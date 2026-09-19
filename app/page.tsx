@@ -1,6 +1,12 @@
 "use client";
 
+import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
+
+import ArrowIcon from "./_components/ArrowIcon";
+import NewsletterForm from "./_components/NewsletterForm";
+import QuoteForm from "./_components/QuoteForm";
+import { AMZ_PHONE_DISPLAY, AMZ_PHONE_HREF } from "./_lib/contact";
 
 /* ---------------------------------------------------------------------- */
 /*  Static content                                                        */
@@ -243,14 +249,6 @@ function Eyebrow({ children, dark }: { children: React.ReactNode; dark?: boolean
   );
 }
 
-function ArrowIcon({ color = "#1462A7" }: { color?: string }) {
-  return (
-    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2.4" strokeLinecap="butt" strokeLinejoin="miter" aria-hidden="true">
-      <path d="M4 12h16M14 6l6 6-6 6" />
-    </svg>
-  );
-}
-
 function PlaceholderAvatar() {
   return (
     <span
@@ -270,6 +268,152 @@ function PlaceholderAvatar() {
         <path d="M4 20c0-4.4 3.6-7 8-7s8 2.6 8 7" />
       </svg>
     </span>
+  );
+}
+
+/* Scroll-scrubbed hero video.
+
+   The section is a tall scroll "track"; the panel inside it sticks to the viewport
+   while you scroll past it, and the video's currentTime is driven by how far through
+   the track you are — so the frames advance with the scroll instead of on a clock.
+   The video is never played; it is only seeked. */
+
+/* Track height, in viewport heights. This is the pacing knob: the whole clip is spread
+   across (HERO_SCRUB_SCREENS - 1) screens of scrolling, so a bigger number means fewer
+   frames per pixel scrolled — a slower, finer scrub. At 6 screens on a 900px viewport the
+   clip's 884 frames land about 5px apart; at 3 they were ~2px apart, so a single wheel
+   tick skipped roughly 50 frames. */
+const HERO_SCRUB_SCREENS = 6;
+
+const HERO_SCRUB_EASING = 0.09;
+
+function HeroScrollStage({ children }: { children: React.ReactNode }) {
+  const trackRef = useRef<HTMLElement | null>(null);
+  const videoRef = useRef<HTMLVideoElement | null>(null);
+  const [reducedMotion, setReducedMotion] = useState(false);
+
+  useEffect(() => {
+    const query = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const sync = () => setReducedMotion(query.matches);
+    sync();
+    query.addEventListener("change", sync);
+    return () => query.removeEventListener("change", sync);
+  }, []);
+
+  useEffect(() => {
+    const track = trackRef.current;
+    const video = videoRef.current;
+    if (!track || !video) return;
+
+    video.pause();
+
+    if (reducedMotion) {
+      // Hold a single representative frame rather than animating on scroll.
+      const holdStill = () => {
+        video.currentTime = Math.min(1, video.duration || 0);
+      };
+      if (video.readyState >= 1) holdStill();
+      else video.addEventListener("loadedmetadata", holdStill, { once: true });
+      return;
+    }
+
+    let frame = 0;
+    let target = 0;
+    let painted = -1;
+
+    const readScroll = () => {
+      const duration = video.duration;
+      if (!duration || !Number.isFinite(duration)) return;
+      const scrollable = track.offsetHeight - window.innerHeight;
+      if (scrollable <= 0) return;
+      const travelled = -track.getBoundingClientRect().top;
+      const progress = Math.min(1, Math.max(0, travelled / scrollable));
+      target = progress * duration;
+    };
+
+    const tick = () => {
+      frame = requestAnimationFrame(tick);
+      if (painted < 0) painted = target;
+
+      // Ease toward the scroll position instead of snapping to it: a seek costs a decode,
+      // and following every scroll delta exactly makes that cost visible. Lower = smoother
+      // glide but more lag behind the scroll; higher = tighter but choppier.
+      painted += (target - painted) * HERO_SCRUB_EASING;
+      if (Math.abs(target - painted) < 0.004) painted = target;
+
+      // A seek requested while one is in flight is dropped by the browser, so wait.
+      if (!video.seeking && Math.abs(painted - video.currentTime) > 0.015) {
+        video.currentTime = painted;
+      }
+    };
+
+    const onScroll = () => readScroll();
+    const onResize = () => readScroll();
+
+    readScroll();
+    if (video.readyState >= 1) frame = requestAnimationFrame(tick);
+    else video.addEventListener("loadedmetadata", () => { readScroll(); frame = requestAnimationFrame(tick); }, { once: true });
+
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", onResize);
+    return () => {
+      cancelAnimationFrame(frame);
+      window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("resize", onResize);
+    };
+  }, [reducedMotion]);
+
+  return (
+    <section
+      data-screen-label="Hero"
+      ref={trackRef}
+      style={{
+        position: "relative",
+        background: "#0F4E85",
+        marginTop: -76,
+        height: reducedMotion ? "auto" : `${HERO_SCRUB_SCREENS * 100}svh`,
+      }}
+    >
+      <div
+        style={{
+          position: reducedMotion ? "relative" : "sticky",
+          top: 0,
+          height: reducedMotion ? "auto" : "100svh",
+          overflow: "hidden",
+          paddingTop: 76,
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+      >
+        <video
+          ref={videoRef}
+          src="/images/hero-scroll.mp4"
+          muted
+          playsInline
+          preload="auto"
+          aria-hidden="true"
+          tabIndex={-1}
+          style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", pointerEvents: "none" }}
+        />
+        {/* Neutral scrim, not a blue wash — dark enough to hold the white type against a
+            bright frame, light enough to leave the footage readable. */}
+        <div
+          aria-hidden="true"
+          style={{
+            position: "absolute",
+            inset: 0,
+            background: "linear-gradient(180deg,rgba(0,0,0,.34) 0%,rgba(0,0,0,.20) 45%,rgba(0,0,0,.40) 100%)",
+          }}
+        />
+        <svg viewBox="0 0 1600 760" preserveAspectRatio="none" aria-hidden="true" style={{ position: "absolute", inset: 0, width: "130%", height: "100%", opacity: 0.13 }}>
+          <path d="M-160,690 A1900,1900 0 0 1 1740,350" fill="none" stroke="#FFFFFF" strokeWidth="32" />
+          <path d="M820,410 A1900,1900 0 0 1 1700,312" fill="none" stroke="#FFFFFF" strokeWidth="18" />
+        </svg>
+        {children}
+      </div>
+      <div style={{ height: 4, background: "linear-gradient(96deg,#0F4E85 0%,#1879CD 100%)" }} />
+    </section>
   );
 }
 
@@ -507,9 +651,12 @@ export default function Home() {
           }}
         >
           <a href="#main" aria-label="AMZ Energy Systems — home" style={{ flex: "none", display: "flex", alignItems: "center", gap: 10, textDecoration: "none" }}>
-            <span className="amz-plate" style={{ flex: "none", display: "flex", alignItems: "center", justifyContent: "center", width: 38, height: 38, borderRadius: 999, background: "#FFFFFF" }}>
+            <span className="amz-plate" style={{ flex: "none", display: "flex", alignItems: "center", justifyContent: "center", width: 38, height: 38, borderRadius: 999 }}>
+              {/* The mark ships as dark navy artwork on transparency, which is why it used to
+                  sit on a white disc. It reads better straight on the blue bar, so flip the
+                  solid silhouette to white instead of plating it. */}
               {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src="/images/logo/amz-mark-small.png" alt="" width={298} height={278} style={{ display: "block", height: 26, width: "auto" }} />
+              <img src="/images/logo/amz-mark-small.png" alt="" width={298} height={278} style={{ display: "block", height: 30, width: "auto", filter: "brightness(0) invert(1)" }} />
             </span>
             <span className="amz-logo-t" style={{ fontFamily: "var(--font-display)", fontWeight: 700, fontSize: 21, letterSpacing: "-.01em", color: "#FFFFFF" }}>
               AMZ
@@ -781,11 +928,11 @@ export default function Home() {
                 Request a quote
               </a>
               <a
-                href="tel:0000000000"
+                href={AMZ_PHONE_HREF}
                 className="amz-btn-outline-light"
                 style={{ display: "flex", alignItems: "center", justifyContent: "center", height: 52, borderRadius: 999, border: "1.5px solid rgba(255,255,255,.4)", color: "#FFFFFF", fontFamily: "var(--font-display)", fontWeight: 600, fontSize: 16, textDecoration: "none" }}
               >
-                000-000-0000
+                {AMZ_PHONE_DISPLAY}
               </a>
             </div>
           </nav>
@@ -794,12 +941,8 @@ export default function Home() {
 
       <main id="main">
         {/* Hero */}
-        <section data-screen-label="Hero" style={{ background: "#0F4E85", position: "relative", overflow: "hidden", marginTop: -76, paddingTop: 76 }}>
-          <svg viewBox="0 0 1600 760" preserveAspectRatio="none" aria-hidden="true" style={{ position: "absolute", inset: 0, width: "130%", height: "100%", opacity: 0.13 }}>
-            <path d="M-160,690 A1900,1900 0 0 1 1740,350" fill="none" stroke="#FFFFFF" strokeWidth="32" />
-            <path d="M820,410 A1900,1900 0 0 1 1700,312" fill="none" stroke="#FFFFFF" strokeWidth="18" />
-          </svg>
-          <div style={{ position: "relative", maxWidth: 1000, margin: "0 auto", padding: "clamp(72px,11vw,140px) clamp(20px,4vw,40px) clamp(72px,10vw,120px)", textAlign: "center", display: "flex", flexDirection: "column", alignItems: "center" }}>
+        <HeroScrollStage>
+          <div style={{ position: "relative", maxWidth: 1000, margin: "0 auto", padding: "clamp(32px,5vw,64px) clamp(20px,4vw,40px)", textAlign: "center", display: "flex", flexDirection: "column", alignItems: "center" }}>
             <p
               style={{
                 display: "inline-flex",
@@ -874,7 +1017,7 @@ export default function Home() {
             </div>
             <dl
               style={{
-                margin: "clamp(56px,8vw,88px) 0 0",
+                margin: "clamp(32px,4.5vw,56px) 0 0",
                 padding: 0,
                 display: "grid",
                 gridTemplateColumns: "repeat(auto-fit,minmax(150px,1fr))",
@@ -892,8 +1035,7 @@ export default function Home() {
               ))}
             </dl>
           </div>
-          <div style={{ height: 4, background: "linear-gradient(96deg,#0F4E85 0%,#1879CD 100%)" }} />
-        </section>
+        </HeroScrollStage>
 
         {/* Trusted partners marquee */}
         <section data-screen-label="Trusted partners" style={{ padding: "clamp(40px,5vw,56px) 0", background: "#FFFFFF" }}>
@@ -1407,32 +1549,34 @@ export default function Home() {
           <svg viewBox="0 0 1600 340" preserveAspectRatio="none" aria-hidden="true" style={{ position: "absolute", inset: 0, width: "130%", height: "100%", opacity: 0.13 }}>
             <path d="M-160,300 A1900,1900 0 0 1 1740,120" fill="none" stroke="#FFFFFF" strokeWidth="28" />
           </svg>
-          <div style={{ position: "relative", maxWidth: 820, margin: "0 auto", padding: "clamp(56px,8vw,88px) clamp(20px,4vw,40px)", textAlign: "center" }}>
+          <div className="amz-contact-grid" style={{ position: "relative", maxWidth: 1080, margin: "0 auto", padding: "clamp(56px,8vw,88px) clamp(20px,4vw,40px)" }}>
+            <div>
             <h2 style={{ fontFamily: "var(--font-display)", fontWeight: 700, fontSize: "clamp(1.625rem,1.17rem + 1.94vw,2.4375rem)", lineHeight: 1.15, letterSpacing: "-.012em", margin: "0 0 16px", color: "#FFFFFF" }}>
               Tell us what the building is doing
             </h2>
-            <p style={{ fontSize: "clamp(1.0625rem,.98rem + .35vw,1.25rem)", lineHeight: 1.6, color: "rgba(255,255,255,.86)", margin: "0 0 32px" }}>We&rsquo;ll come and measure. We reply to every request within one business day.</p>
-            <address style={{ fontStyle: "normal", display: "flex", alignItems: "center", justifyContent: "center", gap: 10, fontSize: 15, lineHeight: 1.6, color: "rgba(255,255,255,.80)", margin: "0 0 28px" }}>
+            <p style={{ fontSize: "clamp(1.0625rem,.98rem + .35vw,1.25rem)", lineHeight: 1.6, color: "rgba(255,255,255,.86)", margin: "0 0 32px", maxWidth: "36ch" }}>We&rsquo;ll come and measure. We reply to every request within one business day.</p>
+            <address style={{ fontStyle: "normal", display: "flex", alignItems: "center", gap: 10, fontSize: 15, lineHeight: 1.6, color: "rgba(255,255,255,.80)", margin: "0 0 28px" }}>
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,.62)" strokeWidth="2" strokeLinecap="butt" strokeLinejoin="miter" aria-hidden="true" style={{ flex: "none" }}>
                 <path d="M12 21s7-6.2 7-11a7 7 0 1 0-14 0c0 4.8 7 11 7 11z" />
                 <circle cx="12" cy="10" r="2.6" />
               </svg>
               100 W Oxford Street, Philadelphia, PA 19122
             </address>
-            <div style={{ display: "flex", flexWrap: "wrap", gap: 14, justifyContent: "center", alignItems: "center" }}>
-              <a href="#contact" className="amz-btn-accent" style={{ display: "inline-flex", alignItems: "center", height: 58, padding: "0 34px", borderRadius: 999, background: "#F99615", color: "#191C1F", fontFamily: "var(--font-display)", fontWeight: 600, fontSize: 16, textDecoration: "none" }}>
-                Request a quote
-              </a>
+            <div style={{ display: "flex", flexWrap: "wrap", gap: 14, alignItems: "center" }}>
               <a
-                href="tel:0000000000"
+                href={AMZ_PHONE_HREF}
                 className="amz-btn-outline-light"
                 style={{ display: "inline-flex", alignItems: "center", gap: 10, height: 58, padding: "0 28px", borderRadius: 999, border: "1.5px solid rgba(255,255,255,.56)", fontFamily: "var(--font-display)", fontWeight: 600, fontSize: 16, color: "#FFFFFF", textDecoration: "none" }}
               >
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" strokeWidth="2" strokeLinecap="butt" strokeLinejoin="miter" aria-hidden="true">
                   <path d="M4 3h5l2 5-3 2a12 12 0 0 0 6 6l2-3 5 2v5h-2A15 15 0 0 1 4 5z" />
                 </svg>
-                000-000-0000
+                {AMZ_PHONE_DISPLAY}
               </a>
+            </div>
+            </div>
+            <div>
+              <QuoteForm />
             </div>
           </div>
         </section>
@@ -1450,13 +1594,13 @@ export default function Home() {
               </p>
             </div>
             <div style={{ minWidth: 0, display: "flex", flexDirection: "column", justifyContent: "center", gap: 2 }}>
-              <a href="tel:0000000000" className="amz-footer-tel" style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 20, padding: "18px 0", borderBottom: "1px solid rgba(255,255,255,.12)", textDecoration: "none" }}>
+              <a href={AMZ_PHONE_HREF} className="amz-footer-tel" style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 20, padding: "18px 0", borderBottom: "1px solid rgba(255,255,255,.12)", textDecoration: "none" }}>
                 <span style={{ fontFamily: "var(--font-display)", fontStretch: "75%", fontWeight: 700, fontSize: 12, letterSpacing: ".14em", textTransform: "uppercase", color: "rgba(255,255,255,.56)" }}>Main line</span>
-                <span style={{ fontFamily: "var(--font-display)", fontWeight: 700, fontSize: "clamp(18px,2vw,22px)", color: "#FFFFFF", fontVariantNumeric: "tabular-nums" }}>000-000-0000</span>
+                <span style={{ fontFamily: "var(--font-display)", fontWeight: 700, fontSize: "clamp(18px,2vw,22px)", color: "#FFFFFF", fontVariantNumeric: "tabular-nums" }}>{AMZ_PHONE_DISPLAY}</span>
               </a>
-              <a href="tel:0000000000" className="amz-footer-tel" style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 20, padding: "18px 0", borderBottom: "1px solid rgba(255,255,255,.12)", textDecoration: "none" }}>
+              <a href={AMZ_PHONE_HREF} className="amz-footer-tel" style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 20, padding: "18px 0", borderBottom: "1px solid rgba(255,255,255,.12)", textDecoration: "none" }}>
                 <span style={{ fontFamily: "var(--font-display)", fontStretch: "75%", fontWeight: 700, fontSize: 12, letterSpacing: ".14em", textTransform: "uppercase", color: "#F0A9A4" }}>24/7 emergency</span>
-                <span style={{ fontFamily: "var(--font-display)", fontWeight: 700, fontSize: "clamp(18px,2vw,22px)", color: "#F0A9A4", fontVariantNumeric: "tabular-nums" }}>000-000-0000</span>
+                <span style={{ fontFamily: "var(--font-display)", fontWeight: 700, fontSize: "clamp(18px,2vw,22px)", color: "#F0A9A4", fontVariantNumeric: "tabular-nums" }}>{AMZ_PHONE_DISPLAY}</span>
               </a>
               <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: 20, padding: "18px 0" }}>
                 <span style={{ fontFamily: "var(--font-display)", fontStretch: "75%", fontWeight: 700, fontSize: 12, letterSpacing: ".14em", textTransform: "uppercase", color: "rgba(255,255,255,.56)", paddingTop: 3 }}>Office</span>
@@ -1493,27 +1637,16 @@ export default function Home() {
                 Newsletter
               </p>
               <p style={{ fontSize: 14, lineHeight: 1.6, color: "rgba(255,255,255,.72)", margin: "0 0 16px", maxWidth: "32ch" }}>Selection notes and spec changes, a few times a year. No sales mail.</p>
-              <form
-                onSubmit={(e) => e.preventDefault()}
-                style={{ display: "flex", alignItems: "center", gap: 8, border: "1px solid rgba(255,255,255,.28)", borderRadius: 999, padding: "6px 6px 6px 18px" }}
-              >
-                <label htmlFor="amz-news" style={{ position: "absolute", width: 1, height: 1, overflow: "hidden", clip: "rect(0 0 0 0)" }}>
-                  Your email address
-                </label>
-                <input id="amz-news" type="email" placeholder="Your email address" style={{ flex: "1 1 auto", minWidth: 0, height: 40, background: "transparent", border: 0, color: "#FFFFFF", fontFamily: "var(--font-body)", fontSize: 15, outline: "none" }} />
-                <button type="submit" aria-label="Subscribe" style={{ flex: "none", width: 40, height: 40, borderRadius: 999, background: "#FFFFFF", border: 0, cursor: "pointer", display: "inline-flex", alignItems: "center", justifyContent: "center" }}>
-                  <ArrowIcon color="#0A1017" />
-                </button>
-              </form>
+              <NewsletterForm />
             </div>
           </div>
 
           <div style={{ borderTop: "1px solid rgba(255,255,255,.14)", padding: "24px 0 32px", display: "flex", flexWrap: "wrap", gap: 20, justifyContent: "space-between", alignItems: "center" }}>
             <p style={{ fontSize: 13, lineHeight: 1.5, color: "rgba(255,255,255,.56)", margin: 0 }}>&copy; 2026 AMZ Energy Systems &middot; Licence no. pending client fact</p>
             <div style={{ display: "flex", flexWrap: "wrap", gap: 24 }}>
-              <a href="#contact" style={{ fontSize: 13, color: "rgba(255,255,255,.56)" }}>Privacy</a>
-              <a href="#contact" style={{ fontSize: 13, color: "rgba(255,255,255,.56)" }}>Terms</a>
-              <a href="#contact" style={{ fontSize: 13, color: "rgba(255,255,255,.56)" }}>Accessibility</a>
+              <Link href="/privacy" style={{ fontSize: 13, color: "rgba(255,255,255,.56)" }}>Privacy</Link>
+              <Link href="/terms" style={{ fontSize: 13, color: "rgba(255,255,255,.56)" }}>Terms</Link>
+              <Link href="/accessibility" style={{ fontSize: 13, color: "rgba(255,255,255,.56)" }}>Accessibility</Link>
             </div>
           </div>
         </div>

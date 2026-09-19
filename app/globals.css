@@ -91,7 +91,6 @@ a {
 }
 .amz-hdr.amz-stuck .amz-logo-t { color: #191C1F !important; }
 .amz-hdr.amz-stuck .amz-nav-a { color: #444444 !important; }
-.amz-hdr.amz-stuck .amz-plate { background: #EEF5FC !important; }
 .amz-hdr.amz-stuck .amz-burger { background: #191C1F !important; }
 @media (hover: hover) and (pointer: fine) {
   .amz-nav-a:hover { opacity: .72; }
@@ -320,4 +319,167 @@ a {
     animation-iteration-count: 1 !important;
     transition-duration: .01ms !important;
   }
+}
+
+/* ---------- Legal pages (/privacy, /terms, /accessibility) ---------- */
+.amz-legal-grid {
+  display: grid;
+  grid-template-columns: 236px minmax(0, 1fr);
+  gap: clamp(32px, 5vw, 72px);
+  align-items: start;
+}
+/* Sidebar contents list, pinned while the body scrolls. */
+.amz-legal-toc {
+  position: sticky;
+  top: 28px;
+  border-left: 2px solid var(--graphite-200);
+  padding-left: 20px;
+}
+.amz-legal-toc ol {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  counter-reset: amz-toc;
+}
+.amz-legal-toc a {
+  display: flex;
+  gap: 10px;
+  padding: 7px 0;
+  font-size: 14px;
+  line-height: 1.45;
+  color: var(--graphite-600);
+  text-decoration: none;
+  transition: color 160ms ease;
+}
+.amz-legal-toc a::before {
+  counter-increment: amz-toc;
+  content: counter(amz-toc, decimal-leading-zero);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--blue-300);
+  padding-top: 3px;
+  flex: none;
+}
+.amz-legal-toc a:hover { color: var(--blue-700); }
+
+/* The mobile disclosure version is swapped in below the breakpoint. */
+.amz-legal-toc-mobile { display: none; }
+
+.amz-legal-body h2 { scroll-margin-top: 24px; }
+.amz-legal-body p { max-width: 68ch; }
+.amz-legal-body ul {
+  list-style: none;
+  margin: 0 0 18px;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  max-width: 68ch;
+}
+.amz-legal-body li {
+  position: relative;
+  padding-left: 22px;
+}
+.amz-legal-body li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 11px;
+  width: 7px;
+  height: 2px;
+  background: var(--amber-400);
+}
+/* Anchor affordance on each section heading. */
+.amz-legal-anchor {
+  opacity: 0;
+  margin-left: 10px;
+  font-weight: 400;
+  color: var(--blue-300);
+  text-decoration: none;
+  transition: opacity 160ms ease;
+}
+.amz-legal-body h2:hover .amz-legal-anchor,
+.amz-legal-anchor:focus-visible { opacity: 1; }
+
+.amz-legal-next {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+  gap: 14px;
+}
+.amz-legal-next a {
+  display: block;
+  padding: 20px;
+  border: 1px solid var(--graphite-200);
+  border-radius: 2px;
+  text-decoration: none;
+  background: #FFFFFF;
+  transition: border-color 160ms ease, transform 160ms ease;
+}
+.amz-legal-next a:hover {
+  border-color: var(--blue-300);
+  transform: translateY(-2px);
+}
+
+@media (max-width: 880px) {
+  .amz-legal-grid { grid-template-columns: minmax(0, 1fr); }
+  .amz-legal-toc { display: none; }
+  .amz-legal-toc-mobile {
+    display: block;
+    border: 1px solid var(--graphite-200);
+    border-radius: 2px;
+    margin-bottom: 32px;
+  }
+  .amz-legal-toc-mobile summary {
+    cursor: pointer;
+    padding: 14px 18px;
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 15px;
+    color: var(--graphite-900);
+  }
+  .amz-legal-toc-mobile ol {
+    list-style: none;
+    margin: 0;
+    padding: 0 18px 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .amz-legal-toc-mobile a {
+    font-size: 15px;
+    color: var(--blue-600);
+    text-decoration: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .amz-legal-next a:hover { transform: none; }
+}
+
+/* ---------- Contact band (quote form) ---------- */
+.amz-contact-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr);
+  gap: clamp(32px, 5vw, 72px);
+  align-items: start;
+}
+/* Dark-on-blue form controls: the browser default focus ring and autofill styling
+   both assume a light field, so they are restated here. */
+.amz-field::placeholder { color: rgba(255,255,255,.52); }
+.amz-field:focus {
+  border-color: #F99615;
+  background: rgba(255,255,255,.14);
+}
+select.amz-field {
+  background-image: linear-gradient(45deg, transparent 50%, rgba(255,255,255,.72) 50%),
+                    linear-gradient(135deg, rgba(255,255,255,.72) 50%, transparent 50%);
+  background-position: calc(100% - 20px) 21px, calc(100% - 14px) 21px;
+  background-size: 6px 6px, 6px 6px;
+  background-repeat: no-repeat;
+}
+@media (max-width: 900px) {
+  .amz-contact-grid { grid-template-columns: minmax(0, 1fr); }
 }
