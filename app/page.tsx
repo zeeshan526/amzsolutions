@@ -291,14 +291,28 @@ function HeroScrollStage({ children }: { children: React.ReactNode }) {
   const trackRef = useRef<HTMLElement | null>(null);
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const [reducedMotion, setReducedMotion] = useState(false);
+  // Phones get the poster, not the scrub: the clip is a 54MB landscape file, so on a
+  // portrait viewport object-fit crops it to an unreadable slice, seeking costs far more
+  // on mobile hardware, and six screens of track is a punishing amount of thumb-scrolling.
+  const [compact, setCompact] = useState(false);
 
   useEffect(() => {
-    const query = window.matchMedia("(prefers-reduced-motion: reduce)");
-    const sync = () => setReducedMotion(query.matches);
+    const motion = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const narrow = window.matchMedia("(max-width: 900px), (pointer: coarse)");
+    const sync = () => {
+      setReducedMotion(motion.matches);
+      setCompact(narrow.matches);
+    };
     sync();
-    query.addEventListener("change", sync);
-    return () => query.removeEventListener("change", sync);
+    motion.addEventListener("change", sync);
+    narrow.addEventListener("change", sync);
+    return () => {
+      motion.removeEventListener("change", sync);
+      narrow.removeEventListener("change", sync);
+    };
   }, []);
+
+  const staticHero = reducedMotion || compact;
 
   useEffect(() => {
     const track = trackRef.current;
@@ -307,7 +321,7 @@ function HeroScrollStage({ children }: { children: React.ReactNode }) {
 
     video.pause();
 
-    if (reducedMotion) {
+    if (staticHero) {
       // Hold a single representative frame rather than animating on scroll.
       const holdStill = () => {
         video.currentTime = Math.min(1, video.duration || 0);
@@ -361,7 +375,7 @@ function HeroScrollStage({ children }: { children: React.ReactNode }) {
       window.removeEventListener("scroll", onScroll);
       window.removeEventListener("resize", onResize);
     };
-  }, [reducedMotion]);
+  }, [staticHero]);
 
   return (
     <section
@@ -371,14 +385,14 @@ function HeroScrollStage({ children }: { children: React.ReactNode }) {
         position: "relative",
         background: "#0F4E85",
         marginTop: -76,
-        height: reducedMotion ? "auto" : `${HERO_SCRUB_SCREENS * 100}svh`,
+        height: staticHero ? "auto" : `${HERO_SCRUB_SCREENS * 100}svh`,
       }}
     >
       <div
         style={{
-          position: reducedMotion ? "relative" : "sticky",
+          position: staticHero ? "relative" : "sticky",
           top: 0,
-          height: reducedMotion ? "auto" : "100svh",
+          height: staticHero ? "auto" : "100svh",
           overflow: "hidden",
           paddingTop: 76,
           display: "flex",
@@ -386,16 +400,29 @@ function HeroScrollStage({ children }: { children: React.ReactNode }) {
           justifyContent: "center",
         }}
       >
-        <video
-          ref={videoRef}
-          src="/images/hero-scroll.mp4"
-          muted
-          playsInline
-          preload="auto"
-          aria-hidden="true"
-          tabIndex={-1}
-          style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", pointerEvents: "none" }}
-        />
+        {staticHero ? (
+          /* No <video> at all here — mounting it would still pull the 54MB file down on a
+             phone for a background nobody can scrub. The poster is one 50KB still. */
+          // eslint-disable-next-line @next/next/no-img-element
+          <img
+            src="/images/hero-poster.jpg"
+            alt=""
+            aria-hidden="true"
+            style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", objectPosition: "center 40%", pointerEvents: "none" }}
+          />
+        ) : (
+          <video
+            ref={videoRef}
+            src="/images/hero-scroll.mp4"
+            poster="/images/hero-poster.jpg"
+            muted
+            playsInline
+            preload="auto"
+            aria-hidden="true"
+            tabIndex={-1}
+            style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", pointerEvents: "none" }}
+          />
+        )}
         {/* Neutral scrim, not a blue wash — dark enough to hold the white type against a
             bright frame, light enough to leave the footage readable. */}
         <div
@@ -410,7 +437,10 @@ function HeroScrollStage({ children }: { children: React.ReactNode }) {
           <path d="M-160,690 A1900,1900 0 0 1 1740,350" fill="none" stroke="#FFFFFF" strokeWidth="32" />
           <path d="M820,410 A1900,1900 0 0 1 1700,312" fill="none" stroke="#FFFFFF" strokeWidth="18" />
         </svg>
-        {children}
+        {/* The panel is a flex container, and a flex item defaults to min-width:auto — so
+            without this wrapper the hero copy refuses to shrink below its intrinsic width
+            and gets clipped on a phone. width:100% + min-width:0 lets it reflow. */}
+        <div style={{ position: "relative", width: "100%", minWidth: 0 }}>{children}</div>
       </div>
       <div style={{ height: 4, background: "linear-gradient(96deg,#0F4E85 0%,#1879CD 100%)" }} />
     </section>
@@ -650,13 +680,10 @@ export default function Home() {
             padding: "10px clamp(14px,1.8vw,24px)",
           }}
         >
-          <a href="#main" aria-label="AMZ Energy Systems — home" style={{ flex: "none", display: "flex", alignItems: "center", gap: 10, textDecoration: "none" }}>
-            <span className="amz-plate" style={{ flex: "none", display: "flex", alignItems: "center", justifyContent: "center", width: 38, height: 38, borderRadius: 999 }}>
-              {/* The mark ships as dark navy artwork on transparency, which is why it used to
-                  sit on a white disc. It reads better straight on the blue bar, so flip the
-                  solid silhouette to white instead of plating it. */}
+          <a href="#main" aria-label="AMZ Energy Systems — home" style={{ flex: "none", display: "flex", alignItems: "center", gap: 7, textDecoration: "none" }}>
+            <span className="amz-plate" style={{ flex: "none", display: "flex", alignItems: "center" }}>
               {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src="/images/logo/amz-mark-small.png" alt="" width={298} height={278} style={{ display: "block", height: 30, width: "auto", filter: "brightness(0) invert(1)" }} />
+              <img src="/images/logo/amz-mark-small.png" alt="" width={298} height={278} style={{ display: "block", height: 30, width: "auto" }} />
             </span>
             <span className="amz-logo-t" style={{ fontFamily: "var(--font-display)", fontWeight: 700, fontSize: 21, letterSpacing: "-.01em", color: "#FFFFFF" }}>
               AMZ
@@ -858,8 +885,13 @@ export default function Home() {
             }}
           >
             <div style={{ flex: "none", display: "flex", alignItems: "center", justifyContent: "space-between", padding: "20px 24px", borderBottom: "1px solid rgba(255,255,255,.12)" }}>
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src="/images/logo/amz-logo-white.png" alt="AMZ Energy Systems" width={471} height={574} style={{ display: "block", height: 52, width: "auto" }} />
+              {/* Same icon + wordmark lockup as the header bar, rather than the stacked full
+                  logo — the panel sits on #191C1F, so the white mark reads here too. */}
+              <span style={{ display: "flex", alignItems: "center", gap: 7 }}>
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src="/images/logo/amz-mark-small.png" alt="" width={298} height={278} style={{ display: "block", height: 30, width: "auto" }} />
+                <span style={{ fontFamily: "var(--font-display)", fontWeight: 700, fontSize: 21, letterSpacing: "-.01em", color: "#FFFFFF" }}>AMZ</span>
+              </span>
               <button
                 type="button"
                 onClick={() => setOpen(false)}

@@ -89,6 +89,8 @@ a {
               0 8px 20px rgba(25, 28, 31, .10),
               0 20px 44px rgba(25, 28, 31, .10) !important;
 }
+/* The mark is dark navy artwork: white it out over the blue bar, and let it return to
+   its own colour once the header sticks and the bar turns near-white. */
 .amz-hdr.amz-stuck .amz-logo-t { color: #191C1F !important; }
 .amz-hdr.amz-stuck .amz-nav-a { color: #444444 !important; }
 .amz-hdr.amz-stuck .amz-burger { background: #191C1F !important; }
