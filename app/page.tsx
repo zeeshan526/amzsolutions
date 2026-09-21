@@ -27,13 +27,6 @@ const NAV_LINKS = [
   { label: "Impact", href: "#impact" },
 ];
 
-const HERO_STATS = [
-  { label: "Markets served", value: "4" },
-  { label: "Premier lines", value: "6" },
-  { label: "Reply within", value: "1 day" },
-  { label: "Emergency line", value: "24/7" },
-];
-
 const PARTNER_LOGOS = [
   { src: "/images/partners/unilux.png", alt: "Unilux HVAC Industries" },
   { src: "/images/partners/xnrgy.png", alt: "XNRGY" },
@@ -274,34 +267,173 @@ function PlaceholderAvatar() {
 /* Scroll-scrubbed hero video.
 
    The section is a tall scroll "track"; the panel inside it sticks to the viewport
-   while you scroll past it, and the video's currentTime is driven by how far through
-   the track you are — so the frames advance with the scroll instead of on a clock.
+   while you scroll past it, and both the video's currentTime and the copy overlays are
+   driven by how far through the track you are. Everything is a pure function of scroll
+   progress, so scrolling back up rewinds exactly rather than replaying an animation.
    The video is never played; it is only seeked. */
 
-/* Track height, in viewport heights. This is the pacing knob: the whole clip is spread
-   across (HERO_SCRUB_SCREENS - 1) screens of scrolling, so a bigger number means fewer
-   frames per pixel scrolled — a slower, finer scrub. At 6 screens on a 900px viewport the
-   clip's 884 frames land about 5px apart; at 3 they were ~2px apart, so a single wheel
-   tick skipped roughly 50 frames. */
-const HERO_SCRUB_SCREENS = 6;
+type HeroAlign = "left" | "right" | "center";
 
-const HERO_SCRUB_EASING = 0.09;
+type HeroCta = { label: string; href: string; variant: "primary" | "outline" };
 
-function HeroScrollStage({ children }: { children: React.ReactNode }) {
+/** One copy block on the hero timeline. `start`/`end` are 0-1 scroll progress through
+ *  the pinned track; the block fades and lifts in just after `start` and back out just
+ *  before `end`. Edit the copy and the pacing here — nothing else reads the timings. */
+type HeroOverlay = {
+  start: number;
+  end: number;
+  eyebrow?: string;
+  heading: string;
+  body: string;
+  align: HeroAlign;
+  ctas?: HeroCta[];
+};
+
+const HERO_CTAS: HeroCta[] = [
+  { label: "Explore our solutions", href: "#verticals", variant: "primary" },
+  { label: "See how we work", href: "#positioning", variant: "outline" },
+];
+
+const HERO_OVERLAYS: HeroOverlay[] = [
+  {
+    start: 0,
+    end: 0.18,
+    eyebrow: "Commercial mechanical systems",
+    heading: "Making buildings and communities better",
+    body: "Integrated HVAC solutions for efficient, reliable, high-performing commercial buildings.",
+    align: "center",
+    ctas: HERO_CTAS,
+  },
+  {
+    start: 0.22,
+    end: 0.4,
+    heading: "Start with the building",
+    body: "We evaluate building size, floor usage, occupancy, climate conditions, indoor air-quality requirements and existing mechanical infrastructure before recommending the right HVAC solution.",
+    align: "right",
+  },
+  {
+    start: 0.44,
+    end: 0.6,
+    heading: "Water-cooled chillers",
+    body: "Our installation teams coordinate equipment placement, chilled-water piping, controls, pumps, electrical systems and mechanical connections inside the central plant room.",
+    align: "left",
+  },
+  {
+    start: 0.64,
+    end: 0.8,
+    heading: "Cooling tower installation",
+    body: "From crane coordination and structural positioning to condenser-water piping and final alignment, every rooftop installation is carefully planned and executed.",
+    align: "left",
+  },
+  {
+    start: 0.84,
+    end: 1,
+    heading: "Precision air handling",
+    body: "We install and integrate air-handling units, filtration systems, cooling coils, controls and ductwork to deliver consistent airflow, comfort and indoor air quality.",
+    align: "center",
+    ctas: HERO_CTAS,
+  },
+];
+
+const HERO_POSTER_SRC = "/images/hero-poster.jpg";
+
+/* IMPORTANT — how this file must be encoded, or the scrub goes back to stuttering.
+   Seeking decodes forward from the previous keyframe, so the keyframe interval, not the
+   resolution or the bitrate, is what decides whether a scrub keeps up. The original master
+   here was 2560x1440 with SIX keyframes in 29.5s (one per ~147 frames): every seek replayed
+   up to 147 frames of 1440p and the hero delivered ~7fps while scrolling. Re-encoded at
+   1920x1080 with a keyframe every 5 frames it delivers a new frame on essentially every
+   scroll tick, and the file went from 56MB to 19.5MB.
+
+     ffmpeg -i master.mp4 -an -vf scale=1920:1080 -c:v libx264 -preset slow -crf 27 \
+            -g 5 -keyint_min 5 -sc_threshold 0 -pix_fmt yuv420p -movflags +faststart out.mp4
+
+   Keep -g small, keep -an (the video is muted and decorative, so an audio track is pure
+   weight), and keep +faststart so the moov atom is at the front. */
+const HERO_VIDEO_SRC = "/images/hero-scroll.mp4";
+
+/* Deliberately null: phones get the poster, not a scrub. Even a lean mobile encode of this
+   clip runs 4-7MB, which is not a reasonable thing to spend a visitor's cellular data on for
+   a decorative background — and the overlay sequence is scroll-driven either way, so the copy
+   and its pacing are identical without it. If that call is ever revisited, point this at a
+   small encode (same keyframe rules as above); the shorter pin distance is already wired. */
+const HERO_VIDEO_MOBILE_SRC: string | null = null;
+
+/* Pinned scroll distance, in viewport heights. The whole 29.5s clip is spread across this
+   much scrolling, so a bigger number means fewer frames per pixel — a slower, finer scrub.
+   At 4 screens on a 900px viewport the clip's ~884 frames land about 4px apart. */
+const HERO_PIN_SCREENS = 4;
+const HERO_PIN_SCREENS_COMPACT = 2.5;
+
+/* How hard the painted time chases the scroll each frame. The gate below already rate-
+   limits us to what the decoder can service, so easing is only here to turn a mouse
+   wheel's discrete 100px jumps into continuous motion — any lower and it stops being
+   smoothing and starts being lag you can feel. 0.22 settles in ~4 frames. */
+const HERO_SCRUB_EASING = 0.22;
+
+/* Cap on how far behind the scroll the painted time may fall, as a fraction of the clip.
+   Past this the in-between frames are not worth decoding: close the gap in one jump
+   instead of crawling, which is what made a fast flick feel stuck. */
+const HERO_SCRUB_MAX_LAG = 0.05;
+
+/* One frame of the source clip (~30fps). Seeking by less than this spends a full decode
+   to display the identical picture, starving the seeks that would actually move it. */
+const HERO_SOURCE_FRAME = 1 / 30;
+
+/* Fade/lift ramp at each end of a block's window, in progress units. Blocks are 0.16-0.18
+   wide with 0.04 gaps, so ~0.035 leaves a comfortable hold in the middle. */
+const HERO_OVERLAY_FADE = 0.035;
+const HERO_OVERLAY_LIFT = 26;
+
+/** Opacity and vertical offset for one block at a given scroll progress. Pure: the same
+ *  progress always yields the same frame, which is what makes reverse scrolling exact. */
+function heroOverlayState(block: HeroOverlay, progress: number) {
+  // The first block must be fully up at rest, and the last must not blank out as the
+  // section unpins — so those outer edges get no ramp.
+  const fadeIn = block.start > 0 ? HERO_OVERLAY_FADE : 0;
+  const fadeOut = block.end < 1 ? HERO_OVERLAY_FADE : 0;
+
+  let raw = 0;
+  if (progress >= block.start && progress <= block.end) {
+    const rising = fadeIn > 0 ? (progress - block.start) / fadeIn : 1;
+    const falling = fadeOut > 0 ? (block.end - progress) / fadeOut : 1;
+    raw = Math.min(1, Math.max(0, Math.min(rising, falling)));
+  }
+  const opacity = raw * raw * (3 - 2 * raw); // smoothstep
+
+  // Rise from below on the way in, leave upward on the way out.
+  const midpoint = (block.start + block.end) / 2;
+  const lift = (1 - opacity) * HERO_OVERLAY_LIFT * (progress < midpoint ? 1 : -1);
+  return { opacity, lift };
+}
+
+function HeroScrollStage() {
   const trackRef = useRef<HTMLElement | null>(null);
   const videoRef = useRef<HTMLVideoElement | null>(null);
-  const [reducedMotion, setReducedMotion] = useState(false);
-  // Phones get the poster, not the scrub: the clip is a 54MB landscape file, so on a
-  // portrait viewport object-fit crops it to an unreadable slice, seeking costs far more
-  // on mobile hardware, and six screens of track is a punishing amount of thumb-scrolling.
-  const [compact, setCompact] = useState(false);
+  const overlayRefs = useRef<(HTMLDivElement | null)[]>([]);
+
+  // Nothing is decided until we are on the client: the server render is the poster with
+  // the first block up, which is also exactly what the reduced-motion render wants.
+  const [env, setEnv] = useState({ mounted: false, reducedMotion: false, compact: false, iosLike: false });
+  const [ready, setReady] = useState(false);
+  const { mounted, reducedMotion, compact, iosLike } = env;
 
   useEffect(() => {
     const motion = window.matchMedia("(prefers-reduced-motion: reduce)");
-    const narrow = window.matchMedia("(max-width: 900px), (pointer: coarse)");
+    const narrow = window.matchMedia("(max-width: 767px)");
+
     const sync = () => {
-      setReducedMotion(motion.matches);
-      setCompact(narrow.matches);
+      setEnv({
+        mounted: true,
+        reducedMotion: motion.matches,
+        compact: narrow.matches,
+        // iOS Safari services currentTime seeks on a large file badly enough that the
+        // scrub stutters or stalls outright; those clients get the poster instead.
+        // iPadOS reports itself as a Mac, so touch points are the only tell.
+        iosLike:
+          /iP(?:hone|ad|od)/.test(navigator.userAgent) ||
+          (navigator.maxTouchPoints > 1 && /Macintosh/.test(navigator.userAgent)),
+      });
     };
     sync();
     motion.addEventListener("change", sync);
@@ -312,22 +444,74 @@ function HeroScrollStage({ children }: { children: React.ReactNode }) {
     };
   }, []);
 
-  const staticHero = reducedMotion || compact;
+  const videoSrc = compact ? HERO_VIDEO_MOBILE_SRC : HERO_VIDEO_SRC;
+  const scrubVideo = mounted && !reducedMotion && !iosLike && videoSrc !== null;
+  // Reduced motion is the only mode that gives up the pin: the poster fallbacks still
+  // run the overlay sequence off scroll, they just have no frames to seek.
+  const pinned = !reducedMotion;
+  const pinScreens = compact ? HERO_PIN_SCREENS_COMPACT : HERO_PIN_SCREENS;
 
+  /* Readiness gate. Scrubbing before the decoder has data to seek into shows a black
+     frame, so hold the poster and the first block until metadata plus a buffer are in. */
   useEffect(() => {
-    const track = trackRef.current;
+    if (!scrubVideo) return;
     const video = videoRef.current;
-    if (!track || !video) return;
+    if (!video) return;
 
     video.pause();
+    const check = () => {
+      if (video.readyState >= 3) setReady(true); // HAVE_FUTURE_DATA
+    };
+    check();
+    const events = ["loadedmetadata", "loadeddata", "canplay", "canplaythrough", "progress"];
+    events.forEach((e) => video.addEventListener(e, check));
+    return () => events.forEach((e) => video.removeEventListener(e, check));
+  }, [scrubVideo]);
 
-    if (staticHero) {
-      // Hold a single representative frame rather than animating on scroll.
-      const holdStill = () => {
-        video.currentTime = Math.min(1, video.duration || 0);
-      };
-      if (video.readyState >= 1) holdStill();
-      else video.addEventListener("loadedmetadata", holdStill, { once: true });
+  /* The scrub + overlay driver. Re-runs when readiness or layout mode changes, which is
+     also the re-measure that a duration change needs — the scroll-to-progress mapping is
+     read from the live track rect every frame, so there is no cached duration to refresh. */
+  useEffect(() => {
+    const track = trackRef.current;
+    if (!track || !pinned) return;
+
+    const video = scrubVideo ? videoRef.current : null;
+    video?.pause();
+
+    let activeBlock = -1;
+
+    const paintOverlays = (progress: number) => {
+      let nextActive = -1;
+      let best = 0.6; // a block owns the pointer and the tab order once it is mostly up
+      HERO_OVERLAYS.forEach((block, i) => {
+        const node = overlayRefs.current[i];
+        if (!node) return;
+        const { opacity, lift } = heroOverlayState(block, progress);
+        node.style.opacity = String(opacity);
+        node.style.transform = `translate3d(0,${lift.toFixed(2)}px,0)`;
+        if (opacity > best) {
+          best = opacity;
+          nextActive = i;
+        }
+      });
+      if (nextActive === activeBlock) return;
+      activeBlock = nextActive;
+      HERO_OVERLAYS.forEach((_, i) => {
+        const node = overlayRefs.current[i];
+        if (!node) return;
+        const live = i === nextActive;
+        node.style.pointerEvents = live ? "auto" : "none";
+        // Kept in the accessibility tree either way — only the tab stop moves, so a
+        // keyboard user never lands on a CTA they cannot see.
+        node.querySelectorAll("a[href]").forEach((el) => {
+          (el as HTMLAnchorElement).tabIndex = live ? 0 : -1;
+        });
+      });
+    };
+
+    // Not ready to scrub yet: hold frame 0 with the first block up and run nothing.
+    if (video && !ready) {
+      paintOverlays(0);
       return;
     }
 
@@ -336,114 +520,309 @@ function HeroScrollStage({ children }: { children: React.ReactNode }) {
     let painted = -1;
 
     const readScroll = () => {
-      const duration = video.duration;
-      if (!duration || !Number.isFinite(duration)) return;
       const scrollable = track.offsetHeight - window.innerHeight;
-      if (scrollable <= 0) return;
+      if (scrollable <= 0) {
+        target = 0;
+        return;
+      }
       const travelled = -track.getBoundingClientRect().top;
-      const progress = Math.min(1, Math.max(0, travelled / scrollable));
-      target = progress * duration;
+      target = Math.min(1, Math.max(0, travelled / scrollable));
     };
 
     const tick = () => {
       frame = requestAnimationFrame(tick);
       if (painted < 0) painted = target;
 
-      // Ease toward the scroll position instead of snapping to it: a seek costs a decode,
-      // and following every scroll delta exactly makes that cost visible. Lower = smoother
-      // glide but more lag behind the scroll; higher = tighter but choppier.
-      painted += (target - painted) * HERO_SCRUB_EASING;
-      if (Math.abs(target - painted) < 0.004) painted = target;
+      if (video) {
+        // Ease toward the scroll position instead of snapping to it: a seek costs a
+        // decode, and following every scroll delta exactly makes that cost visible. The
+        // scroll callback only ever stores `target`; the seek happens here, once a frame,
+        // so a fast flick collapses into one seek rather than a queue the decoder cannot
+        // service. Lower = smoother glide but more lag; higher = tighter but choppier.
+        if (Math.abs(target - painted) > HERO_SCRUB_MAX_LAG) {
+          painted = target > painted ? target - HERO_SCRUB_MAX_LAG : target + HERO_SCRUB_MAX_LAG;
+        }
+        painted += (target - painted) * HERO_SCRUB_EASING;
+        if (Math.abs(target - painted) < 0.0004) painted = target;
 
-      // A seek requested while one is in flight is dropped by the browser, so wait.
-      if (!video.seeking && Math.abs(painted - video.currentTime) > 0.015) {
-        video.currentTime = painted;
+        const duration = video.duration;
+        if (duration && Number.isFinite(duration)) {
+          const at = painted * duration;
+          // A seek requested while one is in flight is dropped by the browser, so wait for
+          // the decoder, and only ask it for a frame that is actually a different frame.
+          if (!video.seeking && Math.abs(at - video.currentTime) >= HERO_SOURCE_FRAME) {
+            video.currentTime = at;
+          }
+        }
+      } else {
+        // Poster fallback: nothing to decode, so the copy can track the finger exactly.
+        painted = target;
       }
+
+      paintOverlays(painted);
     };
 
     const onScroll = () => readScroll();
     const onResize = () => readScroll();
 
     readScroll();
-    if (video.readyState >= 1) frame = requestAnimationFrame(tick);
-    else video.addEventListener("loadedmetadata", () => { readScroll(); frame = requestAnimationFrame(tick); }, { once: true });
-
+    frame = requestAnimationFrame(tick);
     window.addEventListener("scroll", onScroll, { passive: true });
     window.addEventListener("resize", onResize);
+    window.addEventListener("orientationchange", onResize);
     return () => {
       cancelAnimationFrame(frame);
       window.removeEventListener("scroll", onScroll);
       window.removeEventListener("resize", onResize);
+      window.removeEventListener("orientationchange", onResize);
     };
-  }, [staticHero]);
+  }, [pinned, scrubVideo, ready, pinScreens]);
 
   return (
-    <section
-      data-screen-label="Hero"
-      ref={trackRef}
-      style={{
-        position: "relative",
-        background: "#0F4E85",
-        marginTop: -76,
-        height: staticHero ? "auto" : `${HERO_SCRUB_SCREENS * 100}svh`,
-      }}
-    >
-      <div
+    <>
+      <section
+        data-screen-label="Hero"
+        ref={trackRef}
         style={{
-          position: staticHero ? "relative" : "sticky",
-          top: 0,
-          height: staticHero ? "auto" : "100svh",
-          overflow: "hidden",
-          paddingTop: 76,
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
+          position: "relative",
+          background: "#0F4E85",
+          marginTop: -76,
+          // The track is one screen taller than the pinned distance: the extra screen is
+          // the panel itself, so progress hits 1.0 exactly as the section lets go.
+          height: pinned ? `${(pinScreens + 1) * 100}svh` : "auto",
         }}
       >
-        {staticHero ? (
-          /* No <video> at all here — mounting it would still pull the 54MB file down on a
-             phone for a background nobody can scrub. The poster is one 50KB still. */
-          // eslint-disable-next-line @next/next/no-img-element
-          <img
-            src="/images/hero-poster.jpg"
-            alt=""
-            aria-hidden="true"
-            style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", objectPosition: "center 40%", pointerEvents: "none" }}
-          />
-        ) : (
-          <video
-            ref={videoRef}
-            src="/images/hero-scroll.mp4"
-            poster="/images/hero-poster.jpg"
-            muted
-            playsInline
-            preload="auto"
-            aria-hidden="true"
-            tabIndex={-1}
-            style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", pointerEvents: "none" }}
-          />
-        )}
-        {/* Neutral scrim, not a blue wash — dark enough to hold the white type against a
-            bright frame, light enough to leave the footage readable. */}
         <div
-          aria-hidden="true"
           style={{
-            position: "absolute",
-            inset: 0,
-            background: "linear-gradient(180deg,rgba(0,0,0,.34) 0%,rgba(0,0,0,.20) 45%,rgba(0,0,0,.40) 100%)",
+            position: pinned ? "sticky" : "relative",
+            top: 0,
+            height: pinned ? "100svh" : "auto",
+            minHeight: pinned ? undefined : "78svh",
+            overflow: "hidden",
+            paddingTop: 76,
+            display: "flex",
+            alignItems: "flex-end",
           }}
-        />
-        <svg viewBox="0 0 1600 760" preserveAspectRatio="none" aria-hidden="true" style={{ position: "absolute", inset: 0, width: "130%", height: "100%", opacity: 0.13 }}>
-          <path d="M-160,690 A1900,1900 0 0 1 1740,350" fill="none" stroke="#FFFFFF" strokeWidth="32" />
-          <path d="M820,410 A1900,1900 0 0 1 1700,312" fill="none" stroke="#FFFFFF" strokeWidth="18" />
-        </svg>
-        {/* The panel is a flex container, and a flex item defaults to min-width:auto — so
-            without this wrapper the hero copy refuses to shrink below its intrinsic width
-            and gets clipped on a phone. width:100% + min-width:0 lets it reflow. */}
-        <div style={{ position: "relative", width: "100%", minWidth: 0 }}>{children}</div>
-      </div>
-      <div style={{ height: 4, background: "linear-gradient(96deg,#0F4E85 0%,#1879CD 100%)" }} />
-    </section>
+        >
+          {scrubVideo && videoSrc ? (
+            <video
+              ref={videoRef}
+              src={videoSrc}
+              poster={HERO_POSTER_SRC}
+              muted
+              playsInline
+              preload="auto"
+              disablePictureInPicture
+              aria-hidden="true"
+              tabIndex={-1}
+              style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", pointerEvents: "none" }}
+            />
+          ) : (
+            /* No <video> mounted at all in the fallbacks — mounting it would still pull the
+               clip down for a background nobody can scrub. The poster is one 50KB still. */
+            // eslint-disable-next-line @next/next/no-img-element
+            <img
+              src={HERO_POSTER_SRC}
+              alt=""
+              aria-hidden="true"
+              style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", objectPosition: "center 40%", pointerEvents: "none" }}
+            />
+          )}
+
+          {/* Neutral scrim, not a blue wash, weighted to the bottom third where the copy
+              sits — dark enough to hold white type against a bright frame, light enough to
+              leave the footage readable. */}
+          <div
+            aria-hidden="true"
+            style={{
+              position: "absolute",
+              inset: 0,
+              background:
+                "linear-gradient(180deg,rgba(0,0,0,.40) 0%,rgba(0,0,0,.14) 30%,rgba(0,0,0,.28) 58%,rgba(0,0,0,.74) 100%)",
+            }}
+          />
+          {/* Every block is in the DOM at all times — hidden ones are transparent, not
+              unmounted — so screen readers and crawlers get the whole hero copy. */}
+          <div
+            style={{
+              position: "relative",
+              width: "100%",
+              minWidth: 0,
+              maxWidth: 1360,
+              margin: "0 auto",
+              padding: "0 clamp(20px,4vw,56px) clamp(44px,8vh,104px)",
+              display: "grid",
+            }}
+          >
+            {(pinned ? HERO_OVERLAYS : HERO_OVERLAYS.slice(0, 1)).map((block, i) => (
+              <div
+                key={block.heading}
+                ref={(el) => {
+                  overlayRefs.current[i] = el;
+                }}
+                style={{
+                  // All blocks share one grid cell so they cross-fade in place. The cell is
+                  // as tall as the longest block, so they bottom-anchor to keep the copy in
+                  // the same place in the frame no matter how many lines it runs to.
+                  gridArea: "1 / 1",
+                  alignSelf: "end",
+                  justifySelf: block.align === "right" ? "end" : block.align === "center" ? "center" : "start",
+                  width: "100%",
+                  maxWidth: block.align === "center" ? 880 : "min(52rem, max(58%, 380px))",
+                  textAlign: block.align === "center" ? "center" : "left",
+                  opacity: i === 0 ? 1 : 0,
+                  transform: `translate3d(0,${i === 0 ? 0 : HERO_OVERLAY_LIFT}px,0)`,
+                  pointerEvents: i === 0 ? "auto" : "none",
+                  willChange: "opacity, transform",
+                }}
+              >
+                <HeroOverlayCopy block={block} tabbable={i === 0} headingLevel={i === 0 ? "h1" : "h2"} />
+              </div>
+            ))}
+          </div>
+        </div>
+        <div style={{ height: 4, background: "linear-gradient(96deg,#0F4E85 0%,#1879CD 100%)" }} />
+      </section>
+
+      {/* Reduced motion: no pin and no scrub, so the blocks that would have been scrubbed
+          through become ordinary stacked sections instead of copy nobody can reach. */}
+      {!pinned &&
+        HERO_OVERLAYS.slice(1).map((block) => (
+          <section
+            key={block.heading}
+            style={{ background: "#0F4E85", borderTop: "1px solid rgba(255,255,255,.14)", padding: "clamp(48px,7vw,88px) clamp(20px,4vw,56px)" }}
+          >
+            <div
+              style={{
+                maxWidth: 1360,
+                margin: "0 auto",
+                display: "flex",
+                justifyContent: block.align === "right" ? "flex-end" : block.align === "center" ? "center" : "flex-start",
+              }}
+            >
+              <div style={{ width: "100%", maxWidth: block.align === "center" ? 880 : "min(52rem, max(58%, 380px))", textAlign: block.align === "center" ? "center" : "left" }}>
+                <HeroOverlayCopy block={block} tabbable headingLevel="h2" />
+              </div>
+            </div>
+          </section>
+        ))}
+    </>
+  );
+}
+
+/** The copy inside one hero block. Shared by the pinned overlay and the reduced-motion
+ *  stack so there is a single place the markup lives. */
+function HeroOverlayCopy({
+  block,
+  tabbable,
+  headingLevel,
+}: {
+  block: HeroOverlay;
+  tabbable: boolean;
+  headingLevel: "h1" | "h2";
+}) {
+  const Heading = headingLevel;
+  return (
+    <>
+      {block.eyebrow && (
+        <p
+          style={{
+            fontFamily: "var(--font-display)",
+            fontStretch: "75%",
+            fontWeight: 700,
+            fontSize: 12,
+            lineHeight: 1.2,
+            letterSpacing: ".22em",
+            textTransform: "uppercase",
+            color: "#7DB9ED",
+            margin: "0 0 18px",
+          }}
+        >
+          {block.eyebrow}
+        </p>
+      )}
+      <Heading
+        style={{
+          fontFamily: "var(--font-display)",
+          fontWeight: 700,
+          fontSize: "clamp(2.25rem,1.05rem + 5.2vw,4.5rem)",
+          lineHeight: 1.03,
+          letterSpacing: "-.022em",
+          color: "#FFFFFF",
+          margin: "0 0 20px",
+          // Off-centre blocks let the heading run the full column width so its edge lines
+          // up with the body's — that shared edge is what reads as the alignment.
+          maxWidth: block.align === "center" ? "20ch" : undefined,
+          marginInline: block.align === "center" ? "auto" : undefined,
+        }}
+      >
+        {block.heading}
+      </Heading>
+      <p
+        style={{
+          fontSize: "clamp(1rem,.95rem + .32vw,1.1875rem)",
+          lineHeight: 1.6,
+          color: "rgba(255,255,255,.9)",
+          margin: 0,
+          maxWidth: block.align === "center" ? "62ch" : undefined,
+          marginInline: block.align === "center" ? "auto" : undefined,
+        }}
+      >
+        {block.body}
+      </p>
+      {block.ctas && (
+        <div
+          style={{
+            display: "flex",
+            flexWrap: "wrap",
+            gap: 14,
+            marginTop: 32,
+            justifyContent: block.align === "right" ? "flex-end" : block.align === "center" ? "center" : "flex-start",
+          }}
+        >
+          {block.ctas.map((cta) =>
+            cta.variant === "primary" ? (
+              <a
+                key={cta.label}
+                href={cta.href}
+                tabIndex={tabbable ? 0 : -1}
+                className="amz-btn-accent"
+                style={{
+                  display: "inline-flex",
+                  alignItems: "center",
+                  gap: 10,
+                  height: 58,
+                  padding: "0 34px",
+                  borderRadius: 999,
+                  background: "#F99615",
+                  color: "#191C1F",
+                  fontFamily: "var(--font-display)",
+                  fontWeight: 600,
+                  fontSize: 16,
+                  letterSpacing: ".01em",
+                  textDecoration: "none",
+                }}
+              >
+                {cta.label}
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#191C1F" strokeWidth="2" strokeLinecap="butt" strokeLinejoin="miter" aria-hidden="true">
+                  <path d="M4 12h16M14 6l6 6-6 6" />
+                </svg>
+              </a>
+            ) : (
+              <a
+                key={cta.label}
+                href={cta.href}
+                tabIndex={tabbable ? 0 : -1}
+                className="amz-btn-outline-light"
+                style={{ display: "inline-flex", alignItems: "center", height: 58, padding: "0 34px", borderRadius: 999, border: "1.5px solid rgba(255,255,255,.56)", color: "#FFFFFF", fontFamily: "var(--font-display)", fontWeight: 600, fontSize: 16, letterSpacing: ".01em", textDecoration: "none" }}
+              >
+                {cta.label}
+              </a>
+            )
+          )}
+        </div>
+      )}
+    </>
   );
 }
 
@@ -973,101 +1352,7 @@ export default function Home() {
 
       <main id="main">
         {/* Hero */}
-        <HeroScrollStage>
-          <div style={{ position: "relative", maxWidth: 1000, margin: "0 auto", padding: "clamp(32px,5vw,64px) clamp(20px,4vw,40px)", textAlign: "center", display: "flex", flexDirection: "column", alignItems: "center" }}>
-            <p
-              style={{
-                display: "inline-flex",
-                alignItems: "center",
-                gap: 10,
-                fontFamily: "var(--font-display)",
-                fontStretch: "75%",
-                fontWeight: 700,
-                fontSize: 12,
-                lineHeight: 1.2,
-                letterSpacing: ".14em",
-                textTransform: "uppercase",
-                color: "#FFFFFF",
-                margin: "0 0 28px",
-                padding: "8px 16px",
-                border: "1px solid rgba(255,255,255,.34)",
-                borderRadius: 999,
-              }}
-            >
-              <span style={{ width: 6, height: 6, background: "#F99615", borderRadius: 999 }} />
-              Commercial mechanical systems
-            </p>
-            <h1
-              style={{
-                fontFamily: "var(--font-display)",
-                fontWeight: 700,
-                fontSize: "clamp(2.5rem,1.09rem + 6.01vw,4.75rem)",
-                lineHeight: 1.02,
-                letterSpacing: "-.022em",
-                color: "#FFFFFF",
-                margin: "0 0 28px",
-                maxWidth: "22ch",
-              }}
-            >
-              Making buildings and communities better
-            </h1>
-            <p style={{ fontSize: "clamp(1.0625rem,.98rem + .35vw,1.25rem)", lineHeight: 1.6, color: "rgba(255,255,255,.88)", margin: "0 0 40px", maxWidth: "58ch" }}>
-              Integrated HVAC solutions for efficient, reliable, high-performing commercial buildings — specified from measured load, commissioned with the readings handed over.
-            </p>
-            <div style={{ display: "flex", flexWrap: "wrap", gap: 14, justifyContent: "center" }}>
-              <a
-                href="#verticals"
-                className="amz-btn-accent"
-                style={{
-                  display: "inline-flex",
-                  alignItems: "center",
-                  gap: 10,
-                  height: 58,
-                  padding: "0 34px",
-                  borderRadius: 999,
-                  background: "#F99615",
-                  color: "#191C1F",
-                  fontFamily: "var(--font-display)",
-                  fontWeight: 600,
-                  fontSize: 16,
-                  letterSpacing: ".01em",
-                  textDecoration: "none",
-                }}
-              >
-                Explore our solutions
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#191C1F" strokeWidth="2" strokeLinecap="butt" strokeLinejoin="miter" aria-hidden="true">
-                  <path d="M4 12h16M14 6l6 6-6 6" />
-                </svg>
-              </a>
-              <a
-                href="#positioning"
-                className="amz-btn-outline-light"
-                style={{ display: "inline-flex", alignItems: "center", height: 58, padding: "0 34px", borderRadius: 999, border: "1.5px solid rgba(255,255,255,.56)", color: "#FFFFFF", fontFamily: "var(--font-display)", fontWeight: 600, fontSize: 16, letterSpacing: ".01em", textDecoration: "none" }}
-              >
-                See how we work
-              </a>
-            </div>
-            <dl
-              style={{
-                margin: "clamp(32px,4.5vw,56px) 0 0",
-                padding: 0,
-                display: "grid",
-                gridTemplateColumns: "repeat(auto-fit,minmax(150px,1fr))",
-                gap: 1,
-                width: "100%",
-                maxWidth: 820,
-                background: "rgba(255,255,255,.18)",
-              }}
-            >
-              {HERO_STATS.map((s) => (
-                <div key={s.label} style={{ background: "#0F4E85", padding: "24px 16px" }}>
-                  <dt style={{ fontFamily: "var(--font-display)", fontStretch: "75%", fontWeight: 700, fontSize: 12, letterSpacing: ".14em", textTransform: "uppercase", color: "rgba(255,255,255,.66)", margin: "0 0 10px" }}>{s.label}</dt>
-                  <dd style={{ fontFamily: "var(--font-display)", fontWeight: 700, fontSize: "clamp(28px,3.4vw,40px)", lineHeight: 1, fontVariantNumeric: "tabular-nums", color: "#FFFFFF", margin: 0 }}>{s.value}</dd>
-                </div>
-              ))}
-            </dl>
-          </div>
-        </HeroScrollStage>
+        <HeroScrollStage />
 
         {/* Trusted partners marquee */}
         <section data-screen-label="Trusted partners" style={{ padding: "clamp(40px,5vw,56px) 0", background: "#FFFFFF" }}>

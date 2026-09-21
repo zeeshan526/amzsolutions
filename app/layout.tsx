@@ -33,7 +33,11 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       className={`${archivo.variable} ${sourceSans.variable} ${plexMono.variable} h-full antialiased`}
       suppressHydrationWarning
     >
-      <body className="min-h-full flex flex-col">{children}</body>
+      {/* suppressHydrationWarning applies one level deep only, so <body> needs its own:
+          extensions (Grammarly, ColorZilla) stamp attributes on it before React hydrates. */}
+      <body className="min-h-full flex flex-col" suppressHydrationWarning>
+        {children}
+      </body>
     </html>
   );
 }
