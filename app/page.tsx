@@ -19,13 +19,18 @@ const TECH_MENU = [
   { label: "Utility Incentive Management", href: "#engineers" },
 ];
 
+/* Title Case throughout — these are labels, not sentences. */
 const NAV_LINKS = [
   { label: "Markets", href: "#verticals" },
-  { label: "For engineers", href: "#engineers" },
   { label: "Partners", href: "#partners" },
-  { label: "How we work", href: "#positioning" },
+  { label: "How We Work", href: "#positioning" },
   { label: "Impact", href: "#impact" },
 ];
+
+/* The line card is republished whenever the represented lines change, so it lives as one
+   file at a fixed path rather than as markup: drop the new PDF at public/amz-line-card.pdf
+   and the link below is current — no code change, no redeploy of this page's content. */
+const LINE_CARD_HREF = "/amz-line-card.pdf";
 
 const PARTNER_LOGOS = [
   { src: "/images/partners/unilux.png", alt: "Unilux HVAC Industries" },
@@ -49,7 +54,7 @@ const VERTICALS = [
   {
     n: "01",
     tag: "Commercial",
-    title: "High-rise office",
+    title: "High-Rise Office & Residential",
     text: "Central chiller plant, tenant churn, and no tolerance for downtime on occupied floors. Staged replacement without emptying the building.",
     img: "/images/verticals/office.webp",
     alt: "High-rise office chiller plant",
@@ -65,7 +70,7 @@ const VERTICALS = [
   {
     n: "03",
     tag: "Mission critical",
-    title: "Data centres",
+    title: "Data Centres",
     text: "Rising rack density, redundancy that must be real rather than nominal, and a cooling plant judged on its worst hour.",
     img: "/images/verticals/datacenter.webp",
     alt: "Data centre CRAH row",
@@ -180,13 +185,18 @@ const MOSAIC = [
   { span: "span 2 / span 1", img: "/images/impact/shelter-visit-team.jpg", alt: "Four staff delivering supplies at an animal shelter", pos: "center 44%" },
 ];
 
+/* Organisations the crew gives time to, shown as a ribbon under the Social impact mosaic.
+   Same shape as PARTNER_LOGOS. Left empty the ribbon does not render at all, so this can be
+   filled in as names and marks are confirmed without touching the section markup. */
+const VOLUNTEER_LOGOS: { src: string; alt: string }[] = [];
+
 const FOOTER_COLUMNS = [
   {
     heading: "Markets",
     links: [
-      { label: "High-rise office", href: "#verticals" },
+      { label: "High-Rise Office & Residential", href: "#verticals" },
       { label: "Hospitals", href: "#verticals" },
-      { label: "Data centres", href: "#verticals" },
+      { label: "Data Centres", href: "#verticals" },
       { label: "Schools", href: "#verticals" },
     ],
   },
@@ -289,17 +299,14 @@ type HeroOverlay = {
   ctas?: HeroCta[];
 };
 
-const HERO_CTAS: HeroCta[] = [
-  { label: "Explore our solutions", href: "#verticals", variant: "primary" },
-  { label: "See how we work", href: "#positioning", variant: "outline" },
-];
+const HERO_CTAS: HeroCta[] = [{ label: "Explore Solutions", href: "#verticals", variant: "primary" }];
 
 const HERO_OVERLAYS: HeroOverlay[] = [
   {
     start: 0,
     end: 0.18,
     eyebrow: "Commercial mechanical systems",
-    heading: "Making buildings and communities better",
+    heading: "Making Buildings and Communities Better",
     body: "Integrated HVAC solutions for efficient, reliable, high-performing commercial buildings.",
     align: "center",
     ctas: HERO_CTAS,
@@ -586,7 +593,6 @@ function HeroScrollStage() {
         style={{
           position: "relative",
           background: "#0F4E85",
-          marginTop: -76,
           // The track is one screen taller than the pinned distance: the extra screen is
           // the panel itself, so progress hits 1.0 exactly as the section lets go.
           height: pinned ? `${(pinScreens + 1) * 100}svh` : "auto",
@@ -599,7 +605,7 @@ function HeroScrollStage() {
             height: pinned ? "100svh" : "auto",
             minHeight: pinned ? undefined : "78svh",
             overflow: "hidden",
-            paddingTop: 76,
+            paddingTop: "var(--amz-hdr-h)",
             display: "flex",
             alignItems: "flex-end",
           }}
@@ -1041,7 +1047,7 @@ export default function Home() {
       )}
 
       {/* Header */}
-      <header className={`amz-hdr${stuck ? " amz-stuck" : ""}`} style={{ position: "sticky", top: 0, zIndex: 200, padding: 0, pointerEvents: "none" }}>
+      <header className={`amz-hdr${stuck ? " amz-stuck" : ""}`} style={{ position: "fixed", top: 0, left: 0, right: 0, zIndex: 200, padding: 0, pointerEvents: "none" }}>
         <div
           className="amz-bar"
           style={{
@@ -1059,13 +1065,22 @@ export default function Home() {
             padding: "10px clamp(14px,1.8vw,24px)",
           }}
         >
-          <a href="#main" aria-label="AMZ Energy Systems — home" style={{ flex: "none", display: "flex", alignItems: "center", gap: 7, textDecoration: "none" }}>
-            <span className="amz-plate" style={{ flex: "none", display: "flex", alignItems: "center" }}>
+          {/* Two lockups, one visible at a time. Over the hero the bar is transparent, so the
+              all-white logo carries it alone. Once the header condenses onto its white pill the
+              white artwork would vanish, so the full-colour logo takes over and the name sits
+              beside it, "AMZ" stacked over "Energy Systems". */}
+          <a href="#main" aria-label="AMZ Energy Systems — home" style={{ flex: "none", display: "flex", alignItems: "center", gap: 10, textDecoration: "none" }}>
+            <span className="amz-logo-slot">
               {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src="/images/logo/amz-mark-small.png" alt="" width={298} height={278} style={{ display: "block", height: 30, width: "auto" }} />
+              <img className="amz-logo-hero" src="/images/logo/amz-logo-white.png" alt="" width={471} height={574} />
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img className="amz-logo-stuck" src="/images/logo/amz-logo.png" alt="" width={471} height={574} />
             </span>
-            <span className="amz-logo-t" style={{ fontFamily: "var(--font-display)", fontWeight: 700, fontSize: 21, letterSpacing: "-.01em", color: "#FFFFFF" }}>
-              AMZ
+            <span className="amz-logo-t amz-logo-words" style={{ flexDirection: "column", justifyContent: "center", gap: 2, color: "#FFFFFF" }}>
+              <span style={{ fontFamily: "var(--font-display)", fontWeight: 700, fontSize: 19, lineHeight: 1, letterSpacing: "-.01em" }}>AMZ</span>
+              <span style={{ fontFamily: "var(--font-display)", fontStretch: "75%", fontWeight: 700, fontSize: 10, lineHeight: 1, letterSpacing: ".13em", textTransform: "uppercase" }}>
+                Energy Systems
+              </span>
             </span>
           </a>
 
@@ -1653,7 +1668,21 @@ export default function Home() {
           <div style={{ maxWidth: 1280, margin: "0 auto", padding: "0 clamp(20px,4vw,40px)" }}>
             <div style={{ maxWidth: 680, margin: "0 auto 56px", textAlign: "center" }}>
               <Eyebrow>Premier partners</Eyebrow>
-              <h2 style={{ fontFamily: "var(--font-display)", fontWeight: 700, fontSize: "clamp(1.625rem,1.17rem + 1.94vw,2.4375rem)", lineHeight: 1.15, letterSpacing: "-.012em", margin: "0 0 20px" }}>Front of the line card</h2>
+              <h2 style={{ fontFamily: "var(--font-display)", fontWeight: 700, fontSize: "clamp(1.625rem,1.17rem + 1.94vw,2.4375rem)", lineHeight: 1.15, letterSpacing: "-.012em", margin: "0 0 20px" }}>
+                <a
+                  className="amz-linecard-link"
+                  href={LINE_CARD_HREF}
+                  target="_blank"
+                  rel="noopener"
+                  style={{ display: "inline-flex", alignItems: "center", gap: 12, color: "inherit", textDecoration: "none" }}
+                >
+                  Our Line Card
+                  <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#1462A7" strokeWidth="2" strokeLinecap="butt" strokeLinejoin="miter" aria-hidden="true" style={{ flex: "none" }}>
+                    <path d="M4 12h16M14 6l6 6-6 6" />
+                  </svg>
+                  <span className="sr-only">(opens in a new tab)</span>
+                </a>
+              </h2>
               <p style={{ fontSize: "clamp(1.0625rem,.98rem + .35vw,1.25rem)", lineHeight: 1.6, color: "#444444", margin: 0 }}>
                 The manufacturers we represent most often, and what we specify them for. Every line links straight to the product pages and selection data.
               </p>
@@ -1685,7 +1714,7 @@ export default function Home() {
           <div style={{ maxWidth: 1280, margin: "0 auto", padding: "0 clamp(20px,4vw,40px)" }}>
             <div style={{ maxWidth: 640, margin: "0 auto 56px", textAlign: "center" }}>
               <Eyebrow>In their words</Eyebrow>
-              <h2 style={{ fontFamily: "var(--font-display)", fontWeight: 700, fontSize: "clamp(1.625rem,1.17rem + 1.94vw,2.4375rem)", lineHeight: 1.15, letterSpacing: "-.012em", margin: 0 }}>Every side of the same job</h2>
+              <h2 style={{ fontFamily: "var(--font-display)", fontWeight: 700, fontSize: "clamp(1.625rem,1.17rem + 1.94vw,2.4375rem)", lineHeight: 1.15, letterSpacing: "-.012em", margin: 0 }}>Every side of the work</h2>
             </div>
 
             <div className="amz-ring" style={{ position: "relative", width: "min(100%,calc(var(--r) * 2 + var(--av) + 24px))", margin: "0 auto", aspectRatio: "1 / 1", display: "flex", alignItems: "center", justifyContent: "center" }}>
@@ -1859,6 +1888,46 @@ export default function Home() {
               ))}
             </div>
           </div>
+          {VOLUNTEER_LOGOS.length > 0 && (
+            <>
+              <p
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  gap: 12,
+                  fontFamily: "var(--font-display)",
+                  fontStretch: "75%",
+                  fontWeight: 700,
+                  fontSize: 12,
+                  letterSpacing: ".14em",
+                  textTransform: "uppercase",
+                  color: "#5A6068",
+                  margin: "0 0 32px",
+                }}
+              >
+                <span aria-hidden style={{ width: 28, height: 1, background: "currentColor", opacity: 0.42, flex: "none" }} />
+                Organisations we volunteer with
+                <span aria-hidden style={{ width: 28, height: 1, background: "currentColor", opacity: 0.42, flex: "none" }} />
+              </p>
+              <div
+                className="amz-marquee-wrap"
+                style={{
+                  position: "relative",
+                  overflow: "hidden",
+                  maskImage: "linear-gradient(to right,transparent 0,#000 8%,#000 92%,transparent 100%)",
+                  WebkitMaskImage: "linear-gradient(to right,transparent 0,#000 8%,#000 92%,transparent 100%)",
+                }}
+              >
+                <div className="amz-marquee" style={{ display: "flex", width: "max-content", alignItems: "center", gap: "clamp(48px,6vw,88px)", padding: "0 clamp(24px,3vw,44px)" }}>
+                  {[...VOLUNTEER_LOGOS, ...VOLUNTEER_LOGOS].map((v, i) => (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img key={i} src={v.src} alt={i < VOLUNTEER_LOGOS.length ? v.alt : ""} aria-hidden={i >= VOLUNTEER_LOGOS.length} loading="lazy" style={{ height: "clamp(30px,3.6vw,44px)", width: "auto", flex: "none" }} />
+                  ))}
+                </div>
+              </div>
+            </>
+          )}
         </section>
 
         {/* CTA band */}
@@ -1877,7 +1946,7 @@ export default function Home() {
                 <path d="M12 21s7-6.2 7-11a7 7 0 1 0-14 0c0 4.8 7 11 7 11z" />
                 <circle cx="12" cy="10" r="2.6" />
               </svg>
-              100 W Oxford Street, Philadelphia, PA 19122
+              100 W Oxford Street, Suite W1200, Philadelphia, PA 19122
             </address>
             <div style={{ display: "flex", flexWrap: "wrap", gap: 14, alignItems: "center" }}>
               <a
@@ -1922,7 +1991,7 @@ export default function Home() {
               <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: 20, padding: "18px 0" }}>
                 <span style={{ fontFamily: "var(--font-display)", fontStretch: "75%", fontWeight: 700, fontSize: 12, letterSpacing: ".14em", textTransform: "uppercase", color: "rgba(255,255,255,.56)", paddingTop: 3 }}>Office</span>
                 <address style={{ fontStyle: "normal", textAlign: "right", fontSize: 15, lineHeight: 1.6, color: "#FFFFFF", margin: 0 }}>
-                  100 W Oxford Street
+                  100 W Oxford Street, Suite W1200
                   <br />
                   Philadelphia, PA 19122
                 </address>

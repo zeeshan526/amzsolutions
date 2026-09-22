@@ -33,6 +33,7 @@
 
 html {
   scroll-behavior: smooth;
+  scroll-padding-top: calc(var(--amz-hdr-h) + 12px);
 }
 
 body {
@@ -62,14 +63,42 @@ a {
 }
 
 /* ---------- Header ---------- */
+/* Header height, in one place: the hero pads itself by this so the bar never covers copy,
+   and nothing else has to know how tall the logo is. */
+:root { --amz-hdr-h: 104px; }
+
 .amz-hdr {
   container-type: inline-size;
+}
+/* Explicit heights, not content-driven ones — a height that comes from the logo inside
+   cannot be transitioned, which is what made the condense snap instead of animate. */
+.amz-bar { height: 104px; }
+.amz-hdr.amz-stuck .amz-bar { height: 78px !important; min-height: 78px !important; }
+
+/* One slot, two lockups stacked in it, cross-faded. */
+.amz-logo-slot {
+  position: relative;
+  flex: none;
+  display: block;
+  height: 84px;
+  width: 69px;
+  transition: height 320ms cubic-bezier(0.36,0,0.24,1), width 320ms cubic-bezier(0.36,0,0.24,1);
+}
+.amz-hdr.amz-stuck .amz-logo-slot { height: 58px; width: 48px; }
+.amz-logo-slot img {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: auto;
+  transition: opacity 240ms cubic-bezier(0.32,0,0.68,1);
 }
 .amz-hdr, .amz-bar, .amz-plate, .amz-logo-t, .amz-nav-a, .amz-burger {
   transition: padding 320ms cubic-bezier(0.36,0,0.24,1),
               max-width 320ms cubic-bezier(0.36,0,0.24,1),
               border-radius 320ms cubic-bezier(0.36,0,0.24,1),
               min-height 320ms cubic-bezier(0.36,0,0.24,1),
+              height 320ms cubic-bezier(0.36,0,0.24,1),
               background-color 240ms cubic-bezier(0.32,0,0.68,1),
               border-color 240ms cubic-bezier(0.32,0,0.68,1),
               box-shadow 240ms cubic-bezier(0.32,0,0.68,1),
@@ -92,6 +121,15 @@ a {
 /* The mark is dark navy artwork: white it out over the blue bar, and let it return to
    its own colour once the header sticks and the bar turns near-white. */
 .amz-hdr.amz-stuck .amz-logo-t { color: #191C1F !important; }
+
+/* Swap the white hero lockup for the colour one plus the wordmark when the bar sticks.
+   Opacity, not display: a display swap pops mid-transition. */
+.amz-logo-hero { opacity: 1; }
+.amz-logo-stuck { opacity: 0; }
+.amz-logo-words { display: none; }
+.amz-hdr.amz-stuck .amz-logo-hero { opacity: 0; }
+.amz-hdr.amz-stuck .amz-logo-stuck { opacity: 1; }
+.amz-hdr.amz-stuck .amz-logo-words { display: flex; }
 .amz-hdr.amz-stuck .amz-nav-a { color: #444444 !important; }
 .amz-hdr.amz-stuck .amz-burger { background: #191C1F !important; }
 @media (hover: hover) and (pointer: fine) {
