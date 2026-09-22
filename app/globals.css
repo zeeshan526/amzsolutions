@@ -514,18 +514,48 @@ a {
 }
 /* Dark-on-blue form controls: the browser default focus ring and autofill styling
    both assume a light field, so they are restated here. */
+.amz-field {
+  background: rgba(255,255,255,.10);
+  border: 1px solid rgba(255,255,255,.30);
+  transition: border-color 160ms ease, background-color 160ms ease, box-shadow 160ms ease;
+}
 .amz-field::placeholder { color: rgba(255,255,255,.52); }
+.amz-field:hover { border-color: rgba(255,255,255,.46); }
+/* A colour change alone is easy to miss on a translucent field, so focus also gets a ring. */
 .amz-field:focus {
   border-color: #F99615;
-  background: rgba(255,255,255,.14);
+  background: rgba(255,255,255,.16);
+  box-shadow: 0 0 0 3px rgba(249,150,21,.26);
 }
-select.amz-field {
-  background-image: linear-gradient(45deg, transparent 50%, rgba(255,255,255,.72) 50%),
-                    linear-gradient(135deg, rgba(255,255,255,.72) 50%, transparent 50%);
-  background-position: calc(100% - 20px) 21px, calc(100% - 14px) 21px;
-  background-size: 6px 6px, 6px 6px;
+/* :user-invalid, not :invalid — a required field is invalid the moment it renders empty,
+   so :invalid would put an error ring on an untouched form. :user-invalid only matches once
+   the person has actually typed in the field and left it. (:not(:placeholder-shown) does not
+   work as a stand-in here: it is true for any field with no placeholder attribute at all.) */
+.amz-field:user-invalid { border-color: rgba(240,169,164,.76); }
+.amz-field:user-invalid:focus { box-shadow: 0 0 0 3px rgba(240,169,164,.24); }
+
+/* Chrome paints autofilled fields a solid pale yellow, unreadable here: the inset shadow
+   repaints the fill and the text colour is locked back to white. */
+.amz-field:-webkit-autofill,
+.amz-field:-webkit-autofill:hover,
+.amz-field:-webkit-autofill:focus {
+  -webkit-text-fill-color: #FFFFFF;
+  -webkit-box-shadow: 0 0 0 1000px #17558C inset;
+  caret-color: #FFFFFF;
+}
+
+/* A real chevron, centred on the field's own height, instead of two gradient triangles
+   pinned to a hard-coded offset that breaks whenever the field height changes. */
+select.amz-select {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='13' height='8' viewBox='0 0 13 8' fill='none'%3E%3Cpath d='M1.5 1.5L6.5 6.5L11.5 1.5' stroke='%23BBD6EF' stroke-width='1.9' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-position: right 17px center;
   background-repeat: no-repeat;
 }
+select.amz-select:focus { background-color: rgba(255,255,255,.16); }
+
+@keyframes amz-spin { to { transform: rotate(360deg); } }
+.amz-spin { animation: amz-spin 640ms linear infinite; transform-origin: 50% 50%; }
+@media (prefers-reduced-motion: reduce) { .amz-spin { animation: none; } }
 @media (max-width: 900px) {
   .amz-contact-grid { grid-template-columns: minmax(0, 1fr); }
 }
