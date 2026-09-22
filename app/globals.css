@@ -130,6 +130,12 @@ a {
 .amz-hdr.amz-stuck .amz-logo-hero { opacity: 0; }
 .amz-hdr.amz-stuck .amz-logo-stuck { opacity: 1; }
 .amz-hdr.amz-stuck .amz-logo-words { display: flex; }
+/* On a phone the condensed pill cannot hold the logo, the typeset wordmark, the CTA and
+   the burger at once — the burger was the one pushed off-screen. The colour logo already
+   carries the name, so the typeset copy of it is what goes. */
+@container (max-width: 520px) {
+  .amz-hdr.amz-stuck .amz-logo-words { display: none !important; }
+}
 .amz-hdr.amz-stuck .amz-nav-a { color: #444444 !important; }
 .amz-hdr.amz-stuck .amz-burger { background: #191C1F !important; }
 @media (hover: hover) and (pointer: fine) {
