@@ -7,15 +7,12 @@ import QuoteForm from "./_components/QuoteForm";
 import SiteFooter from "./_components/SiteFooter";
 import SiteHeader from "./_components/SiteHeader";
 import { AMZ_PHONE_DISPLAY, AMZ_PHONE_HREF } from "./_lib/contact";
+import { LINE_CARD_HREF } from "./_lib/lineCard";
 
 /* ---------------------------------------------------------------------- */
 /*  Static content                                                        */
 /* ---------------------------------------------------------------------- */
 
-/* The line card is republished whenever the represented lines change, so it lives as one
-   file at a fixed path rather than as markup: drop the new PDF at public/amz-line-card.pdf
-   and the link below is current — no code change, no redeploy of this page's content. */
-const LINE_CARD_HREF = "/amz-line-card.pdf";
 
 const PARTNER_LOGOS = [
   { src: "/images/partners/unilux.png", alt: "Unilux HVAC Industries" },
