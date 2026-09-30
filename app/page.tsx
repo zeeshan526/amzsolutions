@@ -1,31 +1,16 @@
 "use client";
 
-import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 
 import ArrowIcon from "./_components/ArrowIcon";
-import NewsletterForm from "./_components/NewsletterForm";
 import QuoteForm from "./_components/QuoteForm";
+import SiteFooter from "./_components/SiteFooter";
+import SiteHeader from "./_components/SiteHeader";
 import { AMZ_PHONE_DISPLAY, AMZ_PHONE_HREF } from "./_lib/contact";
 
 /* ---------------------------------------------------------------------- */
 /*  Static content                                                        */
 /* ---------------------------------------------------------------------- */
-
-const TECH_MENU = [
-  { label: "Products by System Type", href: "#partners" },
-  { label: "Products by Manufacturer", href: "#partners" },
-  { label: "Installation Services", href: "#positioning" },
-  { label: "Utility Incentive Management", href: "#engineers" },
-];
-
-/* Title Case throughout — these are labels, not sentences. */
-const NAV_LINKS = [
-  { label: "Markets", href: "#verticals" },
-  { label: "Partners", href: "#partners" },
-  { label: "How We Work", href: "#positioning" },
-  { label: "Impact", href: "#impact" },
-];
 
 /* The line card is republished whenever the represented lines change, so it lives as one
    file at a fixed path rather than as markup: drop the new PDF at public/amz-line-card.pdf
@@ -189,36 +174,6 @@ const MOSAIC = [
    Same shape as PARTNER_LOGOS. Left empty the ribbon does not render at all, so this can be
    filled in as names and marks are confirmed without touching the section markup. */
 const VOLUNTEER_LOGOS: { src: string; alt: string }[] = [];
-
-const FOOTER_COLUMNS = [
-  {
-    heading: "Markets",
-    links: [
-      { label: "High-Rise Office & Residential", href: "#verticals" },
-      { label: "Hospitals", href: "#verticals" },
-      { label: "Data Centres", href: "#verticals" },
-      { label: "Schools", href: "#verticals" },
-    ],
-  },
-  {
-    heading: "For specifiers",
-    links: [
-      { label: "Specifier tool", href: "#engineers" },
-      { label: "Line card", href: "#partners" },
-      { label: "Submittal review", href: "#partners" },
-      { label: "Talk to an engineer", href: "#engineers" },
-    ],
-  },
-  {
-    heading: "Company",
-    links: [
-      { label: "How we work", href: "#positioning" },
-      { label: "Social impact", href: "#impact" },
-      { label: "Reviews", href: "#testimonials" },
-      { label: "Contact", href: "#contact" },
-    ],
-  },
-];
 
 /* ---------------------------------------------------------------------- */
 /*  Small shared bits                                                     */
@@ -839,19 +794,13 @@ function HeroOverlayCopy({
 export default function Home() {
   const [loading, setLoading] = useState(true);
   const [pct, setPct] = useState(0);
-  const [open, setOpen] = useState(false); // mobile menu
-  const [navOpen, setNavOpen] = useState(false); // technologies dropdown
-  const [stuck, setStuck] = useState(false); // header scrolled state
   const [active, setActive] = useState(0); // testimonial index
   const [cookie, setCookie] = useState<"hidden" | "notice" | "prefs">("hidden");
   const [consent, setConsent] = useState({ analytics: false, functional: false, marketing: false });
 
   const pausedRef = useRef(false);
-  const navTimerRef = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
-  const menuPanelRef = useRef<HTMLUListElement | null>(null);
-  const menuTriggerRef = useRef<HTMLButtonElement | null>(null);
 
-  // Loading sequence + cookie notice delay + Escape/outside-click for nav + testimonial rotation.
+  // Loading sequence + cookie notice delay + testimonial rotation.
   useEffect(() => {
     const reduced = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
@@ -881,20 +830,6 @@ export default function Home() {
       }, 1900);
     }
 
-    const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") setNavOpen(false);
-    };
-    const onDocClick = (e: MouseEvent) => {
-      const panel = menuPanelRef.current;
-      const trigger = menuTriggerRef.current;
-      const target = e.target as Node;
-      if (panel && panel.contains(target)) return;
-      if (trigger && trigger.contains(target)) return;
-      setNavOpen(false);
-    };
-    document.addEventListener("keydown", onKey);
-    document.addEventListener("click", onDocClick);
-
     const rotate = setInterval(() => {
       if (pausedRef.current) return;
       setActive((a) => (a + 1) % 6);
@@ -907,37 +842,8 @@ export default function Home() {
       if (hide) clearTimeout(hide);
       if (cookieT) clearTimeout(cookieT);
       clearInterval(rotate);
-      document.removeEventListener("keydown", onKey);
-      document.removeEventListener("click", onDocClick);
     };
   }, []);
-
-  // Header scroll state: read-driven, not event-latched.
-  useEffect(() => {
-    const sync = () => {
-      const el = document.scrollingElement || document.documentElement;
-      const y = el.scrollTop || window.scrollY || document.body.scrollTop || 0;
-      setStuck(y > 80);
-    };
-    window.addEventListener("scroll", sync, { passive: true });
-    window.addEventListener("resize", sync);
-    const poll = setInterval(sync, 200);
-    sync();
-    return () => {
-      window.removeEventListener("scroll", sync);
-      window.removeEventListener("resize", sync);
-      clearInterval(poll);
-    };
-  }, []);
-
-  const navEnter = () => {
-    clearTimeout(navTimerRef.current);
-    navTimerRef.current = setTimeout(() => setNavOpen(true), 120);
-  };
-  const navLeave = () => {
-    clearTimeout(navTimerRef.current);
-    navTimerRef.current = setTimeout(() => setNavOpen(false), 240);
-  };
 
   const pick = (i: number) => {
     pausedRef.current = true;
@@ -957,28 +863,7 @@ export default function Home() {
 
   return (
     <div style={{ fontFamily: "var(--font-body)", color: "#191C1F", background: "#FFFFFF", position: "relative" }}>
-      <a
-        href="#main"
-        style={{
-          position: "absolute",
-          left: -9999,
-          top: 16,
-          zIndex: 700,
-          background: "#1462A7",
-          color: "#FFFFFF",
-          fontFamily: "var(--font-display)",
-          fontWeight: 600,
-          fontSize: 16,
-          padding: "0 20px",
-          height: 44,
-          display: "inline-flex",
-          alignItems: "center",
-          borderRadius: 4,
-          textDecoration: "none",
-        }}
-      >
-        Skip to main content
-      </a>
+      <SiteHeader />
 
       {/* Loading overlay */}
       {loading && (
@@ -1043,325 +928,6 @@ export default function Home() {
               <div style={{ position: "absolute", inset: "0 auto 0 0", background: "#FFFFFF", transition: "width 200ms linear", width: `${pct}%` }} />
             </div>
           </div>
-        </div>
-      )}
-
-      {/* Header */}
-      <header className={`amz-hdr${stuck ? " amz-stuck" : ""}`} style={{ position: "fixed", top: 0, left: 0, right: 0, zIndex: 200, padding: 0, pointerEvents: "none" }}>
-        <div
-          className="amz-bar"
-          style={{
-            pointerEvents: "auto",
-            maxWidth: "100%",
-            margin: "0 auto",
-            background: "transparent",
-            border: "1px solid transparent",
-            borderRadius: 0,
-            boxShadow: "none",
-            minHeight: 76,
-            display: "flex",
-            alignItems: "center",
-            gap: 16,
-            padding: "10px clamp(14px,1.8vw,24px)",
-          }}
-        >
-          {/* Two lockups, one visible at a time. Over the hero the bar is transparent, so the
-              all-white logo carries it alone. Once the header condenses onto its white pill the
-              white artwork would vanish, so the full-colour logo takes over and the name sits
-              beside it, "AMZ" stacked over "Energy Systems". */}
-          <a href="#main" aria-label="AMZ Energy Systems — home" style={{ flex: "none", display: "flex", alignItems: "center", gap: 10, textDecoration: "none" }}>
-            <span className="amz-logo-slot">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img className="amz-logo-hero" src="/images/logo/amz-logo-white.png" alt="" width={471} height={574} />
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img className="amz-logo-stuck" src="/images/logo/amz-logo.png" alt="" width={471} height={574} />
-            </span>
-            <span className="amz-logo-t amz-logo-words" style={{ flexDirection: "column", justifyContent: "center", gap: 2, color: "#FFFFFF" }}>
-              <span style={{ fontFamily: "var(--font-display)", fontWeight: 700, fontSize: 19, lineHeight: 1, letterSpacing: "-.01em" }}>AMZ</span>
-              <span style={{ fontFamily: "var(--font-display)", fontStretch: "75%", fontWeight: 700, fontSize: 10, lineHeight: 1, letterSpacing: ".13em", textTransform: "uppercase" }}>
-                Energy Systems
-              </span>
-            </span>
-          </a>
-
-          <nav aria-label="Main" className="amz-w" style={{ flex: "1 1 auto", minWidth: 0, display: "flex", justifyContent: "center" }}>
-            <ul style={{ listStyle: "none", margin: 0, padding: 0, display: "flex", alignItems: "center", gap: "clamp(16px,2.2vw,34px)" }}>
-              <li style={{ position: "relative" }} onMouseEnter={navEnter} onMouseLeave={navLeave}>
-                <button
-                  ref={menuTriggerRef}
-                  type="button"
-                  className="amz-nav-a"
-                  onClick={() => setNavOpen((v) => !v)}
-                  aria-expanded={navOpen}
-                  aria-controls="amz-tech-menu"
-                  style={{
-                    position: "relative",
-                    display: "inline-flex",
-                    alignItems: "center",
-                    gap: 7,
-                    padding: "6px 0",
-                    background: "transparent",
-                    border: 0,
-                    fontFamily: "var(--font-display)",
-                    fontWeight: 600,
-                    fontSize: 15,
-                    whiteSpace: "nowrap",
-                    cursor: "pointer",
-                    color: "#FFFFFF",
-                  }}
-                >
-                  Technologies &amp; Services
-                  <svg
-                    width="12"
-                    height="12"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2.6"
-                    strokeLinecap="butt"
-                    strokeLinejoin="miter"
-                    aria-hidden="true"
-                    style={{ transition: `transform 160ms ${EASE_MOVE}`, transform: navOpen ? "rotate(180deg)" : "rotate(0deg)" }}
-                  >
-                    <path d="M5 9l7 7 7-7" />
-                  </svg>
-                  <span aria-hidden style={{ position: "absolute", left: 0, right: 0, bottom: 0, height: 2, background: "currentColor", transition: `opacity 160ms ${EASE_MOVE}`, opacity: navOpen ? 1 : 0 }} />
-                </button>
-                {navOpen && (
-                  <ul
-                    ref={menuPanelRef}
-                    id="amz-tech-menu"
-                    style={{
-                      listStyle: "none",
-                      margin: 0,
-                      padding: 8,
-                      position: "absolute",
-                      top: "calc(100% + 14px)",
-                      left: -12,
-                      zIndex: 300,
-                      minWidth: 286,
-                      background: "#FFFFFF",
-                      border: "1px solid rgba(25,28,31,.10)",
-                      borderRadius: 14,
-                      boxShadow: "0 4px 8px rgba(25,28,31,.06),0 12px 28px rgba(25,28,31,.10)",
-                    }}
-                  >
-                    {TECH_MENU.map((item) => (
-                      <li key={item.label}>
-                        <a
-                          href={item.href}
-                          onClick={() => setNavOpen(false)}
-                          className="amz-menu-item"
-                          style={{
-                            display: "flex",
-                            alignItems: "center",
-                            minHeight: 48,
-                            padding: "0 16px",
-                            borderRadius: 10,
-                            fontFamily: "var(--font-display)",
-                            fontWeight: 600,
-                            fontSize: 15,
-                            color: "#444444",
-                            textDecoration: "none",
-                            whiteSpace: "nowrap",
-                          }}
-                        >
-                          {item.label}
-                        </a>
-                      </li>
-                    ))}
-                  </ul>
-                )}
-              </li>
-              {NAV_LINKS.map((l) => (
-                <li key={l.label}>
-                  <a href={l.href} className="amz-nav-a" style={{ fontFamily: "var(--font-display)", fontWeight: 600, fontSize: 15, textDecoration: "none", whiteSpace: "nowrap", color: "#FFFFFF" }}>
-                    {l.label}
-                  </a>
-                </li>
-              ))}
-            </ul>
-          </nav>
-
-          <div className="amz-w" style={{ flex: "none", display: "flex", alignItems: "center", gap: 18 }}>
-            <a
-              href="#contact"
-              className="amz-btn-accent"
-              style={{
-                display: "inline-flex",
-                alignItems: "center",
-                gap: 8,
-                height: 46,
-                padding: "0 24px",
-                borderRadius: 999,
-                background: "#F99615",
-                color: "#191C1F",
-                fontFamily: "var(--font-display)",
-                fontWeight: 600,
-                fontSize: 16,
-                letterSpacing: ".01em",
-                textDecoration: "none",
-                whiteSpace: "nowrap",
-              }}
-            >
-              Start a project
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#191C1F" strokeWidth="2.4" strokeLinecap="butt" strokeLinejoin="miter" aria-hidden="true">
-                <path d="M7 17L17 7M9 7h8v8" />
-              </svg>
-            </a>
-          </div>
-
-          <div className="amz-n" style={{ flex: "1 1 auto" }} />
-          <a
-            href="#contact"
-            className="amz-n amz-btn-accent"
-            style={{
-              flex: "none",
-              display: "inline-flex",
-              alignItems: "center",
-              height: 44,
-              padding: "0 20px",
-              borderRadius: 999,
-              background: "#F99615",
-              color: "#191C1F",
-              fontFamily: "var(--font-display)",
-              fontWeight: 600,
-              fontSize: 15,
-              textDecoration: "none",
-              whiteSpace: "nowrap",
-            }}
-          >
-            Start a project
-          </a>
-          <button
-            type="button"
-            className="amz-n amz-burger"
-            onClick={() => setOpen(true)}
-            aria-label="Open menu"
-            aria-expanded={open}
-            style={{
-              flex: "none",
-              width: 44,
-              height: 44,
-              display: "inline-flex",
-              alignItems: "center",
-              justifyContent: "center",
-              background: "rgba(255,255,255,.18)",
-              border: 0,
-              borderRadius: 999,
-              cursor: "pointer",
-            }}
-          >
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" strokeWidth="2" strokeLinecap="butt" strokeLinejoin="miter" aria-hidden="true">
-              <path d="M3 7h18M3 12h18M3 17h18" />
-            </svg>
-          </button>
-        </div>
-      </header>
-
-      {/* Mobile menu overlay */}
-      {open && (
-        <div style={{ position: "fixed", inset: 0, zIndex: 400, display: "flex", alignItems: "flex-start", justifyContent: "center", padding: "20px clamp(16px,3vw,32px)", overflowY: "auto", overscrollBehavior: "contain" }}>
-          <div onClick={() => setOpen(false)} style={{ position: "absolute", inset: 0, background: "rgba(10,16,23,.72)", backdropFilter: "blur(6px)", WebkitBackdropFilter: "blur(6px)" }} />
-          <nav
-            aria-label="Menu"
-            style={{
-              position: "relative",
-              flex: "none",
-              width: "min(560px,100%)",
-              maxHeight: "calc(100dvh - 40px)",
-              display: "flex",
-              flexDirection: "column",
-              background: "#191C1F",
-              borderRadius: 28,
-              boxShadow: "0 8px 16px rgba(25,28,31,.18),0 24px 56px rgba(25,28,31,.30)",
-              overflow: "hidden",
-            }}
-          >
-            <div style={{ flex: "none", display: "flex", alignItems: "center", justifyContent: "space-between", padding: "20px 24px", borderBottom: "1px solid rgba(255,255,255,.12)" }}>
-              {/* Same icon + wordmark lockup as the header bar, rather than the stacked full
-                  logo — the panel sits on #191C1F, so the white mark reads here too. */}
-              <span style={{ display: "flex", alignItems: "center", gap: 7 }}>
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src="/images/logo/amz-mark-small.png" alt="" width={298} height={278} style={{ display: "block", height: 30, width: "auto" }} />
-                <span style={{ fontFamily: "var(--font-display)", fontWeight: 700, fontSize: 21, letterSpacing: "-.01em", color: "#FFFFFF" }}>AMZ</span>
-              </span>
-              <button
-                type="button"
-                onClick={() => setOpen(false)}
-                aria-label="Close menu"
-                style={{ width: 44, height: 44, display: "inline-flex", alignItems: "center", justifyContent: "center", background: "transparent", border: "1px solid rgba(255,255,255,.24)", borderRadius: 999, cursor: "pointer" }}
-              >
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" strokeWidth="2" strokeLinecap="butt" strokeLinejoin="miter" aria-hidden="true">
-                  <path d="M5 5l14 14M19 5L5 19" />
-                </svg>
-              </button>
-            </div>
-            <ul style={{ listStyle: "none", margin: 0, padding: "12px 0", flex: "1 1 auto", minHeight: 0, overflowY: "auto", overscrollBehavior: "contain" }}>
-              <li style={{ padding: "14px 24px 6px" }}>
-                <p
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    gap: 10,
-                    fontFamily: "var(--font-display)",
-                    fontStretch: "75%",
-                    fontWeight: 700,
-                    fontSize: 11,
-                    letterSpacing: ".14em",
-                    textTransform: "uppercase",
-                    color: "rgba(255,255,255,.52)",
-                    margin: "0 0 6px",
-                  }}
-                >
-                  <span aria-hidden style={{ width: 16, height: 1, background: "currentColor", flex: "none" }} />
-                  Technologies &amp; Services
-                </p>
-              </li>
-              {TECH_MENU.map((item) => (
-                <li key={item.label}>
-                  <a
-                    href={item.href}
-                    onClick={() => setOpen(false)}
-                    className="amz-mobile-item"
-                    style={{ display: "flex", alignItems: "center", minHeight: 50, padding: "0 24px", fontFamily: "var(--font-display)", fontWeight: 600, fontSize: 17, color: "rgba(255,255,255,.86)", textDecoration: "none" }}
-                  >
-                    {item.label}
-                  </a>
-                </li>
-              ))}
-              <li aria-hidden style={{ height: 1, background: "rgba(255,255,255,.12)", margin: "12px 24px" }} />
-              {NAV_LINKS.map((l) => (
-                <li key={l.label}>
-                  <a
-                    href={l.href}
-                    onClick={() => setOpen(false)}
-                    className="amz-mobile-item"
-                    style={{ display: "flex", alignItems: "center", minHeight: 56, padding: "0 24px", fontFamily: "var(--font-display)", fontWeight: 700, fontSize: 24, color: "#FFFFFF", textDecoration: "none" }}
-                  >
-                    {l.label}
-                  </a>
-                </li>
-              ))}
-            </ul>
-            <div style={{ flex: "none", padding: "20px 24px 28px", borderTop: "1px solid rgba(255,255,255,.12)", display: "flex", flexDirection: "column", gap: 12 }}>
-              <a
-                href="#contact"
-                onClick={() => setOpen(false)}
-                className="amz-btn-accent"
-                style={{ display: "flex", alignItems: "center", justifyContent: "center", height: 52, borderRadius: 999, background: "#F99615", color: "#191C1F", fontFamily: "var(--font-display)", fontWeight: 600, fontSize: 16, textDecoration: "none" }}
-              >
-                Request a quote
-              </a>
-              <a
-                href={AMZ_PHONE_HREF}
-                className="amz-btn-outline-light"
-                style={{ display: "flex", alignItems: "center", justifyContent: "center", height: 52, borderRadius: 999, border: "1.5px solid rgba(255,255,255,.4)", color: "#FFFFFF", fontFamily: "var(--font-display)", fontWeight: 600, fontSize: 16, textDecoration: "none" }}
-              >
-                {AMZ_PHONE_DISPLAY}
-              </a>
-            </div>
-          </nav>
         </div>
       )}
 
@@ -1968,75 +1534,7 @@ export default function Home() {
         </section>
       </main>
 
-      {/* Footer */}
-      <footer style={{ background: "#0A1017", color: "#FFFFFF" }}>
-        <div style={{ maxWidth: 1280, margin: "0 auto", padding: "clamp(56px,8vw,88px) clamp(20px,4vw,40px) 0" }}>
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(min(100%,280px),1fr))", gap: "clamp(32px,4vw,56px)", paddingBottom: "clamp(40px,5vw,56px)", borderBottom: "1px solid rgba(255,255,255,.14)" }}>
-            <div style={{ minWidth: 0 }}>
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src="/images/logo/amz-logo-white.png" alt="AMZ Energy Systems" width={471} height={574} style={{ display: "block", height: 76, width: "auto", marginBottom: 24 }} />
-              <p style={{ fontSize: "clamp(1.0625rem,.98rem + .35vw,1.25rem)", lineHeight: 1.6, color: "#FFFFFF", margin: 0, maxWidth: "36ch" }}>
-                We engineer, install and maintain the mechanical systems that decide whether a building performs — and hand over the numbers that prove it.
-              </p>
-            </div>
-            <div style={{ minWidth: 0, display: "flex", flexDirection: "column", justifyContent: "center", gap: 2 }}>
-              <a href={AMZ_PHONE_HREF} className="amz-footer-tel" style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 20, padding: "18px 0", borderBottom: "1px solid rgba(255,255,255,.12)", textDecoration: "none" }}>
-                <span style={{ fontFamily: "var(--font-display)", fontStretch: "75%", fontWeight: 700, fontSize: 12, letterSpacing: ".14em", textTransform: "uppercase", color: "rgba(255,255,255,.56)" }}>Main line</span>
-                <span style={{ fontFamily: "var(--font-display)", fontWeight: 700, fontSize: "clamp(18px,2vw,22px)", color: "#FFFFFF", fontVariantNumeric: "tabular-nums" }}>{AMZ_PHONE_DISPLAY}</span>
-              </a>
-              <a href={AMZ_PHONE_HREF} className="amz-footer-tel" style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 20, padding: "18px 0", borderBottom: "1px solid rgba(255,255,255,.12)", textDecoration: "none" }}>
-                <span style={{ fontFamily: "var(--font-display)", fontStretch: "75%", fontWeight: 700, fontSize: 12, letterSpacing: ".14em", textTransform: "uppercase", color: "#F0A9A4" }}>24/7 emergency</span>
-                <span style={{ fontFamily: "var(--font-display)", fontWeight: 700, fontSize: "clamp(18px,2vw,22px)", color: "#F0A9A4", fontVariantNumeric: "tabular-nums" }}>{AMZ_PHONE_DISPLAY}</span>
-              </a>
-              <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: 20, padding: "18px 0" }}>
-                <span style={{ fontFamily: "var(--font-display)", fontStretch: "75%", fontWeight: 700, fontSize: 12, letterSpacing: ".14em", textTransform: "uppercase", color: "rgba(255,255,255,.56)", paddingTop: 3 }}>Office</span>
-                <address style={{ fontStyle: "normal", textAlign: "right", fontSize: 15, lineHeight: 1.6, color: "#FFFFFF", margin: 0 }}>
-                  100 W Oxford Street, Suite W1200
-                  <br />
-                  Philadelphia, PA 19122
-                </address>
-              </div>
-            </div>
-          </div>
-
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(min(100%,180px),1fr))", gap: "clamp(28px,3vw,44px)", padding: "clamp(40px,5vw,56px) 0" }}>
-            {FOOTER_COLUMNS.map((col) => (
-              <div key={col.heading}>
-                <p style={{ display: "flex", alignItems: "center", gap: 10, fontFamily: "var(--font-display)", fontStretch: "75%", fontWeight: 700, fontSize: 12, letterSpacing: ".14em", textTransform: "uppercase", color: "rgba(255,255,255,.56)", margin: "0 0 20px" }}>
-                  <span aria-hidden style={{ width: 18, height: 1, background: "#7DB9ED", flex: "none" }} />
-                  {col.heading}
-                </p>
-                <ul style={{ listStyle: "none", margin: 0, padding: 0, display: "flex", flexDirection: "column", gap: 12 }}>
-                  {col.links.map((l) => (
-                    <li key={l.label}>
-                      <a href={l.href} className="amz-footer-link" style={{ fontSize: 15, color: "rgba(255,255,255,.80)", textDecoration: "none" }}>
-                        {l.label}
-                      </a>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            ))}
-            <div style={{ minWidth: 0 }}>
-              <p style={{ display: "flex", alignItems: "center", gap: 10, fontFamily: "var(--font-display)", fontStretch: "75%", fontWeight: 700, fontSize: 12, letterSpacing: ".14em", textTransform: "uppercase", color: "rgba(255,255,255,.56)", margin: "0 0 20px" }}>
-                <span aria-hidden style={{ width: 18, height: 1, background: "#7DB9ED", flex: "none" }} />
-                Newsletter
-              </p>
-              <p style={{ fontSize: 14, lineHeight: 1.6, color: "rgba(255,255,255,.72)", margin: "0 0 16px", maxWidth: "32ch" }}>Selection notes and spec changes, a few times a year. No sales mail.</p>
-              <NewsletterForm />
-            </div>
-          </div>
-
-          <div style={{ borderTop: "1px solid rgba(255,255,255,.14)", padding: "24px 0 32px", display: "flex", flexWrap: "wrap", gap: 20, justifyContent: "space-between", alignItems: "center" }}>
-            <p style={{ fontSize: 13, lineHeight: 1.5, color: "rgba(255,255,255,.56)", margin: 0 }}>&copy; 2026 AMZ Energy Systems &middot; Licence no. pending client fact</p>
-            <div style={{ display: "flex", flexWrap: "wrap", gap: 24 }}>
-              <Link href="/privacy" style={{ fontSize: 13, color: "rgba(255,255,255,.56)" }}>Privacy</Link>
-              <Link href="/terms" style={{ fontSize: 13, color: "rgba(255,255,255,.56)" }}>Terms</Link>
-              <Link href="/accessibility" style={{ fontSize: 13, color: "rgba(255,255,255,.56)" }}>Accessibility</Link>
-            </div>
-          </div>
-        </div>
-      </footer>
+      <SiteFooter />
 
       {/* Cookie consent */}
       {cookie !== "hidden" && (

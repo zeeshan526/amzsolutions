@@ -529,3 +529,8 @@ select.amz-field {
 @media (max-width: 900px) {
   .amz-contact-grid { grid-template-columns: minmax(0, 1fr); }
 }
+
+/* ---------- Installation Services process stepper ---------- */
+@media (max-width: 700px) {
+  .amz-install-stepper { grid-template-columns: minmax(0, 1fr) !important; }
+}
