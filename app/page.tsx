@@ -797,6 +797,15 @@ export default function Home() {
 
   const pausedRef = useRef(false);
 
+  const COOKIE_KEY = "amz-cookie-consent";
+  const saveChoice = (c: { analytics: boolean; functional: boolean; marketing: boolean }) => {
+    setConsent(c);
+    setCookie("hidden");
+    try {
+      localStorage.setItem(COOKIE_KEY, JSON.stringify(c));
+    } catch {}
+  };
+
   // Loading sequence + cookie notice delay + testimonial rotation.
   useEffect(() => {
     const reduced = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -807,12 +816,24 @@ export default function Home() {
     let cookieT: ReturnType<typeof setTimeout> | undefined;
     let skip: ReturnType<typeof setTimeout> | undefined;
 
+    let saved = false;
+    try {
+      const raw = localStorage.getItem("amz-cookie-consent");
+      if (raw) {
+        saved = true;
+        setConsent(JSON.parse(raw));
+      }
+    } catch {}
+    const showNotice = (ms: number) => {
+      if (!saved) cookieT = setTimeout(() => setCookie("notice"), ms);
+    };
+
     if (reduced) {
       skip = setTimeout(() => {
         setLoading(false);
         setPct(100);
       }, 0);
-      cookieT = setTimeout(() => setCookie("notice"), 400);
+      showNotice(400);
     } else {
       tick = setInterval(() => {
         setPct((p) => Math.min(100, p + Math.max(2, Math.round((100 - p) * 0.16))));
@@ -822,7 +843,7 @@ export default function Home() {
         setPct(100);
         hide = setTimeout(() => {
           setLoading(false);
-          cookieT = setTimeout(() => setCookie("notice"), 900);
+          showNotice(900);
         }, 420);
       }, 1900);
     }
@@ -1568,10 +1589,7 @@ export default function Home() {
               <div style={{ display: "flex", flexWrap: "wrap", gap: 10 }}>
                 <button
                   type="button"
-                  onClick={() => {
-                    setConsent({ analytics: true, functional: true, marketing: true });
-                    setCookie("hidden");
-                  }}
+                  onClick={() => saveChoice({ analytics: true, functional: true, marketing: true })}
                   className="amz-cookie-primary"
                   style={{ flex: "1 1 auto", height: 44, padding: "0 20px", border: 0, borderRadius: 999, background: "#1462A7", color: "#FFFFFF", fontFamily: "var(--font-display)", fontWeight: 600, fontSize: 15, cursor: "pointer", whiteSpace: "nowrap" }}
                 >
@@ -1642,15 +1660,12 @@ export default function Home() {
                 ))}
               </ul>
               <div style={{ flex: "none", padding: "16px 20px 20px", borderTop: "1px solid rgba(25,28,31,.10)", display: "flex", flexWrap: "wrap", gap: 10 }}>
-                <button type="button" onClick={() => setCookie("hidden")} className="amz-cookie-primary" style={{ flex: "1 1 auto", height: 44, padding: "0 20px", border: 0, borderRadius: 999, background: "#1462A7", color: "#FFFFFF", fontFamily: "var(--font-display)", fontWeight: 600, fontSize: 15, cursor: "pointer", whiteSpace: "nowrap" }}>
+                <button type="button" onClick={() => saveChoice(consent)} className="amz-cookie-primary" style={{ flex: "1 1 auto", height: 44, padding: "0 20px", border: 0, borderRadius: 999, background: "#1462A7", color: "#FFFFFF", fontFamily: "var(--font-display)", fontWeight: 600, fontSize: 15, cursor: "pointer", whiteSpace: "nowrap" }}>
                   Save choices
                 </button>
                 <button
                   type="button"
-                  onClick={() => {
-                    setConsent({ analytics: false, functional: false, marketing: false });
-                    setCookie("hidden");
-                  }}
+                  onClick={() => saveChoice({ analytics: false, functional: false, marketing: false })}
                   className="amz-cookie-outline"
                   style={{ flex: "1 1 auto", height: 44, padding: "0 20px", border: "1.5px solid #9CA2AB", borderRadius: 999, background: "rgba(255,255,255,.46)", color: "#444444", fontFamily: "var(--font-display)", fontWeight: 600, fontSize: 15, cursor: "pointer", whiteSpace: "nowrap" }}
                 >
