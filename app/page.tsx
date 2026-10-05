@@ -1496,7 +1496,10 @@ export default function Home() {
         {/* CTA band */}
         <section id="contact" data-screen-label="CTA band" style={{ background: "#0F4E85", position: "relative", overflow: "hidden" }}>
           <svg viewBox="0 0 1600 340" preserveAspectRatio="none" aria-hidden="true" style={{ position: "absolute", inset: 0, width: "130%", height: "100%", opacity: 0.13 }}>
-            <path d="M-160,300 A1900,1900 0 0 1 1740,120" fill="none" stroke="#FFFFFF" strokeWidth="28" />
+            <path className="amz-swoosh" pathLength={1} d="M-160,300 A1900,1900 0 0 1 1740,120" fill="none" stroke="#FFFFFF" strokeWidth="28" />
+          </svg>
+          <svg viewBox="0 0 1600 340" preserveAspectRatio="none" aria-hidden="true" style={{ position: "absolute", inset: 0, width: "130%", height: "100%" }}>
+            <path className="amz-swoosh-glint" pathLength={1} d="M-160,300 A1900,1900 0 0 1 1740,120" fill="none" strokeWidth="4" />
           </svg>
           <div className="amz-contact-grid" style={{ position: "relative", maxWidth: 1080, margin: "0 auto", padding: "clamp(56px,8vw,88px) clamp(20px,4vw,40px)" }}>
             <div>

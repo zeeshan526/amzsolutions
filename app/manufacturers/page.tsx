@@ -19,6 +19,7 @@ export default function ManufacturersPage() {
       <main id="main">
         <PageMasthead
           eyebrow="Technologies & Services"
+          breadcrumbSection="Technologies & Services"
           title="Products by Manufacturer"
           intro="We represent manufacturers we'd put our own name behind — decades of field history, parts availability, and a rep we can get on the phone when a job needs it. Search or filter to find who covers what."
           stats={[

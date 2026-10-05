@@ -26,6 +26,7 @@ export default async function ProductsBySystemTypePage(props: PageProps<"/produc
       <main id="main">
         <PageMasthead
           eyebrow="Technologies & Services"
+          breadcrumbSection="Technologies & Services"
           title="Products by System Type"
           intro="Every job starts with the problem, not the equipment — but once the selection is made, this is where it comes from. Ten system types, the manufacturer lines we carry in each, and what they're actually good for."
           stats={[

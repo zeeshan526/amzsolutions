@@ -534,3 +534,61 @@ select.amz-field {
 @media (max-width: 700px) {
   .amz-install-stepper { grid-template-columns: minmax(0, 1fr) !important; }
 }
+
+/* ---------- Markets Served explorer ---------- */
+@media (max-width: 780px) {
+  .amz-market-panel { grid-template-columns: minmax(0, 1fr) !important; }
+  .amz-market-panel > div:first-child { min-height: 200px !important; }
+}
+
+/* ---------- Masthead swoosh lines: draw in and flash bright once on load ---------- */
+/* pathLength="1" on the <path> makes the dasharray trick work regardless of the arc's
+   actual length in its own coordinate system — always exactly one full dash.
+
+   The dash/offset endpoints below are read from custom properties instead of written
+   as bare numbers: Lightning CSS's build-time minifier "helpfully" appends px to a bare
+   number on stroke-dashoffset specifically (stroke-dasharray is left alone), which
+   silently breaks the pathLength normalisation — "1" stops meaning "one full path
+   length" and starts meaning one physical pixel. Custom property values are unparsed
+   per spec, so they pass through untouched. */
+:root {
+  --amz-path-hidden: 1;
+  --amz-path-shown: 0;
+  --amz-path-past: -1.2;
+}
+@keyframes amz-swoosh-draw {
+  0%   { stroke-dashoffset: var(--amz-path-hidden); filter: brightness(1); }
+  60%  { filter: brightness(1.6); }
+  100% { stroke-dashoffset: var(--amz-path-shown); filter: brightness(1); }
+}
+.amz-swoosh {
+  stroke-dasharray: 1;
+  stroke-dashoffset: var(--amz-path-hidden);
+  animation: amz-swoosh-draw 1500ms cubic-bezier(0.16,0.84,0.24,1) both;
+}
+.amz-swoosh-2 { animation-delay: 200ms; }
+
+/* A short, faint segment riding just behind the draw, then sweeping on past the end —
+   the same dasharray trick, but with a short dash and a gap longer than the whole path
+   (so only ever one glint is visible) instead of a single full-length dash. Kept subtle
+   on purpose: opacity tops out well under 1 and the glow is a thin, soft halo rather
+   than a bloom. */
+@keyframes amz-swoosh-glint {
+  0%   { stroke-dashoffset: var(--amz-path-hidden); opacity: 0; }
+  10%  { opacity: .28; }
+  85%  { opacity: .28; }
+  100% { stroke-dashoffset: var(--amz-path-past); opacity: 0; }
+}
+.amz-swoosh-glint {
+  stroke-dasharray: 0.09 2;
+  stroke-dashoffset: var(--amz-path-hidden);
+  stroke: #FFFFFF;
+  stroke-linecap: round;
+  opacity: 0;
+  filter: drop-shadow(0 0 2px rgba(255,255,255,.4));
+  /* Its own, constant pace — the draw's ease-out ramps the dashoffset through most of
+     its distance in the first third of the duration, which raced the glint across and
+     off the path before it was on screen for more than a blink. */
+  animation: amz-swoosh-glint 1700ms linear both;
+}
+.amz-swoosh-glint-2 { animation-delay: 200ms; }

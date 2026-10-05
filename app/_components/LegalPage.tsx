@@ -71,8 +71,12 @@ export default function LegalPage({
       {/* Masthead */}
       <section style={{ background: "#0F4E85", position: "relative", overflow: "hidden" }}>
         <svg viewBox="0 0 1600 460" preserveAspectRatio="none" aria-hidden="true" style={{ position: "absolute", inset: 0, width: "130%", height: "100%", opacity: 0.13 }}>
-          <path d="M-160,400 A1900,1900 0 0 1 1740,150" fill="none" stroke="#FFFFFF" strokeWidth="30" />
-          <path d="M820,250 A1900,1900 0 0 1 1700,150" fill="none" stroke="#FFFFFF" strokeWidth="16" />
+          <path className="amz-swoosh" pathLength={1} d="M-160,400 A1900,1900 0 0 1 1740,150" fill="none" stroke="#FFFFFF" strokeWidth="30" />
+          <path className="amz-swoosh amz-swoosh-2" pathLength={1} d="M820,250 A1900,1900 0 0 1 1700,150" fill="none" stroke="#FFFFFF" strokeWidth="16" />
+        </svg>
+        <svg viewBox="0 0 1600 460" preserveAspectRatio="none" aria-hidden="true" style={{ position: "absolute", inset: 0, width: "130%", height: "100%" }}>
+          <path className="amz-swoosh-glint" pathLength={1} d="M-160,400 A1900,1900 0 0 1 1740,150" fill="none" strokeWidth="4" />
+          <path className="amz-swoosh-glint amz-swoosh-glint-2" pathLength={1} d="M820,250 A1900,1900 0 0 1 1700,150" fill="none" strokeWidth="3" />
         </svg>
         <div style={{ position: "relative", maxWidth: 1120, margin: "0 auto", padding: "clamp(24px,3.5vw,36px) clamp(20px,4vw,40px) clamp(52px,7vw,84px)" }}>
           {/* Breadcrumb */}
@@ -209,7 +213,10 @@ export default function LegalPage({
             {/* Contact */}
             <section style={{ marginTop: "clamp(40px,5vw,60px)", background: "#0F4E85", color: "#FFFFFF", padding: "clamp(28px,4vw,44px)", position: "relative", overflow: "hidden" }}>
               <svg viewBox="0 0 800 300" preserveAspectRatio="none" aria-hidden="true" style={{ position: "absolute", inset: 0, width: "140%", height: "100%", opacity: 0.12 }}>
-                <path d="M-80,270 A1200,1200 0 0 1 900,90" fill="none" stroke="#FFFFFF" strokeWidth="26" />
+                <path className="amz-swoosh" pathLength={1} d="M-80,270 A1200,1200 0 0 1 900,90" fill="none" stroke="#FFFFFF" strokeWidth="26" />
+              </svg>
+              <svg viewBox="0 0 800 300" preserveAspectRatio="none" aria-hidden="true" style={{ position: "absolute", inset: 0, width: "140%", height: "100%" }}>
+                <path className="amz-swoosh-glint" pathLength={1} d="M-80,270 A1200,1200 0 0 1 900,90" fill="none" strokeWidth="4" />
               </svg>
               <div style={{ position: "relative" }}>
                 <h2 style={{ fontFamily: "var(--font-display)", fontWeight: 700, fontSize: "clamp(1.25rem,1.1rem + .6vw,1.5rem)", lineHeight: 1.25, color: "#FFFFFF", margin: "0 0 14px" }}>{contactHeading}</h2>

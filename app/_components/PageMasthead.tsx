@@ -14,18 +14,30 @@ export default function PageMasthead({
   intro,
   stats,
   cta,
+  breadcrumbSection,
 }: {
   eyebrow: string;
   title: string;
   intro: string;
   stats?: MastheadStat[];
   cta?: { label: string; href: string };
+  /** Middle breadcrumb crumb, e.g. "Technologies & Services". Omitted entirely when the
+   *  page doesn't sit under a section (About, Contact, Insights, ...). */
+  breadcrumbSection?: string;
 }) {
   return (
     <section style={{ background: "#0F4E85", position: "relative", overflow: "hidden" }}>
       <svg viewBox="0 0 1600 460" preserveAspectRatio="none" aria-hidden="true" style={{ position: "absolute", inset: 0, width: "130%", height: "100%", opacity: 0.13 }}>
-        <path d="M-160,400 A1900,1900 0 0 1 1740,150" fill="none" stroke="#FFFFFF" strokeWidth="30" />
-        <path d="M820,250 A1900,1900 0 0 1 1700,150" fill="none" stroke="#FFFFFF" strokeWidth="16" />
+        <path className="amz-swoosh" pathLength={1} d="M-160,400 A1900,1900 0 0 1 1740,150" fill="none" stroke="#FFFFFF" strokeWidth="30" />
+        <path className="amz-swoosh amz-swoosh-2" pathLength={1} d="M820,250 A1900,1900 0 0 1 1700,150" fill="none" stroke="#FFFFFF" strokeWidth="16" />
+      </svg>
+      {/* Glint sweep, in its own un-dimmed svg: the ambient line above lives inside a
+          13%-opacity group, which would cap the shine to the same faintness if it were
+          in there too. This one sits at full opacity so the sweep actually reads as
+          bright against the dark masthead. */}
+      <svg viewBox="0 0 1600 460" preserveAspectRatio="none" aria-hidden="true" style={{ position: "absolute", inset: 0, width: "130%", height: "100%" }}>
+        <path className="amz-swoosh-glint" pathLength={1} d="M-160,400 A1900,1900 0 0 1 1740,150" fill="none" strokeWidth="4" />
+        <path className="amz-swoosh-glint amz-swoosh-glint-2" pathLength={1} d="M820,250 A1900,1900 0 0 1 1700,150" fill="none" strokeWidth="3" />
       </svg>
       <div
         style={{
@@ -46,8 +58,12 @@ export default function PageMasthead({
                 {AMZ_COMPANY}
               </Link>
             </li>
-            <li aria-hidden style={{ color: "rgba(255,255,255,.34)", fontSize: 14 }}>/</li>
-            <li style={{ fontSize: 14.5, color: "rgba(255,255,255,.60)" }}>Technologies &amp; Services</li>
+            {breadcrumbSection && (
+              <>
+                <li aria-hidden style={{ color: "rgba(255,255,255,.34)", fontSize: 14 }}>/</li>
+                <li style={{ fontSize: 14.5, color: "rgba(255,255,255,.60)" }}>{breadcrumbSection}</li>
+              </>
+            )}
             <li aria-hidden style={{ color: "rgba(255,255,255,.34)", fontSize: 14 }}>/</li>
             <li style={{ fontSize: 14.5, color: "rgba(255,255,255,.60)" }}>{title}</li>
           </ol>

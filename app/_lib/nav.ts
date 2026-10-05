@@ -9,12 +9,17 @@ export const AMZ_TECH_MENU = [
   { label: "Utility Incentive Management", href: "/utility-incentive-management" },
 ] as const;
 
-/* Title Case throughout — these are labels, not sentences. */
+/* These four mirror the live site's own primary nav (Home / About Us / Technologies &
+   Services / Markets Served / Insights / Contact / Line Card / COSTARS Program) — the
+   four highest-traffic destinations after Technologies & Services get a header slot;
+   the rest live in the footer so the header doesn't have to grow past its tested width.
+   "Partners" was dropped entirely: it duplicated Products by Manufacturer, which is
+   already one click away under Technologies & Services. */
 export const AMZ_NAV_LINKS = [
-  { label: "Markets", href: "/#verticals" },
-  { label: "Partners", href: "/#partners" },
-  { label: "How We Work", href: "/#positioning" },
-  { label: "Impact", href: "/#impact" },
+  { label: "About", href: "/about" },
+  { label: "Markets Served", href: "/markets-served" },
+  { label: "Insights", href: "/insights" },
+  { label: "Contact", href: "/contact" },
 ] as const;
 
 export const AMZ_FOOTER_COLUMNS = [
@@ -28,21 +33,31 @@ export const AMZ_FOOTER_COLUMNS = [
     ],
   },
   {
-    heading: "Markets",
+    heading: "Markets Served",
     links: [
-      { label: "High-Rise Office & Residential", href: "/#verticals" },
-      { label: "Hospitals", href: "/#verticals" },
-      { label: "Data Centres", href: "/#verticals" },
-      { label: "Schools", href: "/#verticals" },
+      { label: "Data Centers", href: "/markets-served?segment=data-center" },
+      { label: "Healthcare", href: "/markets-served?segment=healthcare" },
+      { label: "High-Rise Residential", href: "/markets-served?segment=high-rise-residential" },
+      { label: "Education", href: "/markets-served?segment=education" },
+      { label: "Industrial & Manufacturing", href: "/markets-served?segment=industrial-manufacturing" },
     ],
   },
   {
     heading: "Company",
     links: [
-      { label: "How we work", href: "/#positioning" },
-      { label: "Social impact", href: "/#impact" },
+      { label: "About Us", href: "/about" },
+      { label: "How We Work", href: "/how-we-work" },
+      { label: "Social Impact", href: "/impact" },
       { label: "Reviews", href: "/#testimonials" },
-      { label: "Contact", href: "/#contact" },
+      { label: "Contact", href: "/contact" },
+    ],
+  },
+  {
+    heading: "Resources",
+    links: [
+      { label: "Insights", href: "/insights" },
+      { label: "Line Card", href: "/line-card" },
+      { label: "COSTARS Program", href: "/costars-program" },
     ],
   },
 ] as const;

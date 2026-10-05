@@ -19,6 +19,7 @@ export default function UtilityIncentiveManagementPage() {
       <main id="main">
         <PageMasthead
           eyebrow="Technologies & Services"
+          breadcrumbSection="Technologies & Services"
           title="Utility Incentive Management"
           intro="Energy-efficiency upgrades come with real money on the table from utilities, states and the federal government. We identify what a project qualifies for, estimate the value up front, and file the paperwork so it actually gets paid."
           stats={[

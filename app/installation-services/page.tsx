@@ -56,6 +56,7 @@ export default function InstallationServicesPage() {
       <main id="main">
         <PageMasthead
           eyebrow="Technologies & Services"
+          breadcrumbSection="Technologies & Services"
           title="Installation Services"
           intro="Design-build construction, utility incentive management and integrated financing, run by a team that coordinates the trades instead of handing them a spec and a deadline."
           stats={[
