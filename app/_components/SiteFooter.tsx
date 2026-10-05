@@ -9,7 +9,7 @@ import NewsletterForm from "./NewsletterForm";
 export default function SiteFooter() {
   return (
     <footer style={{ background: "#0A1017", color: "#FFFFFF" }}>
-      <div style={{ maxWidth: 1280, margin: "0 auto", padding: "clamp(56px,8vw,88px) clamp(20px,4vw,40px) 0" }}>
+      <div className="amz-reveal" style={{ maxWidth: 1280, margin: "0 auto", padding: "clamp(56px,8vw,88px) clamp(20px,4vw,40px) 0" }}>
         <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(min(100%,280px),1fr))", gap: "clamp(32px,4vw,56px)", paddingBottom: "clamp(40px,5vw,56px)", borderBottom: "1px solid rgba(255,255,255,.14)" }}>
           <div style={{ minWidth: 0 }}>
             {/* eslint-disable-next-line @next/next/no-img-element */}

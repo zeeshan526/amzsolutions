@@ -790,6 +790,7 @@ function HeroOverlayCopy({
 
 export default function Home() {
   const [loading, setLoading] = useState(true);
+  const [leaving, setLeaving] = useState(false);
   const [pct, setPct] = useState(0);
   const [active, setActive] = useState(0); // testimonial index
   const [cookie, setCookie] = useState<"hidden" | "notice" | "prefs">("hidden");
@@ -815,6 +816,7 @@ export default function Home() {
     let hide: ReturnType<typeof setTimeout> | undefined;
     let cookieT: ReturnType<typeof setTimeout> | undefined;
     let skip: ReturnType<typeof setTimeout> | undefined;
+    let leave: ReturnType<typeof setTimeout> | undefined;
 
     let saved = false;
     try {
@@ -842,10 +844,14 @@ export default function Home() {
         if (tick) clearInterval(tick);
         setPct(100);
         hide = setTimeout(() => {
-          setLoading(false);
-          showNotice(900);
-        }, 420);
-      }, 1900);
+          // Fade the curtain out instead of cutting it, then unmount.
+          setLeaving(true);
+          leave = setTimeout(() => {
+            setLoading(false);
+            showNotice(500);
+          }, 700);
+        }, 300);
+      }, 1700);
     }
 
     const rotate = setInterval(() => {
@@ -858,6 +864,7 @@ export default function Home() {
       if (tick) clearInterval(tick);
       if (done) clearTimeout(done);
       if (hide) clearTimeout(hide);
+      if (leave) clearTimeout(leave);
       if (cookieT) clearTimeout(cookieT);
       clearInterval(rotate);
     };
@@ -888,11 +895,13 @@ export default function Home() {
         <div
           role="status"
           aria-live="polite"
+          className={leaving ? "amz-load-out" : undefined}
           style={{
             position: "fixed",
             inset: 0,
             zIndex: 900,
-            background: "#0A1017",
+            overflow: "hidden",
+            background: "radial-gradient(ellipse 70% 55% at 50% 46%, #11324F 0%, #0A1017 70%)",
             display: "flex",
             flexDirection: "column",
             alignItems: "center",
@@ -900,6 +909,10 @@ export default function Home() {
             padding: "40px 24px",
           }}
         >
+          <div aria-hidden="true" className="amz-load-grid" />
+          <svg viewBox="0 0 1600 900" preserveAspectRatio="none" aria-hidden="true" style={{ position: "absolute", inset: 0, width: "100%", height: "100%", opacity: 0.5 }}>
+            <path className="amz-swoosh" pathLength={1} d="M-160,760 A2400,2400 0 0 1 1760,300" fill="none" stroke="rgba(125,185,237,.22)" strokeWidth="22" />
+          </svg>
           <div style={{ position: "absolute", top: 24, left: 0, right: 0, display: "flex", alignItems: "center", justifyContent: "center", gap: 10 }}>
             <svg className="amz-spin" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,.72)" strokeWidth="1.5" strokeLinecap="butt" aria-hidden="true">
               <circle cx="12" cy="12" r="9" strokeDasharray="42 14" />
@@ -925,6 +938,7 @@ export default function Home() {
               alt="AMZ Energy Systems"
               width={471}
               height={574}
+              className="amz-load-logo"
               style={{ display: "block", height: "clamp(120px,20vw,188px)", width: "auto" }}
             />
           </div>
@@ -942,8 +956,8 @@ export default function Home() {
             >
               {pct}%
             </p>
-            <div style={{ width: "min(340px,60vw)", height: 2, background: "rgba(255,255,255,.22)", position: "relative" }}>
-              <div style={{ position: "absolute", inset: "0 auto 0 0", background: "#FFFFFF", transition: "width 200ms linear", width: `${pct}%` }} />
+            <div style={{ width: "min(340px,60vw)", height: 3, borderRadius: 3, background: "rgba(255,255,255,.18)", position: "relative", overflow: "hidden" }}>
+              <div style={{ position: "absolute", inset: 0, borderRadius: 3, background: "linear-gradient(90deg,#7DB9ED 0%,#FFFFFF 100%)", transformOrigin: "left center", transition: "transform 320ms cubic-bezier(0.22,0.8,0.3,1)", transform: `scaleX(${pct / 100})` }} />
             </div>
           </div>
         </div>
@@ -994,7 +1008,15 @@ export default function Home() {
         </section>
 
         {/* Positioning / How we work */}
-        <section id="positioning" data-screen-label="Positioning" style={{ padding: "clamp(64px,9vw,96px) 0", borderBottom: "1px solid #E3E5E8" }}>
+        <section className="amz-clip-x" id="positioning" data-screen-label="Positioning" style={{ padding: "clamp(64px,9vw,96px) 0", borderBottom: "1px solid #E3E5E8" }}>
+          <svg className="amz-deco amz-drift-l" aria-hidden="true" viewBox="0 0 400 400" style={{ top: "6%", left: -140, width: 380, height: 380, opacity: 0.5 }}>
+            <circle cx="200" cy="200" r="150" fill="none" stroke="#AFD3F3" strokeWidth="2" strokeDasharray="4 10" />
+            <circle cx="200" cy="200" r="96" fill="none" stroke="#D6E8F8" strokeWidth="18" />
+          </svg>
+          <svg className="amz-deco amz-drift-r" aria-hidden="true" viewBox="0 0 400 400" style={{ bottom: "4%", right: -150, width: 420, height: 420, opacity: 0.5 }}>
+            <circle cx="200" cy="200" r="160" fill="none" stroke="#D6E8F8" strokeWidth="22" />
+            <circle cx="200" cy="200" r="104" fill="none" stroke="#AFD3F3" strokeWidth="2" strokeDasharray="4 10" />
+          </svg>
           <div style={{ maxWidth: 1280, margin: "0 auto", padding: "0 clamp(20px,4vw,40px)" }}>
             <div className="amz-head" style={{ maxWidth: 760, margin: "0 auto 56px", textAlign: "center" }}>
               <Eyebrow>How we work</Eyebrow>
@@ -1021,7 +1043,7 @@ export default function Home() {
         </section>
 
         {/* Verticals / markets */}
-        <section id="verticals" data-screen-label="Verticals" style={{ padding: "clamp(64px,9vw,96px) 0", background: "#F9FAFB", borderBottom: "1px solid #E3E5E8" }}>
+        <section className="amz-clip-x" id="verticals" data-screen-label="Verticals" style={{ padding: "clamp(64px,9vw,96px) 0", background: "#F9FAFB", borderBottom: "1px solid #E3E5E8" }}>
           <div style={{ maxWidth: 1280, margin: "0 auto", padding: "0 clamp(20px,4vw,40px)" }}>
             <div className="amz-head" style={{ maxWidth: 680, margin: "0 auto 56px", textAlign: "center" }}>
               <Eyebrow>Markets we serve</Eyebrow>
@@ -1031,8 +1053,8 @@ export default function Home() {
               <p style={{ fontSize: "clamp(1.0625rem,.98rem + .35vw,1.25rem)", lineHeight: 1.6, color: "#444444", margin: 0 }}>The equipment overlaps. The constraints do not — and the constraint is what decides the selection.</p>
             </div>
             <div className="amz-mkt amz-row" style={{ display: "grid", gap: "clamp(20px,2.4vw,32px)" }}>
-              {VERTICALS.map((v) => (
-                <article key={v.n} style={{ display: "flex", flexDirection: "column" }}>
+              {VERTICALS.map((v, vi) => (
+                <article key={v.n} className={vi < 2 ? "amz-slide-l" : "amz-slide-r"} style={{ display: "flex", flexDirection: "column" }}>
                   <a href="#contact" aria-label={`${v.title} — see the market`} className="amz-vert-link amz-reveal amz-leaf" style={{ position: "relative", display: "block", aspectRatio: "3 / 4", background: "#E3E5E8", borderRadius: 18, overflow: "hidden", textDecoration: "none" }}>
                     {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img src={v.img} alt={v.alt} style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover" }} />
@@ -1273,7 +1295,7 @@ export default function Home() {
             </div>
             <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(min(100%,290px),1fr))", gap: "clamp(16px,1.8vw,24px)" }}>
               {PARTNER_CARDS.map((p, i) => (
-                <article key={p.alt} className="amz-partner-card amz-stagger amz-leaf" style={{ ["--i" as string]: i % 3, display: "flex", flexDirection: "column", background: "#FFFFFF", border: "1px solid #E3E5E8", borderRadius: 16, padding: 26 }}>
+                <article key={p.alt} className="amz-partner-card amz-quick amz-leaf" style={{ display: "flex", flexDirection: "column", background: "#FFFFFF", border: "1px solid #E3E5E8", borderRadius: 16, padding: 26 }}>
                   <div className="amz-pcard-logo" style={{ position: "relative" }}>
                     {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img src={p.logo} alt={p.alt} style={{ maxHeight: 40, maxWidth: 170, width: "auto", height: "auto" }} />

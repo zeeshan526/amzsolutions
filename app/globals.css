@@ -221,7 +221,7 @@ a {
 /* Scroll reveal: pure CSS, only where scroll-driven animations exist and motion is allowed. */
 @supports (animation-timeline: view()) {
   @media (prefers-reduced-motion: no-preference) {
-    @keyframes amz-rise { from { opacity: 0; transform: translateY(28px); } to { opacity: 1; transform: none; } }
+    @keyframes amz-rise { from { opacity: 0; transform: translateY(64px); } to { opacity: 1; transform: none; } }
     .amz-reveal {
       animation: amz-rise linear backwards;
       animation-timeline: view();
@@ -236,6 +236,30 @@ a {
     @keyframes amz-rise-soft { from { opacity: 0; transform: translateY(18px); filter: blur(6px); } to { opacity: 1; transform: none; filter: none; } }
     @keyframes amz-wipe { from { clip-path: inset(0 0 100% 0 round 16px); } to { clip-path: inset(0 0 0 0 round 16px); } }
     @keyframes amz-settle { from { transform: scale(1.18); } to { transform: scale(1); } }
+    @keyframes amz-from-left { from { opacity: 0; transform: translateX(-200px); } to { opacity: 1; transform: none; } }
+    @keyframes amz-from-right { from { opacity: 0; transform: translateX(200px); } to { opacity: 1; transform: none; } }
+    @keyframes amz-drift-l { from { transform: translateX(-200px); } to { transform: translateX(60px); } }
+    @keyframes amz-drift-r { from { transform: translateX(200px); } to { transform: translateX(-60px); } }
+    .amz-slide-l, .amz-slide-r {
+      animation: amz-from-left linear backwards;
+      animation-timeline: view();
+      animation-range: entry 0% entry 55%;
+    }
+    .amz-slide-r { animation-name: amz-from-right; }
+    /* Decorative layers that drift sideways for as long as the section is on screen. */
+    .amz-drift-l, .amz-drift-r {
+      animation: amz-drift-l linear both;
+      animation-timeline: view();
+      animation-range: cover 0% cover 100%;
+    }
+    .amz-drift-r { animation-name: amz-drift-r; }
+    /* Quick, short reveal for dense grids (Line Card): visible almost as soon as it enters. */
+    @keyframes amz-fade-quick { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: none; } }
+    .amz-quick {
+      animation: amz-fade-quick linear backwards;
+      animation-timeline: view();
+      animation-range: entry 0% entry 18%;
+    }
     @keyframes amz-pop { from { opacity: 0; transform: scale(.86) rotate(-3deg); } to { opacity: 1; transform: none; } }
 
     .amz-stagger {
@@ -267,6 +291,11 @@ a {
     }
   }
 }
+
+/* Sections that host side-sliding layers must not scroll sideways. */
+.amz-clip-x { overflow-x: clip; position: relative; }
+.amz-deco { position: absolute; pointer-events: none; z-index: 0; }
+.amz-clip-x > :not(.amz-deco) { position: relative; z-index: 1; }
 
 /* Partner cards (Line Card section). */
 .amz-pcard-logo {
@@ -480,6 +509,18 @@ a {
 @keyframes amz-fade-up { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: none; } }
 .amz-load-mark { animation: amz-fade-up 640ms cubic-bezier(0.16,0.84,0.24,1) both; }
 .amz-spin { animation: amz-spin 2400ms linear infinite; }
+/* Loading curtain: faint blueprint grid, a breathing logo, and a fade-out exit. */
+.amz-load-grid {
+  position: absolute; inset: 0; pointer-events: none;
+  background-image: linear-gradient(rgba(125,185,237,.07) 1px, transparent 1px), linear-gradient(90deg, rgba(125,185,237,.07) 1px, transparent 1px);
+  background-size: 56px 56px;
+  -webkit-mask-image: radial-gradient(ellipse 60% 55% at 50% 48%, #000 0%, transparent 78%);
+  mask-image: radial-gradient(ellipse 60% 55% at 50% 48%, #000 0%, transparent 78%);
+}
+@keyframes amz-breathe { 0%, 100% { transform: scale(1); filter: drop-shadow(0 0 0 rgba(125,185,237,0)); } 50% { transform: scale(1.035); filter: drop-shadow(0 0 22px rgba(125,185,237,.35)); } }
+.amz-load-logo { animation: amz-breathe 2600ms ease-in-out infinite; }
+@keyframes amz-curtain-out { to { opacity: 0; transform: scale(1.02); visibility: hidden; } }
+.amz-load-out { animation: amz-curtain-out 700ms cubic-bezier(0.4,0,0.2,1) forwards; pointer-events: none; }
 
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
@@ -702,38 +743,35 @@ select.amz-field {
   --amz-path-past: -1.2;
 }
 @keyframes amz-swoosh-draw {
-  0%   { stroke-dashoffset: var(--amz-path-hidden); filter: brightness(1); }
-  60%  { filter: brightness(1.6); }
-  100% { stroke-dashoffset: var(--amz-path-shown); filter: brightness(1); }
+  0%   { stroke-dashoffset: var(--amz-path-hidden); }
+  100% { stroke-dashoffset: var(--amz-path-shown); }
 }
+/* Gentle ease-in-out over a longer run: the old ease-out front-loaded nearly the whole
+   line into the first few hundred ms, then crawled, which read as a jolt. No filter is
+   animated any more — brightness() on a 130%-wide stretched SVG forced a repaint of the
+   whole masthead every frame. */
 .amz-swoosh {
   stroke-dasharray: 1;
   stroke-dashoffset: var(--amz-path-hidden);
-  animation: amz-swoosh-draw 1500ms cubic-bezier(0.16,0.84,0.24,1) both;
+  animation: amz-swoosh-draw 2200ms cubic-bezier(0.45,0,0.2,1) both;
 }
-.amz-swoosh-2 { animation-delay: 200ms; }
+.amz-swoosh-2 { animation-delay: 450ms; }
 
-/* A short, faint segment riding just behind the draw, then sweeping on past the end —
-   the same dasharray trick, but with a short dash and a gap longer than the whole path
-   (so only ever one glint is visible) instead of a single full-length dash. Kept subtle
-   on purpose: opacity tops out well under 1 and the glow is a thin, soft halo rather
-   than a bloom. */
+/* A soft, short highlight that starts once the line is mostly drawn and glides along it at
+   an even, unhurried pace, fading in and out slowly so it never pops. No drop-shadow
+   filter (same repaint cost as above). */
 @keyframes amz-swoosh-glint {
   0%   { stroke-dashoffset: var(--amz-path-hidden); opacity: 0; }
-  10%  { opacity: .28; }
-  85%  { opacity: .28; }
+  25%  { opacity: .30; }
+  75%  { opacity: .30; }
   100% { stroke-dashoffset: var(--amz-path-past); opacity: 0; }
 }
 .amz-swoosh-glint {
-  stroke-dasharray: 0.09 2;
+  stroke-dasharray: 0.12 2;
   stroke-dashoffset: var(--amz-path-hidden);
   stroke: #FFFFFF;
   stroke-linecap: round;
   opacity: 0;
-  filter: drop-shadow(0 0 2px rgba(255,255,255,.4));
-  /* Its own, constant pace — the draw's ease-out ramps the dashoffset through most of
-     its distance in the first third of the duration, which raced the glint across and
-     off the path before it was on screen for more than a blink. */
-  animation: amz-swoosh-glint 1700ms linear both;
+  animation: amz-swoosh-glint 2600ms cubic-bezier(0.3,0,0.6,1) 1100ms both;
 }
-.amz-swoosh-glint-2 { animation-delay: 200ms; }
+.amz-swoosh-glint-2 { animation-delay: 1550ms; }
