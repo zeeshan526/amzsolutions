@@ -189,6 +189,128 @@ a {
   .amz-ring { --r: 0px; --av: 0px; width: min(100%, 420px) !important; aspect-ratio: auto !important; }
   .amz-ring-track { display: none !important; }
 }
+/* ---------- Editorial polish ---------- */
+/* Serif-italic accent word inside a sans heading. */
+.amz-accent { font: inherit; color: inherit; }
+
+/* One generous corner — the shape language shared by cards, tiles and photos. */
+.amz-leaf { border-radius: 16px !important; }
+.amz-tint-1 { background: #EEF5FC !important; }
+.amz-tint-2 { background: #E6EFF0 !important; }
+.amz-tint-3 { background: #F3F1E8 !important; }
+
+/* Oversized footer wordmark. */
+.amz-wordmark {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-stretch: 75%;
+  line-height: .8;
+  letter-spacing: -.04em;
+  font-size: clamp(88px, 22vw, 320px);
+  margin: 0;
+  padding-top: clamp(8px, 2vw, 24px);
+  user-select: none;
+  white-space: nowrap;
+  background: linear-gradient(180deg, rgba(125,185,237,.34) 0%, rgba(125,185,237,0) 92%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  overflow: hidden;
+}
+
+/* Scroll reveal: pure CSS, only where scroll-driven animations exist and motion is allowed. */
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    @keyframes amz-rise { from { opacity: 0; transform: translateY(28px); } to { opacity: 1; transform: none; } }
+    .amz-reveal {
+      animation: amz-rise linear backwards;
+      animation-timeline: view();
+      animation-range: entry 0% entry 38%;
+    }
+  }
+}
+
+/* Scroll-driven extras: staggered cards (--i), heading rise, photo wipe + settle. */
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    @keyframes amz-rise-soft { from { opacity: 0; transform: translateY(18px); filter: blur(6px); } to { opacity: 1; transform: none; filter: none; } }
+    @keyframes amz-wipe { from { clip-path: inset(0 0 100% 0 round 16px); } to { clip-path: inset(0 0 0 0 round 16px); } }
+    @keyframes amz-settle { from { transform: scale(1.18); } to { transform: scale(1); } }
+    @keyframes amz-pop { from { opacity: 0; transform: scale(.86) rotate(-3deg); } to { opacity: 1; transform: none; } }
+
+    .amz-stagger {
+      animation: amz-rise linear backwards;
+      animation-timeline: view();
+      animation-range: entry calc(var(--i, 0) * 7%) entry calc(36% + var(--i, 0) * 7%);
+    }
+    .amz-head > * {
+      animation: amz-rise-soft linear backwards;
+      animation-timeline: view();
+      animation-range: entry 0% entry 42%;
+    }
+    .amz-head > *:nth-child(2) { animation-range: entry 6% entry 48%; }
+    .amz-head > *:nth-child(3) { animation-range: entry 12% entry 54%; }
+    .amz-wipe {
+      animation: amz-wipe linear backwards;
+      animation-timeline: view();
+      animation-range: entry calc(var(--i, 0) * 5%) entry calc(45% + var(--i, 0) * 5%);
+    }
+    .amz-wipe img {
+      animation: amz-settle linear backwards;
+      animation-timeline: view();
+      animation-range: entry 0% cover 55%;
+    }
+    .amz-pop {
+      animation: amz-pop linear backwards;
+      animation-timeline: view();
+      animation-range: entry 10% entry 60%;
+    }
+  }
+}
+
+/* Partner cards (Line Card section). */
+.amz-pcard-logo {
+  height: 92px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 12px;
+  background: #F3F7FC;
+  margin-bottom: 22px;
+  transition: background-color 240ms cubic-bezier(0.36,0,0.24,1);
+}
+.amz-pcard-num { font-family: var(--font-mono); font-size: 12px; line-height: 1; color: #7DB9ED; }
+.amz-arrow-slide { display: inline-flex; transition: transform 240ms cubic-bezier(0.36,0,0.24,1); }
+.amz-linecard-cta {
+  display: inline-flex; align-items: center; gap: 12px; height: 54px; padding: 0 26px;
+  border-radius: 999px; background: #1462A7; color: #fff; text-decoration: none;
+  font-family: var(--font-display); font-weight: 600; font-size: 16px;
+  transition: background-color 200ms, transform 200ms;
+}
+@media (hover: hover) and (pointer: fine) {
+  .amz-partner-card:hover .amz-pcard-logo { background: #EAF2FB; }
+  .amz-partner-card:hover .amz-arrow-slide { transform: translateX(5px); }
+  .amz-linecard-cta:hover { background: #0F4E85; transform: translateY(-2px); }
+  .amz-linecard-cta:hover .amz-arrow-slide { transform: translateX(5px); }
+}
+
+/* Social impact tiles: captions slide up on hover / focus. */
+.amz-tile img { transition: transform 700ms cubic-bezier(0.36,0,0.24,1); }
+.amz-tile-cap {
+  position: absolute; left: 0; right: 0; bottom: 0; padding: 40px 16px 14px;
+  font-size: 13px; line-height: 1.45; color: #fff;
+  background: linear-gradient(180deg, rgba(10,16,23,0) 0%, rgba(10,16,23,.78) 100%);
+  transform: translateY(100%); opacity: 0;
+  transition: transform 320ms cubic-bezier(0.36,0,0.24,1), opacity 320ms;
+}
+.amz-tile:hover .amz-tile-cap, .amz-tile:focus-within .amz-tile-cap { transform: none; opacity: 1; }
+@media (hover: hover) and (pointer: fine) { .amz-tile:hover img { transform: scale(1.05); } }
+@media (hover: none) { .amz-tile-cap { transform: none; opacity: 1; } }
+
+/* Testimonial quote card. */
+.amz-quote-mark { display: none; }
+.amz-quote-serif { font-weight: 400; }
+
 @keyframes amz-marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
 .amz-marquee { animation: amz-marquee 38s linear infinite; }
 .amz-marquee-wrap:hover .amz-marquee { animation-play-state: paused; }
@@ -526,8 +648,31 @@ select.amz-field {
   background-size: 6px 6px, 6px 6px;
   background-repeat: no-repeat;
 }
+@media (min-width: 901px) {
+  .amz-contact-grid.amz-contact-wide { grid-template-columns: minmax(0, 1fr) minmax(0, 1.3fr); align-items: stretch; }
+  .amz-contact-wide .amz-contact-info { display: flex; flex-direction: column; }
+  .amz-contact-wide .amz-contact-cards { flex: 1; grid-auto-rows: 1fr; }
+}
 @media (max-width: 900px) {
   .amz-contact-grid { grid-template-columns: minmax(0, 1fr); }
+}
+
+/* Light contact-form focus state + info cards. */
+.amz-contact-form input:focus, .amz-contact-form textarea:focus {
+  border-color: #1462A7 !important;
+  box-shadow: 0 0 0 3px rgba(20, 98, 167, .16);
+}
+.amz-contact-form input, .amz-contact-form textarea { font-family: var(--font-body); }
+.amz-contact-form input::placeholder, .amz-contact-form textarea::placeholder { font-family: var(--font-body); color: #8A9099; }
+.amz-file { font-size: 15px !important; color: #444444 !important; }
+.amz-file::file-selector-button {
+  margin-right: 14px; padding: 7px 16px; border: 0; border-radius: 999px;
+  background: #EEF5FC; color: #1462A7; cursor: pointer;
+  font-family: var(--font-display); font-weight: 600; font-size: 14px;
+}
+.amz-info-card { transition: border-color 240ms cubic-bezier(0.36,0,0.24,1), box-shadow 240ms cubic-bezier(0.36,0,0.24,1), transform 240ms cubic-bezier(0.36,0,0.24,1); }
+@media (hover: hover) and (pointer: fine) {
+  a.amz-info-card:hover { border-color: #7DB9ED !important; box-shadow: 0 2px 4px rgba(25,28,31,.05), 0 8px 18px rgba(25,28,31,.08); transform: translateY(-2px); }
 }
 
 /* ---------- Installation Services process stepper ---------- */

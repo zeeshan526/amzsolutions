@@ -25,7 +25,7 @@ const fieldStyle: React.CSSProperties = {
   padding: "0 14px",
   background: "rgba(255,255,255,.08)",
   border: "1px solid rgba(255,255,255,.28)",
-  borderRadius: 2,
+  borderRadius: 12,
   color: "#FFFFFF",
   fontFamily: "var(--font-body)",
   fontSize: 15.5,

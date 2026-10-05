@@ -1,6 +1,13 @@
 import type { Metadata } from "next";
-import { Archivo, Source_Sans_3, IBM_Plex_Mono } from "next/font/google";
+import { Archivo, Source_Sans_3, IBM_Plex_Mono, Instrument_Serif } from "next/font/google";
 import "./globals.css";
+
+const instrumentSerif = Instrument_Serif({
+  variable: "--font-serif",
+  subsets: ["latin"],
+  weight: "400",
+  style: ["normal", "italic"],
+});
 
 const archivo = Archivo({
   variable: "--font-archivo",
@@ -30,7 +37,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
       lang="en"
-      className={`${archivo.variable} ${sourceSans.variable} ${plexMono.variable} h-full antialiased`}
+      className={`${archivo.variable} ${sourceSans.variable} ${plexMono.variable} ${instrumentSerif.variable} h-full antialiased`}
       suppressHydrationWarning
     >
       {/* suppressHydrationWarning applies one level deep only, so <body> needs its own:

@@ -996,18 +996,18 @@ export default function Home() {
         {/* Positioning / How we work */}
         <section id="positioning" data-screen-label="Positioning" style={{ padding: "clamp(64px,9vw,96px) 0", borderBottom: "1px solid #E3E5E8" }}>
           <div style={{ maxWidth: 1280, margin: "0 auto", padding: "0 clamp(20px,4vw,40px)" }}>
-            <div style={{ maxWidth: 760, margin: "0 auto 56px", textAlign: "center" }}>
+            <div className="amz-head" style={{ maxWidth: 760, margin: "0 auto 56px", textAlign: "center" }}>
               <Eyebrow>How we work</Eyebrow>
               <h2 style={{ fontFamily: "var(--font-display)", fontWeight: 700, fontSize: "clamp(1.625rem,1.17rem + 1.94vw,2.4375rem)", lineHeight: 1.15, letterSpacing: "-.012em", margin: "0 0 20px" }}>
-                We solve the mechanical problem with you, not for you
+                We solve the mechanical problem <span className="amz-accent">with you,</span> not for you
               </h2>
               <p style={{ fontSize: "clamp(1.0625rem,.98rem + .35vw,1.25rem)", lineHeight: 1.6, color: "#444444", margin: 0 }}>
                 Most mechanical problems arrive already half-diagnosed. The useful work happens in the room where the engineer, the contractor and the owner are all looking at the same numbers — so we start on the drawings, not the catalogue.
               </p>
             </div>
             <ol style={{ listStyle: "none", margin: 0, padding: 0, display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(min(100%,232px),1fr))", gap: 20 }}>
-              {STEPS.map((s) => (
-                <li key={s.n} className="amz-step-card" style={{ background: "#FFFFFF", border: "1px solid #E3E5E8", borderRadius: 16, padding: "30px 26px 26px", position: "relative", overflow: "hidden" }}>
+              {STEPS.map((s, i) => (
+                <li key={s.n} className={`amz-step-card amz-reveal amz-leaf ${["amz-tint-1", "", "amz-tint-3", "amz-tint-2"][i % 4]}`} style={{ background: "#FFFFFF", border: "1px solid #E3E5E8", borderRadius: 16, padding: "30px 26px 26px", position: "relative", overflow: "hidden" }}>
                   <svg viewBox="0 0 200 60" preserveAspectRatio="none" aria-hidden="true" style={{ position: "absolute", top: 0, right: 0, width: 130, height: 60, opacity: 0.16 }}>
                     <path d="M-10,52 A240,240 0 0 1 210,16" fill="none" stroke="#1462A7" strokeWidth="8" />
                   </svg>
@@ -1023,17 +1023,17 @@ export default function Home() {
         {/* Verticals / markets */}
         <section id="verticals" data-screen-label="Verticals" style={{ padding: "clamp(64px,9vw,96px) 0", background: "#F9FAFB", borderBottom: "1px solid #E3E5E8" }}>
           <div style={{ maxWidth: 1280, margin: "0 auto", padding: "0 clamp(20px,4vw,40px)" }}>
-            <div style={{ maxWidth: 680, margin: "0 auto 56px", textAlign: "center" }}>
+            <div className="amz-head" style={{ maxWidth: 680, margin: "0 auto 56px", textAlign: "center" }}>
               <Eyebrow>Markets we serve</Eyebrow>
               <h2 style={{ fontFamily: "var(--font-display)", fontWeight: 700, fontSize: "clamp(1.625rem,1.17rem + 1.94vw,2.4375rem)", lineHeight: 1.15, letterSpacing: "-.012em", margin: "0 0 20px" }}>
-                Four buildings, four different problems
+                Four buildings, <span className="amz-accent">four different problems</span>
               </h2>
               <p style={{ fontSize: "clamp(1.0625rem,.98rem + .35vw,1.25rem)", lineHeight: 1.6, color: "#444444", margin: 0 }}>The equipment overlaps. The constraints do not — and the constraint is what decides the selection.</p>
             </div>
             <div className="amz-mkt amz-row" style={{ display: "grid", gap: "clamp(20px,2.4vw,32px)" }}>
               {VERTICALS.map((v) => (
                 <article key={v.n} style={{ display: "flex", flexDirection: "column" }}>
-                  <a href="#contact" aria-label={`${v.title} — see the market`} className="amz-vert-link" style={{ position: "relative", display: "block", aspectRatio: "3 / 4", background: "#E3E5E8", borderRadius: 18, overflow: "hidden", textDecoration: "none" }}>
+                  <a href="#contact" aria-label={`${v.title} — see the market`} className="amz-vert-link amz-reveal amz-leaf" style={{ position: "relative", display: "block", aspectRatio: "3 / 4", background: "#E3E5E8", borderRadius: 18, overflow: "hidden", textDecoration: "none" }}>
                     {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img src={v.img} alt={v.alt} style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover" }} />
                     <span aria-hidden style={{ position: "absolute", top: 16, left: 16, zIndex: 2, display: "inline-flex", alignItems: "center", height: 28, padding: "0 12px", borderRadius: 999, background: "rgba(10,16,23,.78)", color: "#FFFFFF", fontFamily: "var(--font-mono)", fontSize: 12, letterSpacing: ".06em" }}>
@@ -1250,7 +1250,7 @@ export default function Home() {
         {/* Premier partners */}
         <section id="partners" data-screen-label="Premier partners" style={{ padding: "clamp(64px,9vw,96px) 0", borderBottom: "1px solid #E3E5E8" }}>
           <div style={{ maxWidth: 1280, margin: "0 auto", padding: "0 clamp(20px,4vw,40px)" }}>
-            <div style={{ maxWidth: 680, margin: "0 auto 56px", textAlign: "center" }}>
+            <div className="amz-head" style={{ maxWidth: 680, margin: "0 auto 56px", textAlign: "center" }}>
               <Eyebrow>Premier partners</Eyebrow>
               <h2 style={{ fontFamily: "var(--font-display)", fontWeight: 700, fontSize: "clamp(1.625rem,1.17rem + 1.94vw,2.4375rem)", lineHeight: 1.15, letterSpacing: "-.012em", margin: "0 0 20px" }}>
                 <a
@@ -1272,20 +1272,21 @@ export default function Home() {
               </p>
             </div>
             <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(min(100%,290px),1fr))", gap: "clamp(16px,1.8vw,24px)" }}>
-              {PARTNER_CARDS.map((p) => (
-                <article key={p.alt} className="amz-partner-card" style={{ display: "flex", flexDirection: "column", background: "#FFFFFF", border: "1px solid #E3E5E8", borderRadius: 16, padding: 26 }}>
-                  <div style={{ height: 52, display: "flex", alignItems: "center", marginBottom: 22 }}>
+              {PARTNER_CARDS.map((p, i) => (
+                <article key={p.alt} className="amz-partner-card amz-stagger amz-leaf" style={{ ["--i" as string]: i % 3, display: "flex", flexDirection: "column", background: "#FFFFFF", border: "1px solid #E3E5E8", borderRadius: 16, padding: 26 }}>
+                  <div className="amz-pcard-logo" style={{ position: "relative" }}>
                     {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img src={p.logo} alt={p.alt} style={{ maxHeight: 40, maxWidth: 170, width: "auto", height: "auto" }} />
+                    <span aria-hidden className="amz-pcard-num" style={{ position: "absolute", top: 12, left: 14 }}>{String(i + 1).padStart(2, "0")}</span>
                   </div>
-                  <p style={{ display: "flex", alignItems: "center", gap: 10, fontFamily: "var(--font-display)", fontStretch: "75%", fontWeight: 700, fontSize: 12, letterSpacing: ".14em", textTransform: "uppercase", color: "#5A6068", margin: "0 0 12px", paddingTop: 18, borderTop: "1px solid #E3E5E8" }}>
+                  <p style={{ display: "flex", alignItems: "center", gap: 10, fontFamily: "var(--font-display)", fontStretch: "75%", fontWeight: 700, fontSize: 12, letterSpacing: ".14em", textTransform: "uppercase", color: "#5A6068", margin: "0 0 12px" }}>
                     <span aria-hidden style={{ width: 18, height: 1, background: "#1462A7", flex: "none" }} />
                     {p.category}
                   </p>
                   <p style={{ fontSize: 14, lineHeight: 1.65, color: "#444444", margin: "0 0 22px" }}>{p.text}</p>
                   <a href="#partners" className="amz-link-arrow" style={{ marginTop: "auto", display: "inline-flex", alignItems: "center", gap: 8, fontFamily: "var(--font-display)", fontWeight: 600, fontSize: 14, color: "#1462A7", textDecoration: "none" }}>
                     Product range
-                    <ArrowIcon />
+                    <span className="amz-arrow-slide"><ArrowIcon /></span>
                   </a>
                 </article>
               ))}
@@ -1296,9 +1297,9 @@ export default function Home() {
         {/* Testimonials ring */}
         <section id="testimonials" data-screen-label="Testimonials" style={{ padding: "clamp(64px,9vw,96px) 0", background: "#F9FAFB", borderBottom: "1px solid #E3E5E8", overflow: "hidden" }}>
           <div style={{ maxWidth: 1280, margin: "0 auto", padding: "0 clamp(20px,4vw,40px)" }}>
-            <div style={{ maxWidth: 640, margin: "0 auto 56px", textAlign: "center" }}>
+            <div className="amz-head" style={{ maxWidth: 640, margin: "0 auto 56px", textAlign: "center" }}>
               <Eyebrow>In their words</Eyebrow>
-              <h2 style={{ fontFamily: "var(--font-display)", fontWeight: 700, fontSize: "clamp(1.625rem,1.17rem + 1.94vw,2.4375rem)", lineHeight: 1.15, letterSpacing: "-.012em", margin: 0 }}>Every side of the work</h2>
+              <h2 style={{ fontFamily: "var(--font-display)", fontWeight: 700, fontSize: "clamp(1.625rem,1.17rem + 1.94vw,2.4375rem)", lineHeight: 1.15, letterSpacing: "-.012em", margin: 0 }}>Every side <span className="amz-accent">of the work</span></h2>
             </div>
 
             <div className="amz-ring" style={{ position: "relative", width: "min(100%,calc(var(--r) * 2 + var(--av) + 24px))", margin: "0 auto", aspectRatio: "1 / 1", display: "flex", alignItems: "center", justifyContent: "center" }}>
@@ -1409,9 +1410,9 @@ export default function Home() {
                         Video review
                       </p>
                     ) : (
-                      <div style={{ height: 4, width: 44, background: "linear-gradient(96deg,#0F4E85 0%,#1879CD 100%)", margin: "0 auto 22px" }} />
+                      <p className="amz-quote-mark" aria-hidden="true">&ldquo;</p>
                     )}
-                    <blockquote style={{ margin: "0 0 20px", fontSize: "clamp(1.125rem,1.02rem + .55vw,1.75rem)", lineHeight: 1.42, letterSpacing: "-.006em", color: "#191C1F", maxWidth: "26ch", marginInline: "auto" }}>
+                    <blockquote className="amz-quote-serif" style={{ margin: "0 0 20px", fontSize: "clamp(1.125rem,1.02rem + .55vw,1.75rem)", lineHeight: 1.42, letterSpacing: "-.006em", color: "#191C1F", maxWidth: "26ch", marginInline: "auto" }}>
                       {t.quote}
                     </blockquote>
                     <figcaption>
@@ -1454,20 +1455,21 @@ export default function Home() {
         {/* Social impact mosaic */}
         <section id="impact" data-screen-label="Social impact" style={{ padding: "clamp(64px,9vw,96px) 0", borderBottom: "1px solid #E3E5E8" }}>
           <div style={{ maxWidth: 1280, margin: "0 auto", padding: "0 clamp(20px,4vw,40px)" }}>
-            <div style={{ maxWidth: 700, margin: "0 auto 56px", textAlign: "center" }}>
+            <div className="amz-head" style={{ maxWidth: 700, margin: "0 auto 56px", textAlign: "center" }}>
               <Eyebrow>Social impact</Eyebrow>
               <h2 style={{ fontFamily: "var(--font-display)", fontWeight: 700, fontSize: "clamp(1.625rem,1.17rem + 1.94vw,2.4375rem)", lineHeight: 1.15, letterSpacing: "-.012em", margin: "0 0 20px" }}>
-                The second half of &ldquo;buildings and communities&rdquo;
+                The second half of <span className="amz-accent">&ldquo;buildings and communities&rdquo;</span>
               </h2>
               <p style={{ fontSize: "clamp(1.0625rem,.98rem + .35vw,1.25rem)", lineHeight: 1.6, color: "#444444", margin: 0 }}>
                 Crew time, equipment and know-how given to organisations in the counties we work in. Hours and partners are published, not estimated.
               </p>
             </div>
             <div className="amz-mosaic" style={{ display: "grid", gap: "clamp(10px,1.2vw,16px)", gridAutoFlow: "dense", marginBottom: "clamp(36px,5vw,56px)" }}>
-              {MOSAIC.map((m) => (
-                <figure key={m.alt} className="amz-tile" style={{ gridColumn: m.span.split(" / ")[0], gridRow: m.span.split(" / ")[1], margin: 0, position: "relative", borderRadius: 16, overflow: "hidden", background: "#E3E5E8" }}>
+              {MOSAIC.map((m, i) => (
+                <figure key={m.alt} className={`amz-tile amz-wipe${i % 2 === 0 ? " amz-leaf" : ""}`} style={{ ["--i" as string]: i, gridColumn: m.span.split(" / ")[0], gridRow: m.span.split(" / ")[1], margin: 0, position: "relative", borderRadius: 16, overflow: "hidden", background: "#E3E5E8" }}>
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img src={m.img} alt={m.alt} loading="lazy" decoding="async" style={{ width: "100%", height: "100%", objectFit: "cover", objectPosition: m.pos }} />
+                  <figcaption aria-hidden="true" className="amz-tile-cap">{m.alt}</figcaption>
                 </figure>
               ))}
             </div>
@@ -1525,7 +1527,7 @@ export default function Home() {
           <div className="amz-contact-grid" style={{ position: "relative", maxWidth: 1080, margin: "0 auto", padding: "clamp(56px,8vw,88px) clamp(20px,4vw,40px)" }}>
             <div>
             <h2 style={{ fontFamily: "var(--font-display)", fontWeight: 700, fontSize: "clamp(1.625rem,1.17rem + 1.94vw,2.4375rem)", lineHeight: 1.15, letterSpacing: "-.012em", margin: "0 0 16px", color: "#FFFFFF" }}>
-              Tell us what the building is doing
+              Tell us what the building is <span className="amz-accent amz-accent-light">doing</span>
             </h2>
             <p style={{ fontSize: "clamp(1.0625rem,.98rem + .35vw,1.25rem)", lineHeight: 1.6, color: "rgba(255,255,255,.86)", margin: "0 0 32px", maxWidth: "36ch" }}>We&rsquo;ll come and measure. We reply to every request within one business day.</p>
             <address style={{ fontStyle: "normal", display: "flex", alignItems: "center", gap: 10, fontSize: 15, lineHeight: 1.6, color: "rgba(255,255,255,.80)", margin: "0 0 28px" }}>

@@ -12,18 +12,21 @@ import { submitFormDataToWeb3Forms } from "../_lib/web3forms";
 const labelStyle: React.CSSProperties = {
   display: "block",
   fontFamily: "var(--font-display)",
-  fontWeight: 600,
-  fontSize: 13,
-  color: "#191C1F",
+  fontStretch: "75%",
+  fontWeight: 700,
+  fontSize: 11,
+  letterSpacing: ".14em",
+  textTransform: "uppercase",
+  color: "#5A6068",
   marginBottom: 8,
 };
 
 const fieldStyle: React.CSSProperties = {
   width: "100%",
-  height: 50,
+  height: 48,
   padding: "0 14px",
   border: "1px solid #C7CBD1",
-  borderRadius: 8,
+  borderRadius: 12,
   color: "#191C1F",
   fontFamily: "var(--font-body)",
   fontSize: 15.5,
@@ -92,10 +95,10 @@ export default function ContactForm() {
   }
 
   return (
-    <form ref={formRef} onSubmit={handleSubmit}>
+    <form ref={formRef} onSubmit={handleSubmit} className="amz-contact-form">
       <input type="checkbox" name="botcheck" tabIndex={-1} autoComplete="off" aria-hidden="true" style={{ position: "absolute", width: 1, height: 1, opacity: 0, pointerEvents: "none" }} />
 
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(min(100%,220px),1fr))", gap: 18, marginBottom: 18 }}>
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(min(100%,180px),1fr))", gap: 18, marginBottom: 18 }}>
         <div>
           <label htmlFor={`${id}-first`} style={labelStyle}>First name *</label>
           <input id={`${id}-first`} name="first_name" type="text" required autoComplete="given-name" style={fieldStyle} />
@@ -121,25 +124,25 @@ export default function ContactForm() {
 
       <div style={{ marginBottom: 18 }}>
         <label htmlFor={`${id}-message`} style={labelStyle}>Message *</label>
-        <textarea id={`${id}-message`} name="message" required rows={5} style={{ ...fieldStyle, height: "auto", padding: "12px 14px", lineHeight: 1.6, resize: "vertical" }} />
+        <textarea id={`${id}-message`} name="message" required rows={4} style={{ ...fieldStyle, height: "auto", padding: "12px 14px", lineHeight: 1.6, resize: "vertical" }} />
       </div>
 
       <div style={{ marginBottom: 8 }}>
         <label htmlFor={`${id}-file`} style={labelStyle}>
-          Attachment <span style={{ fontWeight: 400, color: "#5A6068" }}>(optional — drawings, photos, up to 10MB)</span>
+          Attachment <span style={{ fontFamily: "var(--font-body)", fontStretch: "100%", fontWeight: 400, letterSpacing: 0, textTransform: "none", fontSize: 13 }}>(optional — drawings, photos, up to 10MB)</span>
         </label>
         <input
           id={`${id}-file`}
           name="attachment"
           type="file"
           onChange={(e) => setFileName(e.target.files?.[0]?.name ?? null)}
-          style={{ ...fieldStyle, height: "auto", padding: "10px 14px" }}
+          className="amz-file" style={{ ...fieldStyle, height: "auto", padding: "10px 14px" }}
         />
         {fileName && <p style={{ fontSize: 13, color: "#5A6068", margin: "6px 0 0" }}>Attached: {fileName}</p>}
       </div>
 
       {error && (
-        <p role="alert" style={{ margin: "18px 0 0", padding: "12px 14px", background: "#FBE9E7", border: "1px solid #F0A9A4", color: "#7A241C", fontSize: 15, lineHeight: 1.6, borderRadius: 8 }}>
+        <p role="alert" style={{ margin: "18px 0 0", padding: "12px 14px", background: "#FBE9E7", border: "1px solid #F0A9A4", color: "#7A241C", fontSize: 15, lineHeight: 1.6, borderRadius: 12 }}>
           {error}
         </p>
       )}
@@ -173,7 +176,7 @@ export default function ContactForm() {
             </svg>
           )}
         </button>
-        <p style={{ fontSize: 13.5, lineHeight: 1.55, color: "#5A6068", margin: 0, maxWidth: "36ch" }}>
+        <p style={{ flex: "1 1 180px", fontSize: 13.5, lineHeight: 1.5, color: "#5A6068", margin: 0 }}>
           We reply within one business day. Details are handled as described in our Privacy Policy.
         </p>
       </div>
