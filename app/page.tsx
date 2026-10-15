@@ -8,6 +8,7 @@ import SiteFooter from "./_components/SiteFooter";
 import SiteHeader from "./_components/SiteHeader";
 import { AMZ_PHONE_DISPLAY, AMZ_PHONE_HREF } from "./_lib/contact";
 import { LINE_CARD_HREF } from "./_lib/lineCard";
+import { TIMELINE, HERO_OVERLAYS, HERO_VIDEO, HERO_HEIGHT, HERO_FADE, progressToTime, type HeroOverlay } from "./_lib/hero";
 
 /* ---------------------------------------------------------------------- */
 /*  Static content                                                        */
@@ -234,115 +235,8 @@ function PlaceholderAvatar() {
    progress, so scrolling back up rewinds exactly rather than replaying an animation.
    The video is never played; it is only seeked. */
 
-type HeroAlign = "left" | "right" | "center";
-
-type HeroCta = { label: string; href: string; variant: "primary" | "outline" };
-
-/** One copy block on the hero timeline. `start`/`end` are 0-1 scroll progress through
- *  the pinned track; the block fades and lifts in just after `start` and back out just
- *  before `end`. Edit the copy and the pacing here — nothing else reads the timings. */
-type HeroOverlay = {
-  start: number;
-  end: number;
-  eyebrow?: string;
-  heading: string;
-  body: string;
-  align: HeroAlign;
-  ctas?: HeroCta[];
-};
-
-const HERO_CTAS: HeroCta[] = [{ label: "Explore Solutions", href: "#verticals", variant: "primary" }];
-
-const HERO_OVERLAYS: HeroOverlay[] = [
-  {
-    start: 0,
-    end: 0.18,
-    eyebrow: "Commercial mechanical systems",
-    heading: "Making Buildings and Communities Better",
-    body: "Integrated HVAC solutions for efficient, reliable, high-performing commercial buildings.",
-    align: "center",
-    ctas: HERO_CTAS,
-  },
-  {
-    start: 0.22,
-    end: 0.4,
-    heading: "Start with the building",
-    body: "We evaluate building size, floor usage, occupancy, climate conditions, indoor air-quality requirements and existing mechanical infrastructure before recommending the right HVAC solution.",
-    align: "right",
-  },
-  {
-    start: 0.44,
-    end: 0.6,
-    heading: "Water-cooled chillers",
-    body: "Our installation teams coordinate equipment placement, chilled-water piping, controls, pumps, electrical systems and mechanical connections inside the central plant room.",
-    align: "left",
-  },
-  {
-    start: 0.64,
-    end: 0.8,
-    heading: "Cooling tower installation",
-    body: "From crane coordination and structural positioning to condenser-water piping and final alignment, every rooftop installation is carefully planned and executed.",
-    align: "left",
-  },
-  {
-    start: 0.84,
-    end: 1,
-    heading: "Precision air handling",
-    body: "We install and integrate air-handling units, filtration systems, cooling coils, controls and ductwork to deliver consistent airflow, comfort and indoor air quality.",
-    align: "center",
-    ctas: HERO_CTAS,
-  },
-];
-
-const HERO_POSTER_SRC = "/images/hero-poster.jpg";
-
-/* IMPORTANT — how this file must be encoded, or the scrub goes back to stuttering.
-   Seeking decodes forward from the previous keyframe, so the keyframe interval, not the
-   resolution or the bitrate, is what decides whether a scrub keeps up. The original master
-   here was 2560x1440 with SIX keyframes in 29.5s (one per ~147 frames): every seek replayed
-   up to 147 frames of 1440p and the hero delivered ~7fps while scrolling. Re-encoded at
-   1920x1080 with a keyframe every 5 frames it delivers a new frame on essentially every
-   scroll tick, and the file went from 56MB to 19.5MB.
-
-     ffmpeg -i master.mp4 -an -vf scale=1920:1080 -c:v libx264 -preset slow -crf 27 \
-            -g 5 -keyint_min 5 -sc_threshold 0 -pix_fmt yuv420p -movflags +faststart out.mp4
-
-   Keep -g small, keep -an (the video is muted and decorative, so an audio track is pure
-   weight), and keep +faststart so the moov atom is at the front. */
-const HERO_VIDEO_SRC = "/images/hero-scroll.mp4";
-
-/* Deliberately null: phones get the poster, not a scrub. Even a lean mobile encode of this
-   clip runs 4-7MB, which is not a reasonable thing to spend a visitor's cellular data on for
-   a decorative background — and the overlay sequence is scroll-driven either way, so the copy
-   and its pacing are identical without it. If that call is ever revisited, point this at a
-   small encode (same keyframe rules as above); the shorter pin distance is already wired. */
-const HERO_VIDEO_MOBILE_SRC: string | null = null;
-
-/* Pinned scroll distance, in viewport heights. The whole 29.5s clip is spread across this
-   much scrolling, so a bigger number means fewer frames per pixel — a slower, finer scrub.
-   At 4 screens on a 900px viewport the clip's ~884 frames land about 4px apart. */
-const HERO_PIN_SCREENS = 4;
-const HERO_PIN_SCREENS_COMPACT = 2.5;
-
-/* How hard the painted time chases the scroll each frame. The gate below already rate-
-   limits us to what the decoder can service, so easing is only here to turn a mouse
-   wheel's discrete 100px jumps into continuous motion — any lower and it stops being
-   smoothing and starts being lag you can feel. 0.22 settles in ~4 frames. */
-const HERO_SCRUB_EASING = 0.22;
-
-/* Cap on how far behind the scroll the painted time may fall, as a fraction of the clip.
-   Past this the in-between frames are not worth decoding: close the gap in one jump
-   instead of crawling, which is what made a fast flick feel stuck. */
-const HERO_SCRUB_MAX_LAG = 0.05;
-
-/* One frame of the source clip (~30fps). Seeking by less than this spends a full decode
-   to display the identical picture, starving the seeks that would actually move it. */
-const HERO_SOURCE_FRAME = 1 / 30;
-
-/* Fade/lift ramp at each end of a block's window, in progress units. Blocks are 0.16-0.18
-   wide with 0.04 gaps, so ~0.035 leaves a comfortable hold in the middle. */
-const HERO_OVERLAY_FADE = 0.035;
-const HERO_OVERLAY_LIFT = 26;
+const HERO_OVERLAY_FADE = HERO_FADE;
+const HERO_OVERLAY_LIFT = 16;
 
 /** Opacity and vertical offset for one block at a given scroll progress. Pure: the same
  *  progress always yields the same frame, which is what makes reverse scrolling exact. */
@@ -368,308 +262,205 @@ function heroOverlayState(block: HeroOverlay, progress: number) {
 
 function HeroScrollStage() {
   const trackRef = useRef<HTMLElement | null>(null);
+  const stageRef = useRef<HTMLDivElement | null>(null);
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const overlayRefs = useRef<(HTMLDivElement | null)[]>([]);
-
-  // Nothing is decided until we are on the client: the server render is the poster with
-  // the first block up, which is also exactly what the reduced-motion render wants.
-  const [env, setEnv] = useState({ mounted: false, reducedMotion: false, compact: false, iosLike: false });
-  const [ready, setReady] = useState(false);
-  const { mounted, reducedMotion, compact, iosLike } = env;
+  const posterRefs = useRef<(HTMLImageElement | null)[]>([]);
+  const progressRef = useRef<HTMLDivElement | null>(null);
+  const gradientRef = useRef<HTMLDivElement | null>(null);
+  const loadingRef = useRef<HTMLSpanElement | null>(null);
 
   useEffect(() => {
+    const track = trackRef.current;
+    const stage = stageRef.current;
+    const video = videoRef.current;
+    if (!track || !stage || !video) return;
     const motion = window.matchMedia("(prefers-reduced-motion: reduce)");
-    const narrow = window.matchMedia("(max-width: 767px)");
+    const narrow = window.matchMedia("(max-width: 768px)");
+    let disposed = false;
+    let ready = false;
+    let failed = false;
+    let objectUrl: string | undefined;
+    let controller: AbortController | undefined;
+    let generation = 0;
+    let frame = 0;
+    let visible = false;
+    let dirty = true;
+    let target = 0;
+    let paintedTime = 0;
+    let stageHeight = stage.clientHeight;
+    let trackHeight = track.offsetHeight;
 
-    const sync = () => {
-      setEnv({
-        mounted: true,
-        reducedMotion: motion.matches,
-        compact: narrow.matches,
-        // iOS Safari services currentTime seeks on a large file badly enough that the
-        // scrub stutters or stalls outright; those clients get the poster instead.
-        // iPadOS reports itself as a Mac, so touch points are the only tell.
-        iosLike:
-          /iP(?:hone|ad|od)/.test(navigator.userAgent) ||
-          (navigator.maxTouchPoints > 1 && /Macintosh/.test(navigator.userAgent)),
-      });
+    const load = async () => {
+      const version = ++generation;
+      controller?.abort();
+      video.pause();
+      video.removeAttribute("src");
+      video.load();
+      if (objectUrl) URL.revokeObjectURL(objectUrl);
+      objectUrl = undefined;
+      ready = false;
+      failed = false;
+      video.style.opacity = "0";
+      if (loadingRef.current) loadingRef.current.style.opacity = motion.matches ? "0" : "1";
+      if (motion.matches) return;
+      const src = narrow.matches ? HERO_VIDEO.mobile : HERO_VIDEO.desktop;
+      controller = new AbortController();
+      try {
+        const response = await fetch(src, { signal: controller.signal });
+        if (!response.ok) throw new Error("Video fetch failed");
+        const blob = await response.blob();
+        if (disposed || version !== generation) return;
+        objectUrl = URL.createObjectURL(blob);
+        video.src = objectUrl;
+      } catch {
+        if (disposed || version !== generation) return;
+        // Native loading can still work when blob fetching is unavailable.
+        video.src = src;
+      }
+      video.load();
     };
-    sync();
-    motion.addEventListener("change", sync);
-    narrow.addEventListener("change", sync);
+    const onReady = () => {
+      if (!video.getAttribute("src") || motion.matches) return;
+      ready = true;
+      video.style.opacity = "1";
+      if (loadingRef.current) loadingRef.current.style.opacity = "0";
+    };
+    const onError = () => {
+      if (!video.getAttribute("src")) return;
+      failed = true;
+      ready = false;
+      video.style.opacity = "0";
+      if (loadingRef.current) loadingRef.current.style.opacity = "0";
+    };
+    video.addEventListener("loadeddata", onReady);
+    video.addEventListener("error", onError);
+    let unlocked = false;
+    const unlock = () => {
+      const ios = /iP(?:hone|ad|od)/.test(navigator.userAgent) || (navigator.maxTouchPoints > 1 && /Macintosh/.test(navigator.userAgent));
+      if (!ios || unlocked || !ready || motion.matches || failed) return;
+      unlocked = true;
+      void video.play().then(() => video.pause()).catch(() => { unlocked = false; });
+    };
+    window.addEventListener("touchstart", unlock, { passive: true });
+
+    const tick = () => {
+      frame = 0;
+      if (!visible || disposed) return;
+      if (dirty) {
+        const top = track.getBoundingClientRect().top;
+        target = Math.max(0, Math.min(1, -top / Math.max(1, trackHeight - stageHeight)));
+        dirty = false;
+      }
+      const targetTime = progressToTime(target);
+      paintedTime += (targetTime - paintedTime) * 0.12;
+      if (ready && !failed && !motion.matches && Number.isFinite(video.duration)) {
+        const at = Math.max(0, Math.min(paintedTime, video.duration - 0.001));
+        if (!video.seeking && Math.abs(at - video.currentTime) > 1 / 60) video.currentTime = at;
+      }
+      // Match the text to the eased camera position, including when reversing.
+      let copyProgress = target;
+      if (ready && !failed && !motion.matches) {
+        for (let i = 0; i < TIMELINE.length - 1; i++) {
+          const [p0, t0] = TIMELINE[i];
+          const [p1, t1] = TIMELINE[i + 1];
+          if (paintedTime <= t1) {
+            copyProgress = p0 + (p1 - p0) * Math.max(0, (paintedTime - t0) / (t1 - t0));
+            break;
+          }
+        }
+      }
+      let posterIndex = 0;
+      HERO_OVERLAYS.forEach((block, i) => {
+        if (target >= block.start) posterIndex = i;
+        const node = overlayRefs.current[i];
+        if (!node) return;
+        const { opacity, lift } = heroOverlayState(block, copyProgress);
+        node.style.opacity = String(opacity);
+        node.style.transform = `translate3d(0,${lift}px,0)`;
+        const active = opacity > 0.6;
+        node.style.pointerEvents = active ? "auto" : "none";
+        node.querySelectorAll("a").forEach(a => { a.tabIndex = active ? 0 : -1; });
+      });
+      posterRefs.current.forEach((node, i) => {
+        if (node) node.style.opacity = i === posterIndex ? "1" : "0";
+      });
+      if (progressRef.current) progressRef.current.style.width = `${target * 100}%`;
+      if (gradientRef.current) gradientRef.current.style.opacity = String(heroOverlayState(HERO_OVERLAYS[5], copyProgress).opacity);
+      frame = requestAnimationFrame(tick);
+    };
+    const onScroll = () => { dirty = true; };
+    const onResize = () => {
+      stageHeight = stage.clientHeight;
+      trackHeight = track.offsetHeight;
+      dirty = true;
+    };
+    const observer = new IntersectionObserver(([entry]) => {
+      visible = entry.isIntersecting;
+      if (visible) {
+        dirty = true;
+        if (!frame) frame = requestAnimationFrame(tick);
+      } else {
+        cancelAnimationFrame(frame);
+        frame = 0;
+      }
+    });
+    observer.observe(track);
+    const resizeObserver = new ResizeObserver(onResize);
+    resizeObserver.observe(stage);
+    resizeObserver.observe(track);
+    const onEnvironment = () => { void load(); dirty = true; };
+    motion.addEventListener("change", onEnvironment);
+    narrow.addEventListener("change", onEnvironment);
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", onResize);
+    void load();
     return () => {
-      motion.removeEventListener("change", sync);
-      narrow.removeEventListener("change", sync);
+      disposed = true;
+      generation++;
+      controller?.abort();
+      cancelAnimationFrame(frame);
+      observer.disconnect();
+      resizeObserver.disconnect();
+      window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("resize", onResize);
+      window.removeEventListener("touchstart", unlock);
+      motion.removeEventListener("change", onEnvironment);
+      narrow.removeEventListener("change", onEnvironment);
+      video.removeEventListener("loadeddata", onReady);
+      video.removeEventListener("error", onError);
+      video.pause();
+      video.removeAttribute("src");
+      video.load();
+      if (objectUrl) URL.revokeObjectURL(objectUrl);
     };
   }, []);
 
-  const videoSrc = compact ? HERO_VIDEO_MOBILE_SRC : HERO_VIDEO_SRC;
-  const scrubVideo = mounted && !reducedMotion && !iosLike && videoSrc !== null;
-  // Reduced motion is the only mode that gives up the pin: the poster fallbacks still
-  // run the overlay sequence off scroll, they just have no frames to seek.
-  const pinned = !reducedMotion;
-  const pinScreens = compact ? HERO_PIN_SCREENS_COMPACT : HERO_PIN_SCREENS;
-
-  /* Readiness gate. Scrubbing before the decoder has data to seek into shows a black
-     frame, so hold the poster and the first block until metadata plus a buffer are in. */
-  useEffect(() => {
-    if (!scrubVideo) return;
-    const video = videoRef.current;
-    if (!video) return;
-
-    video.pause();
-    const check = () => {
-      if (video.readyState >= 3) setReady(true); // HAVE_FUTURE_DATA
-    };
-    check();
-    const events = ["loadedmetadata", "loadeddata", "canplay", "canplaythrough", "progress"];
-    events.forEach((e) => video.addEventListener(e, check));
-    return () => events.forEach((e) => video.removeEventListener(e, check));
-  }, [scrubVideo]);
-
-  /* The scrub + overlay driver. Re-runs when readiness or layout mode changes, which is
-     also the re-measure that a duration change needs — the scroll-to-progress mapping is
-     read from the live track rect every frame, so there is no cached duration to refresh. */
-  useEffect(() => {
-    const track = trackRef.current;
-    if (!track || !pinned) return;
-
-    const video = scrubVideo ? videoRef.current : null;
-    video?.pause();
-
-    let activeBlock = -1;
-
-    const paintOverlays = (progress: number) => {
-      let nextActive = -1;
-      let best = 0.6; // a block owns the pointer and the tab order once it is mostly up
-      HERO_OVERLAYS.forEach((block, i) => {
-        const node = overlayRefs.current[i];
-        if (!node) return;
-        const { opacity, lift } = heroOverlayState(block, progress);
-        node.style.opacity = String(opacity);
-        node.style.transform = `translate3d(0,${lift.toFixed(2)}px,0)`;
-        if (opacity > best) {
-          best = opacity;
-          nextActive = i;
-        }
-      });
-      if (nextActive === activeBlock) return;
-      activeBlock = nextActive;
-      HERO_OVERLAYS.forEach((_, i) => {
-        const node = overlayRefs.current[i];
-        if (!node) return;
-        const live = i === nextActive;
-        node.style.pointerEvents = live ? "auto" : "none";
-        // Kept in the accessibility tree either way — only the tab stop moves, so a
-        // keyboard user never lands on a CTA they cannot see.
-        node.querySelectorAll("a[href]").forEach((el) => {
-          (el as HTMLAnchorElement).tabIndex = live ? 0 : -1;
-        });
-      });
-    };
-
-    // Not ready to scrub yet: hold frame 0 with the first block up and run nothing.
-    if (video && !ready) {
-      paintOverlays(0);
-      return;
-    }
-
-    let frame = 0;
-    let target = 0;
-    let painted = -1;
-
-    const readScroll = () => {
-      const scrollable = track.offsetHeight - window.innerHeight;
-      if (scrollable <= 0) {
-        target = 0;
-        return;
-      }
-      const travelled = -track.getBoundingClientRect().top;
-      target = Math.min(1, Math.max(0, travelled / scrollable));
-    };
-
-    const tick = () => {
-      frame = requestAnimationFrame(tick);
-      if (painted < 0) painted = target;
-
-      if (video) {
-        // Ease toward the scroll position instead of snapping to it: a seek costs a
-        // decode, and following every scroll delta exactly makes that cost visible. The
-        // scroll callback only ever stores `target`; the seek happens here, once a frame,
-        // so a fast flick collapses into one seek rather than a queue the decoder cannot
-        // service. Lower = smoother glide but more lag; higher = tighter but choppier.
-        if (Math.abs(target - painted) > HERO_SCRUB_MAX_LAG) {
-          painted = target > painted ? target - HERO_SCRUB_MAX_LAG : target + HERO_SCRUB_MAX_LAG;
-        }
-        painted += (target - painted) * HERO_SCRUB_EASING;
-        if (Math.abs(target - painted) < 0.0004) painted = target;
-
-        const duration = video.duration;
-        if (duration && Number.isFinite(duration)) {
-          const at = painted * duration;
-          // A seek requested while one is in flight is dropped by the browser, so wait for
-          // the decoder, and only ask it for a frame that is actually a different frame.
-          if (!video.seeking && Math.abs(at - video.currentTime) >= HERO_SOURCE_FRAME) {
-            video.currentTime = at;
-          }
-        }
-      } else {
-        // Poster fallback: nothing to decode, so the copy can track the finger exactly.
-        painted = target;
-      }
-
-      paintOverlays(painted);
-    };
-
-    const onScroll = () => readScroll();
-    const onResize = () => readScroll();
-
-    readScroll();
-    frame = requestAnimationFrame(tick);
-    window.addEventListener("scroll", onScroll, { passive: true });
-    window.addEventListener("resize", onResize);
-    window.addEventListener("orientationchange", onResize);
-    return () => {
-      cancelAnimationFrame(frame);
-      window.removeEventListener("scroll", onScroll);
-      window.removeEventListener("resize", onResize);
-      window.removeEventListener("orientationchange", onResize);
-    };
-  }, [pinned, scrubVideo, ready, pinScreens]);
-
   return (
-    <>
-      <section
-        data-screen-label="Hero"
-        ref={trackRef}
-        style={{
-          position: "relative",
-          background: "#0F4E85",
-          // The track is one screen taller than the pinned distance: the extra screen is
-          // the panel itself, so progress hits 1.0 exactly as the section lets go.
-          height: pinned ? `${(pinScreens + 1) * 100}svh` : "auto",
-        }}
-      >
-        <div
-          style={{
-            position: pinned ? "sticky" : "relative",
-            top: 0,
-            height: pinned ? "100svh" : "auto",
-            minHeight: pinned ? undefined : "78svh",
-            overflow: "hidden",
-            paddingTop: "var(--amz-hdr-h)",
-            display: "flex",
-            alignItems: "flex-end",
-          }}
-        >
-          {scrubVideo && videoSrc ? (
-            <video
-              ref={videoRef}
-              src={videoSrc}
-              poster={HERO_POSTER_SRC}
-              muted
-              playsInline
-              preload="auto"
-              disablePictureInPicture
-              aria-hidden="true"
-              tabIndex={-1}
-              style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", pointerEvents: "none" }}
-            />
-          ) : (
-            /* No <video> mounted at all in the fallbacks — mounting it would still pull the
-               clip down for a background nobody can scrub. The poster is one 50KB still. */
-            // eslint-disable-next-line @next/next/no-img-element
-            <img
-              src={HERO_POSTER_SRC}
-              alt=""
-              aria-hidden="true"
-              style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", objectPosition: "center 40%", pointerEvents: "none" }}
-            />
-          )}
-
-          {/* Neutral scrim, not a blue wash, weighted to the bottom third where the copy
-              sits — dark enough to hold white type against a bright frame, light enough to
-              leave the footage readable. */}
-          <div
-            aria-hidden="true"
-            style={{
-              position: "absolute",
-              inset: 0,
-              background:
-                "linear-gradient(180deg,rgba(0,0,0,.40) 0%,rgba(0,0,0,.14) 30%,rgba(0,0,0,.28) 58%,rgba(0,0,0,.74) 100%)",
-            }}
-          />
-          {/* Every block is in the DOM at all times — hidden ones are transparent, not
-              unmounted — so screen readers and crawlers get the whole hero copy. */}
-          <div
-            style={{
-              position: "relative",
-              width: "100%",
-              minWidth: 0,
-              maxWidth: 1360,
-              margin: "0 auto",
-              padding: "0 clamp(20px,4vw,56px) clamp(44px,8vh,104px)",
-              display: "grid",
-            }}
-          >
-            {(pinned ? HERO_OVERLAYS : HERO_OVERLAYS.slice(0, 1)).map((block, i) => (
-              <div
-                key={block.heading}
-                ref={(el) => {
-                  overlayRefs.current[i] = el;
-                }}
-                style={{
-                  // All blocks share one grid cell so they cross-fade in place. The cell is
-                  // as tall as the longest block, so they bottom-anchor to keep the copy in
-                  // the same place in the frame no matter how many lines it runs to.
-                  gridArea: "1 / 1",
-                  alignSelf: "end",
-                  justifySelf: block.align === "right" ? "end" : block.align === "center" ? "center" : "start",
-                  width: "100%",
-                  maxWidth: block.align === "center" ? 880 : "min(52rem, max(58%, 380px))",
-                  textAlign: block.align === "center" ? "center" : "left",
-                  opacity: i === 0 ? 1 : 0,
-                  transform: `translate3d(0,${i === 0 ? 0 : HERO_OVERLAY_LIFT}px,0)`,
-                  pointerEvents: i === 0 ? "auto" : "none",
-                  willChange: "opacity, transform",
-                }}
-              >
-                <HeroOverlayCopy block={block} tabbable={i === 0} headingLevel={i === 0 ? "h1" : "h2"} />
-              </div>
-            ))}
-          </div>
-        </div>
-        <div style={{ height: 4, background: "linear-gradient(96deg,#0F4E85 0%,#1879CD 100%)" }} />
-      </section>
-
-      {/* Reduced motion: no pin and no scrub, so the blocks that would have been scrubbed
-          through become ordinary stacked sections instead of copy nobody can reach. */}
-      {!pinned &&
-        HERO_OVERLAYS.slice(1).map((block) => (
-          <section
-            key={block.heading}
-            style={{ background: "#0F4E85", borderTop: "1px solid rgba(255,255,255,.14)", padding: "clamp(48px,7vw,88px) clamp(20px,4vw,56px)" }}
-          >
-            <div
-              style={{
-                maxWidth: 1360,
-                margin: "0 auto",
-                display: "flex",
-                justifyContent: block.align === "right" ? "flex-end" : block.align === "center" ? "center" : "flex-start",
-              }}
-            >
-              <div style={{ width: "100%", maxWidth: block.align === "center" ? 880 : "min(52rem, max(58%, 380px))", textAlign: block.align === "center" ? "center" : "left" }}>
-                <HeroOverlayCopy block={block} tabbable headingLevel="h2" />
-              </div>
-            </div>
-          </section>
+    <section data-screen-label="Hero" ref={trackRef} style={{ position: "relative", background: "#0F4E85", height: HERO_HEIGHT }}>
+      <div ref={stageRef} className="amz-hero-stage">
+        {HERO_OVERLAYS.map((block, i) => (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img key={block.poster} ref={el => { posterRefs.current[i] = el; }} src={block.poster} alt="" aria-hidden="true" className="amz-hero-media amz-hero-poster" style={{ opacity: i === 0 ? 1 : 0 }} />
         ))}
-    </>
+        <video ref={videoRef} poster={HERO_OVERLAYS[0].poster} muted playsInline preload="auto" disablePictureInPicture aria-hidden="true" tabIndex={-1} className="amz-hero-media" style={{ opacity: 0 }} />
+        <div aria-hidden="true" className="amz-hero-media" style={{ background: "linear-gradient(180deg,rgba(0,0,0,.40) 0%,rgba(0,0,0,.14) 30%,rgba(0,0,0,.28) 58%,rgba(0,0,0,.74) 100%)" }} />
+        <div ref={gradientRef} aria-hidden="true" className="amz-hero-media" style={{ opacity: 0, background: "linear-gradient(180deg,transparent 40%,rgba(0,0,0,.15) 100%)" }} />
+        <span ref={loadingRef} className="amz-hero-loading" role="status">Preparing your view…</span>
+        <div className="amz-hero-copy">
+          {HERO_OVERLAYS.map((block, i) => (
+            <div key={block.heading} ref={el => { overlayRefs.current[i] = el; }} className="amz-hero-overlay" style={{ gridArea: "1 / 1", alignSelf: "end", justifySelf: block.align === "center" ? "center" : "start", width: "100%", maxWidth: block.align === "center" ? 880 : "min(52rem, max(58%, 380px))", textAlign: block.align === "center" ? "center" : "left", opacity: i === 0 ? 1 : 0, pointerEvents: i === 0 ? "auto" : "none" }}>
+              <HeroOverlayCopy block={block} tabbable={i === 0} headingLevel={i === 0 ? "h1" : "h2"} />
+            </div>
+          ))}
+        </div>
+        <div className="amz-hero-progress" aria-hidden="true"><div ref={progressRef} /></div>
+      </div>
+    </section>
   );
 }
 
-/** The copy inside one hero block. Shared by the pinned overlay and the reduced-motion
- *  stack so there is a single place the markup lives. */
+/** Semantic HTML shared by the video and poster presentations. */
 function HeroOverlayCopy({
   block,
   tabbable,
@@ -735,7 +526,7 @@ function HeroOverlayCopy({
             flexWrap: "wrap",
             gap: 14,
             marginTop: 32,
-            justifyContent: block.align === "right" ? "flex-end" : block.align === "center" ? "center" : "flex-start",
+            justifyContent: block.align === "center" ? "center" : "flex-start",
           }}
         >
           {block.ctas.map((cta) =>
@@ -771,10 +562,10 @@ function HeroOverlayCopy({
                 key={cta.label}
                 href={cta.href}
                 tabIndex={tabbable ? 0 : -1}
-                className="amz-btn-outline-light"
-                style={{ display: "inline-flex", alignItems: "center", height: 58, padding: "0 34px", borderRadius: 999, border: "1.5px solid rgba(255,255,255,.56)", color: "#FFFFFF", fontFamily: "var(--font-display)", fontWeight: 600, fontSize: 16, letterSpacing: ".01em", textDecoration: "none" }}
+                className="amz-hero-text-link"
+                style={{ display: "inline-flex", alignItems: "center", gap: 10, minHeight: 44, color: "#FFFFFF", fontFamily: "var(--font-display)", fontWeight: 600, fontSize: 16, letterSpacing: ".01em", textDecoration: "none" }}
               >
-                {cta.label}
+                {cta.label} <ArrowIcon />
               </a>
             )
           )}
@@ -818,12 +609,14 @@ export default function Home() {
     let skip: ReturnType<typeof setTimeout> | undefined;
     let leave: ReturnType<typeof setTimeout> | undefined;
 
+    let consentRestore: ReturnType<typeof setTimeout> | undefined;
     let saved = false;
     try {
       const raw = localStorage.getItem("amz-cookie-consent");
       if (raw) {
         saved = true;
-        setConsent(JSON.parse(raw));
+        const storedConsent = JSON.parse(raw);
+        consentRestore = setTimeout(() => setConsent(storedConsent), 0);
       }
     } catch {}
     const showNotice = (ms: number) => {
@@ -860,6 +653,7 @@ export default function Home() {
     }, 6000);
 
     return () => {
+      if (consentRestore) clearTimeout(consentRestore);
       if (skip) clearTimeout(skip);
       if (tick) clearInterval(tick);
       if (done) clearTimeout(done);

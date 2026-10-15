@@ -775,3 +775,25 @@ select.amz-field {
   animation: amz-swoosh-glint 2600ms cubic-bezier(0.3,0,0.6,1) 1100ms both;
 }
 .amz-swoosh-glint-2 { animation-delay: 1550ms; }
+
+/* Scroll hero: preserve the existing typography, palette and CTA styles. */
+.amz-hero-stage { position: sticky; top: 0; height: 100vh; height: 100svh; overflow: hidden; padding-top: var(--amz-hdr-h); display: flex; align-items: flex-end; }
+.amz-hero-media { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; pointer-events: none; }
+.amz-hero-poster { transition: opacity 400ms ease; }
+.amz-hero-copy { position: relative; width: 100%; min-width: 0; max-width: 1360px; margin: 0 auto; padding: 0 clamp(20px,4vw,56px) clamp(44px,8vh,104px); display: grid; }
+.amz-hero-overlay { will-change: opacity, transform; transition: opacity 400ms ease, transform 400ms ease; }
+.amz-hero-loading { position: absolute; top: calc(var(--amz-hdr-h) + 20px); right: 24px; color: #fff; font-size: 12px; letter-spacing: .06em; transition: opacity 400ms; }
+.amz-hero-progress { position: absolute; bottom: 0; left: 0; right: 0; height: 3px; background: rgba(255,255,255,.2); }
+.amz-hero-progress > div { position: relative; width: 0; height: 100%; background: #F99615; }
+.amz-hero-progress > div::after { content: ''; position: absolute; right: -3px; top: -2px; width: 7px; height: 7px; border-radius: 50%; background: #F99615; box-shadow: 0 0 10px #F99615; }
+.amz-hero-text-link:hover { text-decoration: underline !important; }
+@media (max-width: 768px) {
+  .amz-hero-copy { padding: 0 24px 48px; }
+  .amz-hero-overlay { max-width: 100% !important; }
+  .amz-hero-overlay h1, .amz-hero-overlay h2 { font-size: clamp(36px,9vw,40px) !important; }
+  .amz-hero-overlay > p:not(:first-child) { display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 3; overflow: hidden; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .amz-hero-overlay { will-change: auto; }
+  .amz-hero-poster { transition-duration: 400ms !important; }
+}
