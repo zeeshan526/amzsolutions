@@ -8,7 +8,7 @@ import { AMZ_PHONE_DISPLAY, AMZ_PHONE_HREF } from "../_lib/contact";
 
 /* Shared chrome for every page: the fixed header (with its Technologies & Services
    mega-menu), the mobile slide-over menu, and the accessibility skip link. Extracted
-   from the homepage so the same nav — and the same condense-on-scroll behaviour —
+   from the homepage so the same nav, and the same condense-on-scroll behaviour,
    works identically on the service pages that link off it. */
 
 const EASE_MOVE = "cubic-bezier(0.36,0,0.24,1)";
@@ -118,7 +118,7 @@ export default function SiteHeader() {
               all-white logo carries it alone. Once the header condenses onto its white pill the
               white artwork would vanish, so the full-colour logo takes over and the name sits
               beside it, "AMZ" stacked over "Energy Systems". */}
-          <Link href="/" aria-label="AMZ Energy Systems — home" style={{ flex: "none", display: "flex", alignItems: "center", gap: 10, textDecoration: "none" }}>
+          <Link href="/" aria-label="AMZ Energy Systems | home" style={{ flex: "none", display: "flex", alignItems: "center", gap: 10, textDecoration: "none" }}>
             <span className="amz-logo-slot">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img className="amz-logo-hero" src="/images/logo/amz-logo-white.png" alt="" width={471} height={574} />
@@ -135,12 +135,14 @@ export default function SiteHeader() {
 
           <nav aria-label="Main" className="amz-w" style={{ flex: "1 1 auto", minWidth: 0, display: "flex", justifyContent: "center" }}>
             <ul style={{ listStyle: "none", margin: 0, padding: 0, display: "flex", alignItems: "center", gap: "clamp(16px,2.2vw,34px)" }}>
-              <li style={{ position: "relative" }} onMouseEnter={navEnter} onMouseLeave={navLeave}>
+              <li style={{ position: "relative", display: "flex", alignItems: "center", gap: 4 }} onMouseEnter={navEnter} onMouseLeave={navLeave}>
+                <Link href="/technologies-services" className="amz-nav-a" onClick={() => setNavOpen(false)} style={{ fontFamily: "var(--font-display)", fontWeight: 600, fontSize: 15, whiteSpace: "nowrap", color: "#FFFFFF", textDecoration: "none" }}>Technologies &amp; Services</Link>
                 <button
                   ref={menuTriggerRef}
                   type="button"
                   className="amz-nav-a"
                   onClick={() => setNavOpen((v) => !v)}
+                  aria-label="Toggle technologies and services submenu"
                   aria-expanded={navOpen}
                   aria-controls="amz-tech-menu"
                   style={{
@@ -148,7 +150,7 @@ export default function SiteHeader() {
                     display: "inline-flex",
                     alignItems: "center",
                     gap: 7,
-                    padding: "6px 0",
+                    padding: "10px 4px",
                     background: "transparent",
                     border: 0,
                     fontFamily: "var(--font-display)",
@@ -159,7 +161,6 @@ export default function SiteHeader() {
                     color: "#FFFFFF",
                   }}
                 >
-                  Technologies &amp; Services
                   <svg
                     width="12"
                     height="12"
@@ -346,7 +347,7 @@ export default function SiteHeader() {
             </div>
             <ul style={{ listStyle: "none", margin: 0, padding: "12px 0", flex: "1 1 auto", minHeight: 0, overflowY: "auto", overscrollBehavior: "contain" }}>
               <li style={{ padding: "14px 24px 6px" }}>
-                <p
+                <Link href="/technologies-services" onClick={() => setOpen(false)}
                   style={{
                     display: "flex",
                     alignItems: "center",
@@ -359,11 +360,13 @@ export default function SiteHeader() {
                     textTransform: "uppercase",
                     color: "rgba(255,255,255,.52)",
                     margin: "0 0 6px",
+                    textDecoration: "none",
+                    minHeight: 44,
                   }}
                 >
                   <span aria-hidden style={{ width: 16, height: 1, background: "currentColor", flex: "none" }} />
                   Technologies &amp; Services
-                </p>
+                </Link>
               </li>
               {AMZ_TECH_MENU.map((item) => (
                 <li key={item.label}>

@@ -5,7 +5,7 @@ import { useId, useRef, useState } from "react";
 import { AMZ_PHONE_DISPLAY, AMZ_PHONE_HREF } from "../_lib/contact";
 import { submitFormDataToWeb3Forms } from "../_lib/web3forms";
 
-/* Fuller than the homepage's QuoteForm — this mirrors the live site's own contact form
+/* Fuller than the homepage's QuoteForm, this mirrors the live site's own contact form
    (first/last name, subject, an optional file attachment) rather than the quote-request
    shape, since this page is the general "get in touch" destination, not the quote CTA. */
 
@@ -34,7 +34,8 @@ const fieldStyle: React.CSSProperties = {
   background: "#FFFFFF",
 };
 
-export default function ContactForm() {
+export default function ContactForm({ productOptions }: { productOptions?: readonly string[] }) {
+  const isCostars = Boolean(productOptions);
   const formRef = useRef<HTMLFormElement | null>(null);
   const [state, setState] = useState<"idle" | "sending" | "sent">("idle");
   const [error, setError] = useState<string | null>(null);
@@ -53,8 +54,9 @@ export default function ContactForm() {
 
     const firstName = String(data.get("first_name") ?? "");
     const lastName = String(data.get("last_name") ?? "");
-    data.set("subject", `Contact form: ${String(data.get("subject") ?? "General enquiry")} — from ${firstName} ${lastName}`.trim());
-    data.set("from_name", "AMZ website contact form");
+    const topic = isCostars ? String(data.get("costars_product") ?? "COSTARS enquiry") : String(data.get("subject") ?? "General enquiry");
+    data.set("subject", `${isCostars ? "COSTARS Program" : "Contact form"}: ${topic} from ${firstName} ${lastName}`.trim());
+    data.set("from_name", isCostars ? "AMZ COSTARS Program enquiry" : "AMZ website contact form");
     data.set("replyto", String(data.get("email") ?? ""));
 
     setState("sending");
@@ -78,15 +80,15 @@ export default function ContactForm() {
         <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="#1462A7" strokeWidth="2" aria-hidden="true" style={{ marginBottom: 16 }}>
           <path d="M4 12.5l5 5L20 6.5" />
         </svg>
-        <h3 style={{ fontFamily: "var(--font-display)", fontWeight: 700, fontSize: "clamp(1.25rem,1.1rem + .6vw,1.5rem)", color: "#191C1F", margin: "0 0 12px" }}>Message received</h3>
+        <h3 style={{ fontFamily: "var(--font-display)", fontWeight: 700, fontSize: "clamp(1.25rem,1.1rem + .6vw,1.5rem)", color: "#191C1F", margin: "0 0 12px" }}>Message Received</h3>
         <p style={{ fontSize: 16, lineHeight: 1.7, color: "#444444", margin: "0 0 20px" }}>
-          Thanks — we reply to every message within one business day. If it&rsquo;s urgent, call us and ask for the on-call engineer.
+          Thanks, we reply to every message within one business day. If it&rsquo;s urgent, call us and ask for the on-call engineer.
         </p>
         <a href={AMZ_PHONE_HREF} style={{ display: "inline-flex", alignItems: "center", gap: 10, fontFamily: "var(--font-display)", fontWeight: 700, fontSize: 19, color: "#1462A7", textDecoration: "none", fontVariantNumeric: "tabular-nums" }}>
           {AMZ_PHONE_DISPLAY}
         </a>
         <p style={{ margin: "24px 0 0" }}>
-          <button type="button" onClick={() => setState("idle")} style={{ background: "none", border: 0, padding: 0, color: "#5A6068", fontFamily: "var(--font-body)", fontSize: 15, textDecoration: "underline", cursor: "pointer" }}>
+          <button type="button" onClick={() => setState("idle")} style={{ background: "none", border: 0, padding: 0, color: "#5A6068", fontFamily: "var(--font-body)", fontSize: 15, textDecoration: "none", cursor: "pointer" }}>
             Send another message
           </button>
         </p>
@@ -117,19 +119,28 @@ export default function ContactForm() {
         </div>
       </div>
 
-      <div style={{ marginBottom: 18 }}>
+      {isCostars ? (
+        <div style={{ marginBottom: 18 }}>
+          <label htmlFor={`${id}-product`} style={labelStyle}>COSTARS Product Of Interest *</label>
+          <select id={`${id}-product`} name="costars_product" required defaultValue="" style={fieldStyle}>
+            <option value="" disabled>Select a product or service</option>
+            {productOptions?.map(option => <option key={option} value={option}>{option}</option>)}
+            <option value="Other / Not sure yet">Other / Not sure yet</option>
+          </select>
+        </div>
+      ) : <div style={{ marginBottom: 18 }}>
         <label htmlFor={`${id}-subject`} style={labelStyle}>Subject</label>
         <input id={`${id}-subject`} name="subject" type="text" placeholder="What's this about?" style={fieldStyle} />
-      </div>
+      </div>}
 
       <div style={{ marginBottom: 18 }}>
-        <label htmlFor={`${id}-message`} style={labelStyle}>Message *</label>
+        <label htmlFor={`${id}-message`} style={labelStyle}>{isCostars ? "Tell Us More About The Project *" : "Message *"}</label>
         <textarea id={`${id}-message`} name="message" required rows={4} style={{ ...fieldStyle, height: "auto", padding: "12px 14px", lineHeight: 1.6, resize: "vertical" }} />
       </div>
 
       <div style={{ marginBottom: 8 }}>
         <label htmlFor={`${id}-file`} style={labelStyle}>
-          Attachment <span style={{ fontFamily: "var(--font-body)", fontStretch: "100%", fontWeight: 400, letterSpacing: 0, textTransform: "none", fontSize: 13 }}>(optional — drawings, photos, up to 10MB)</span>
+          Attachment <span style={{ fontFamily: "var(--font-body)", fontStretch: "100%", fontWeight: 400, letterSpacing: 0, textTransform: "none", fontSize: 13 }}>(optional, drawings, photos, up to 10MB)</span>
         </label>
         <input
           id={`${id}-file`}

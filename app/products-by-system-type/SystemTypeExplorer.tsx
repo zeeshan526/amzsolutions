@@ -8,7 +8,7 @@ import { SYSTEM_CATEGORIES } from "../_lib/systemTypes";
 
 /* Chip rail + detail panel. Picking a category swaps the panel below rather than
    navigating anywhere, so a specifier can flick through all ten without losing their
-   place — and a text filter narrows the manufacturer rows inside whichever category
+   place, and a text filter narrows the manufacturer rows inside whichever category
    is open, for the case where they already know the brand they're looking for. */
 
 export default function SystemTypeExplorer({ initialSlug }: { initialSlug?: string }) {

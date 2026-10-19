@@ -6,6 +6,7 @@ import ArrowIcon from "./_components/ArrowIcon";
 import QuoteForm from "./_components/QuoteForm";
 import SiteFooter from "./_components/SiteFooter";
 import SiteHeader from "./_components/SiteHeader";
+import TechnologyServices from "./_components/TechnologyServices";
 import { AMZ_PHONE_DISPLAY, AMZ_PHONE_HREF } from "./_lib/contact";
 import { LINE_CARD_HREF } from "./_lib/lineCard";
 import { TIMELINE, HERO_OVERLAYS, HERO_VIDEO, HERO_HEIGHT, HERO_FADE, progressToTime, type HeroOverlay } from "./_lib/hero";
@@ -16,21 +17,21 @@ import { TIMELINE, HERO_OVERLAYS, HERO_VIDEO, HERO_HEIGHT, HERO_FADE, progressTo
 
 
 const PARTNER_LOGOS = [
-  { src: "/images/partners/unilux.png", alt: "Unilux HVAC Industries" },
-  { src: "/images/partners/xnrgy.png", alt: "XNRGY" },
-  { src: "/images/partners/galletti.png", alt: "Galletti" },
-  { src: "/images/partners/american-cooling-tower.png", alt: "American Cooling Tower, Inc" },
-  { src: "/images/partners/aermec.png", alt: "Aermec air conditioning" },
-  { src: "/images/partners/dunham-bush.png", alt: "Dunham-Bush" },
-  { src: "/images/partners/hisense.png", alt: "Hisense" },
-  { src: "/images/partners/superior-rex.png", alt: "Superior Rex" },
+  { src: "/images/partners/unilux.png", alt: "Unilux HVAC Industries", href: "https://uniluxhvac.com/" },
+  { src: "/images/partners/xnrgy.png", alt: "XNRGY", href: "https://www.xnrgy.com/" },
+  { src: "/images/partners/galletti.png", alt: "Galletti", href: "https://www.galletti-na.com/" },
+  { src: "/images/partners/american-cooling-tower.png", alt: "American Cooling Tower, Inc", href: "https://www.americancoolingtower.com/" },
+  { src: "/images/partners/aermec.png", alt: "Aermec air conditioning", href: "https://aermec-na.com/" },
+  { src: "/images/partners/dunham-bush.png", alt: "Dunham-Bush", href: "https://dbamericas.com/" },
+  { src: "/images/partners/hisense.png", alt: "Hisense", href: "https://hisensecomfort.com/" },
+  { src: "/images/partners/superior-rex.png", alt: "Superior Rex", href: "https://www.superiorrex.com/" },
 ];
 
 const STEPS = [
-  { n: "01", title: "Walk the building", text: "Plant room, risers, the zones that complain. Before any selection is made." },
-  { n: "02", title: "Measure and model", text: "Metered load where it exists, modelled where it doesn’t — and we always say which." },
-  { n: "03", title: "Specify together", text: "Options priced side by side, with the trade-off stated in plain terms." },
-  { n: "04", title: "Commission and hand over", text: "Start-up attended, readings documented, one name to call afterwards." },
+  { n: "01", title: "Walk The Building", text: "Plant room, risers, the zones that complain. Before any selection is made." },
+  { n: "02", title: "Measure And Model", text: "Metered load where it exists, modelled where it doesn’t, and we always say which." },
+  { n: "03", title: "Specify Together", text: "Options priced side by side, with the trade-off stated in plain terms." },
+  { n: "04", title: "Commission And Hand Over", text: "Start-up attended, readings documented, one name to call afterwards." },
 ];
 
 const VERTICALS = [
@@ -72,36 +73,42 @@ const PARTNER_CARDS = [
   {
     logo: "/images/partners/aermec.png",
     alt: "Aermec",
+    href: "https://aermec-na.com/",
     category: "Chillers · heat pumps",
     text: "Air- and water-cooled chillers, reversible heat pumps, fan coils. Our default for mid-size plant rooms with tight acoustic limits.",
   },
   {
     logo: "/images/partners/dunham-bush.png",
     alt: "Dunham-Bush",
+    href: "https://dbamericas.com/",
     category: "Chillers · air handling",
     text: "Screw and centrifugal chillers, custom air handling. Where a long service life and rebuildable plant matter more than first cost.",
   },
   {
     logo: "/images/partners/american-cooling-tower.png",
     alt: "American Cooling Tower",
+    href: "https://www.americancoolingtower.com/",
     category: "Heat rejection",
     text: "Field-erected and factory cooling towers, basin and fill rebuilds. Retrofits into existing structures where the footprint cannot change.",
   },
   {
     logo: "/images/partners/galletti.png",
     alt: "Galletti",
+    href: "https://www.galletti-na.com/",
     category: "Terminal units",
     text: "Fan coils, unit ventilators and terminal heat pumps. Classroom and guest-room applications where sound power drives the selection.",
   },
   {
     logo: "/images/partners/hisense.png",
     alt: "Hisense",
+    href: "https://hisensecomfort.com/",
     category: "VRF · light commercial",
     text: "VRF, mini-splits and light commercial packaged equipment. Tenant fit-outs and additions with no room for central plant.",
   },
   {
     logo: "/images/partners/superior-rex.png",
     alt: "Superior Rex",
+    href: "https://www.superiorrex.com/",
     category: "Coils · heat transfer",
     text: "Replacement and custom coils, condensers and heat-transfer products. Same-geometry replacements for plant that is otherwise sound.",
   },
@@ -242,7 +249,7 @@ const HERO_OVERLAY_LIFT = 16;
  *  progress always yields the same frame, which is what makes reverse scrolling exact. */
 function heroOverlayState(block: HeroOverlay, progress: number) {
   // The first block must be fully up at rest, and the last must not blank out as the
-  // section unpins — so those outer edges get no ramp.
+  // section unpins, so those outer edges get no ramp.
   const fadeIn = block.start > 0 ? HERO_OVERLAY_FADE : 0;
   const fadeOut = block.end < 1 ? HERO_OVERLAY_FADE : 0;
 
@@ -267,7 +274,6 @@ function HeroScrollStage() {
   const overlayRefs = useRef<(HTMLDivElement | null)[]>([]);
   const posterRefs = useRef<(HTMLImageElement | null)[]>([]);
   const progressRef = useRef<HTMLDivElement | null>(null);
-  const gradientRef = useRef<HTMLDivElement | null>(null);
   const loadingRef = useRef<HTMLSpanElement | null>(null);
 
   useEffect(() => {
@@ -386,7 +392,6 @@ function HeroScrollStage() {
         if (node) node.style.opacity = i === posterIndex ? "1" : "0";
       });
       if (progressRef.current) progressRef.current.style.width = `${target * 100}%`;
-      if (gradientRef.current) gradientRef.current.style.opacity = String(heroOverlayState(HERO_OVERLAYS[5], copyProgress).opacity);
       frame = requestAnimationFrame(tick);
     };
     const onScroll = () => { dirty = true; };
@@ -444,8 +449,7 @@ function HeroScrollStage() {
           <img key={block.poster} ref={el => { posterRefs.current[i] = el; }} src={block.poster} alt="" aria-hidden="true" className="amz-hero-media amz-hero-poster" style={{ opacity: i === 0 ? 1 : 0 }} />
         ))}
         <video ref={videoRef} poster={HERO_OVERLAYS[0].poster} muted playsInline preload="auto" disablePictureInPicture aria-hidden="true" tabIndex={-1} className="amz-hero-media" style={{ opacity: 0 }} />
-        <div aria-hidden="true" className="amz-hero-media" style={{ background: "linear-gradient(180deg,rgba(0,0,0,.40) 0%,rgba(0,0,0,.14) 30%,rgba(0,0,0,.28) 58%,rgba(0,0,0,.74) 100%)" }} />
-        <div ref={gradientRef} aria-hidden="true" className="amz-hero-media" style={{ opacity: 0, background: "linear-gradient(180deg,transparent 40%,rgba(0,0,0,.15) 100%)" }} />
+        <div aria-hidden="true" className="amz-hero-media amz-hero-shade" />
         <span ref={loadingRef} className="amz-hero-loading" role="status">Preparing your view…</span>
         <div className="amz-hero-copy">
           {HERO_OVERLAYS.map((block, i) => (
@@ -500,7 +504,7 @@ function HeroOverlayCopy({
           color: "#FFFFFF",
           margin: "0 0 20px",
           // Off-centre blocks let the heading run the full column width so its edge lines
-          // up with the body's — that shared edge is what reads as the alignment.
+          // up with the body's, that shared edge is what reads as the alignment.
           maxWidth: block.align === "center" ? "20ch" : undefined,
           marginInline: block.align === "center" ? "auto" : undefined,
         }}
@@ -563,9 +567,12 @@ function HeroOverlayCopy({
                 href={cta.href}
                 tabIndex={tabbable ? 0 : -1}
                 className="amz-hero-text-link"
+                target={cta.href === LINE_CARD_HREF ? "_blank" : undefined}
+                rel={cta.href === LINE_CARD_HREF ? "noopener noreferrer" : undefined}
                 style={{ display: "inline-flex", alignItems: "center", gap: 10, minHeight: 44, color: "#FFFFFF", fontFamily: "var(--font-display)", fontWeight: 600, fontSize: 16, letterSpacing: ".01em", textDecoration: "none" }}
               >
                 {cta.label} <ArrowIcon />
+                {cta.href === LINE_CARD_HREF && <span className="sr-only"> (opens in a new tab)</span>}
               </a>
             )
           )}
@@ -794,12 +801,16 @@ export default function Home() {
           >
             <div className="amz-marquee" style={{ display: "flex", width: "max-content", alignItems: "center", gap: "clamp(48px,6vw,88px)", padding: "0 clamp(24px,3vw,44px)" }}>
               {[...PARTNER_LOGOS, ...PARTNER_LOGOS].map((p, i) => (
-                // eslint-disable-next-line @next/next/no-img-element
-                <img key={i} src={p.src} alt={i < PARTNER_LOGOS.length ? p.alt : ""} aria-hidden={i >= PARTNER_LOGOS.length} style={{ height: "clamp(30px,3.6vw,44px)", width: "auto", flex: "none" }} />
+                <a key={i} href={p.href} target="_blank" rel="noopener noreferrer" className="amz-partner-logo" aria-label={`${p.alt} (opens in a new tab)`} aria-hidden={i >= PARTNER_LOGOS.length} tabIndex={i >= PARTNER_LOGOS.length ? -1 : undefined}>
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img src={p.src} alt={p.alt} style={{ display: "block", height: "clamp(30px,3.6vw,44px)", width: "auto" }} />
+                </a>
               ))}
             </div>
           </div>
         </section>
+
+        <TechnologyServices />
 
         {/* Positioning / How we work */}
         <section className="amz-clip-x" id="positioning" data-screen-label="Positioning" style={{ padding: "clamp(64px,9vw,96px) 0", borderBottom: "1px solid #E3E5E8" }}>
@@ -813,12 +824,12 @@ export default function Home() {
           </svg>
           <div style={{ maxWidth: 1280, margin: "0 auto", padding: "0 clamp(20px,4vw,40px)" }}>
             <div className="amz-head" style={{ maxWidth: 760, margin: "0 auto 56px", textAlign: "center" }}>
-              <Eyebrow>How we work</Eyebrow>
+              <Eyebrow>How We Work</Eyebrow>
               <h2 style={{ fontFamily: "var(--font-display)", fontWeight: 700, fontSize: "clamp(1.625rem,1.17rem + 1.94vw,2.4375rem)", lineHeight: 1.15, letterSpacing: "-.012em", margin: "0 0 20px" }}>
-                We solve the mechanical problem <span className="amz-accent">with you,</span> not for you
+                We Solve The Mechanical Problem <span className="amz-accent">With You,</span> Not For You
               </h2>
               <p style={{ fontSize: "clamp(1.0625rem,.98rem + .35vw,1.25rem)", lineHeight: 1.6, color: "#444444", margin: 0 }}>
-                Most mechanical problems arrive already half-diagnosed. The useful work happens in the room where the engineer, the contractor and the owner are all looking at the same numbers — so we start on the drawings, not the catalogue.
+                Most mechanical problems arrive already half-diagnosed. The useful work happens in the room where the engineer, the contractor and the owner are all looking at the same numbers, so we start on the drawings, not the catalogue.
               </p>
             </div>
             <ol style={{ listStyle: "none", margin: 0, padding: 0, display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(min(100%,232px),1fr))", gap: 20 }}>
@@ -840,16 +851,16 @@ export default function Home() {
         <section className="amz-clip-x" id="verticals" data-screen-label="Verticals" style={{ padding: "clamp(64px,9vw,96px) 0", background: "#F9FAFB", borderBottom: "1px solid #E3E5E8" }}>
           <div style={{ maxWidth: 1280, margin: "0 auto", padding: "0 clamp(20px,4vw,40px)" }}>
             <div className="amz-head" style={{ maxWidth: 680, margin: "0 auto 56px", textAlign: "center" }}>
-              <Eyebrow>Markets we serve</Eyebrow>
+              <Eyebrow>Markets We Serve</Eyebrow>
               <h2 style={{ fontFamily: "var(--font-display)", fontWeight: 700, fontSize: "clamp(1.625rem,1.17rem + 1.94vw,2.4375rem)", lineHeight: 1.15, letterSpacing: "-.012em", margin: "0 0 20px" }}>
-                Four buildings, <span className="amz-accent">four different problems</span>
+                Four Buildings, <span className="amz-accent">Four Different Problems</span>
               </h2>
-              <p style={{ fontSize: "clamp(1.0625rem,.98rem + .35vw,1.25rem)", lineHeight: 1.6, color: "#444444", margin: 0 }}>The equipment overlaps. The constraints do not — and the constraint is what decides the selection.</p>
+              <p style={{ fontSize: "clamp(1.0625rem,.98rem + .35vw,1.25rem)", lineHeight: 1.6, color: "#444444", margin: 0 }}>The equipment overlaps. The constraints do not, and the constraint is what decides the selection.</p>
             </div>
             <div className="amz-mkt amz-row" style={{ display: "grid", gap: "clamp(20px,2.4vw,32px)" }}>
               {VERTICALS.map((v, vi) => (
                 <article key={v.n} className={vi < 2 ? "amz-slide-l" : "amz-slide-r"} style={{ display: "flex", flexDirection: "column" }}>
-                  <a href="#contact" aria-label={`${v.title} — see the market`} className="amz-vert-link amz-reveal amz-leaf" style={{ position: "relative", display: "block", aspectRatio: "3 / 4", background: "#E3E5E8", borderRadius: 18, overflow: "hidden", textDecoration: "none" }}>
+                  <a href="#contact" aria-label={`${v.title}, see the market`} className="amz-vert-link amz-reveal amz-leaf" style={{ position: "relative", display: "block", aspectRatio: "3 / 4", background: "#E3E5E8", borderRadius: 18, overflow: "hidden", textDecoration: "none" }}>
                     {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img src={v.img} alt={v.alt} style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover" }} />
                     <span aria-hidden style={{ position: "absolute", top: 16, left: 16, zIndex: 2, display: "inline-flex", alignItems: "center", height: 28, padding: "0 12px", borderRadius: 999, background: "rgba(10,16,23,.78)", color: "#FFFFFF", fontFamily: "var(--font-mono)", fontSize: 12, letterSpacing: ".06em" }}>
@@ -884,18 +895,18 @@ export default function Home() {
           />
           <div style={{ position: "relative", maxWidth: 1280, margin: "0 auto", padding: "0 clamp(20px,4vw,40px)" }}>
             <div style={{ maxWidth: 660, margin: "0 auto clamp(40px,5vw,60px)", textAlign: "center" }}>
-              <Eyebrow dark>For the design community</Eyebrow>
+              <Eyebrow dark>For The Design Community</Eyebrow>
               <h2 style={{ fontFamily: "var(--font-display)", fontWeight: 700, fontSize: "clamp(1.75rem,1.2rem + 2.2vw,2.75rem)", lineHeight: 1.1, letterSpacing: "-.016em", margin: "0 0 18px", color: "#FFFFFF" }}>
-                Why mechanical engineers choose AMZ
+                Why Mechanical Engineers Choose AMZ
               </h2>
               <p style={{ fontSize: "clamp(1.0625rem,.98rem + .35vw,1.25rem)", lineHeight: 1.6, color: "rgba(255,255,255,.78)", margin: 0 }}>Four things a specifier can check. Each one is something you receive, not something we claim.</p>
             </div>
 
             <div className="amz-bento" style={{ display: "grid", gap: "clamp(16px,1.8vw,24px)" }}>
-              {/* Card 1 — assumptions attached */}
+              {/* Card 1, assumptions attached */}
               <article className="amz-bcard" style={{ background: "#0F1418", border: "1px solid rgba(255,255,255,.10)", borderRadius: 20, overflow: "hidden", display: "flex", flexDirection: "column" }}>
                 <div style={{ padding: "clamp(24px,2.6vw,32px) clamp(24px,2.6vw,32px) 0" }}>
-                  <h3 style={{ fontFamily: "var(--font-display)", fontWeight: 600, fontSize: "clamp(19px,2vw,23px)", lineHeight: 1.3, letterSpacing: "-.006em", margin: "0 0 10px", color: "#FFFFFF" }}>Assumptions attached</h3>
+                  <h3 style={{ fontFamily: "var(--font-display)", fontWeight: 600, fontSize: "clamp(19px,2vw,23px)", lineHeight: 1.3, letterSpacing: "-.006em", margin: "0 0 10px", color: "#FFFFFF" }}>Assumptions Attached</h3>
                   <p style={{ fontSize: 14, lineHeight: 1.65, color: "rgba(255,255,255,.72)", margin: 0, maxWidth: "42ch" }}>
                     Every selection arrives with its load basis, part-load curve and sound data. Where we modelled instead of measured, the copy says so.
                   </p>
@@ -926,10 +937,10 @@ export default function Home() {
                 </div>
               </article>
 
-              {/* Card 2 — in the design meeting */}
+              {/* Card 2, in the design meeting */}
               <article className="amz-bcard" style={{ background: "#0F1418", border: "1px solid rgba(255,255,255,.10)", borderRadius: 20, overflow: "hidden", display: "flex", flexDirection: "column" }}>
                 <div style={{ padding: "clamp(24px,2.6vw,32px) clamp(24px,2.6vw,32px) 0" }}>
-                  <h3 style={{ fontFamily: "var(--font-display)", fontWeight: 600, fontSize: "clamp(19px,2vw,23px)", lineHeight: 1.3, letterSpacing: "-.006em", margin: "0 0 10px", color: "#FFFFFF" }}>In the design meeting, not just the bid</h3>
+                  <h3 style={{ fontFamily: "var(--font-display)", fontWeight: 600, fontSize: "clamp(19px,2vw,23px)", lineHeight: 1.3, letterSpacing: "-.006em", margin: "0 0 10px", color: "#FFFFFF" }}>In The Design Meeting, Not Just The Bid</h3>
                   <p style={{ fontSize: 14, lineHeight: 1.65, color: "rgba(255,255,255,.72)", margin: 0, maxWidth: "42ch" }}>
                     We sit in the review while the scheme is still moving. If a cheaper line meets your spec you hear it before submittals, not after.
                   </p>
@@ -964,10 +975,10 @@ export default function Home() {
                 </div>
               </article>
 
-              {/* Card 3 — schedules that stay current */}
+              {/* Card 3, schedules that stay current */}
               <article className="amz-bcard" style={{ background: "#0F1418", border: "1px solid rgba(255,255,255,.10)", borderRadius: 20, overflow: "hidden", display: "flex", flexDirection: "column" }}>
                 <div style={{ padding: "clamp(24px,2.6vw,32px) clamp(24px,2.6vw,32px) 0" }}>
-                  <h3 style={{ fontFamily: "var(--font-display)", fontWeight: 600, fontSize: "clamp(19px,2vw,23px)", lineHeight: 1.3, letterSpacing: "-.006em", margin: "0 0 10px", color: "#FFFFFF" }}>Schedules that stay current</h3>
+                  <h3 style={{ fontFamily: "var(--font-display)", fontWeight: 600, fontSize: "clamp(19px,2vw,23px)", lineHeight: 1.3, letterSpacing: "-.006em", margin: "0 0 10px", color: "#FFFFFF" }}>Schedules That Stay Current</h3>
                   <p style={{ fontSize: 14, lineHeight: 1.65, color: "rgba(255,255,255,.72)", margin: 0, maxWidth: "42ch" }}>
                     Equipment moves, spec sections don&rsquo;t. We keep the schedule and the blocks current, so today&rsquo;s spec still matches what lands on site.
                   </p>
@@ -1009,12 +1020,12 @@ export default function Home() {
                 </div>
               </article>
 
-              {/* Card 4 — one engineer */}
+              {/* Card 4, one engineer */}
               <article className="amz-bcard" style={{ background: "#0F1418", border: "1px solid rgba(255,255,255,.10)", borderRadius: 20, overflow: "hidden", display: "flex", flexDirection: "column" }}>
                 <div style={{ padding: "clamp(24px,2.6vw,32px) clamp(24px,2.6vw,32px) 0" }}>
-                  <h3 style={{ fontFamily: "var(--font-display)", fontWeight: 600, fontSize: "clamp(19px,2vw,23px)", lineHeight: 1.3, letterSpacing: "-.006em", margin: "0 0 10px", color: "#FFFFFF" }}>One engineer, start to finish</h3>
+                  <h3 style={{ fontFamily: "var(--font-display)", fontWeight: 600, fontSize: "clamp(19px,2vw,23px)", lineHeight: 1.3, letterSpacing: "-.006em", margin: "0 0 10px", color: "#FFFFFF" }}>One Engineer, Start To Finish</h3>
                   <p style={{ fontSize: 14, lineHeight: 1.65, color: "rgba(255,255,255,.72)", margin: 0, maxWidth: "42ch" }}>
-                    The person who sized it attends start-up and signs the readings — one named contact, no handover to a service desk halfway through the job.
+                    The person who sized it attends start-up and signs the readings, one named contact, no handover to a service desk halfway through the job.
                   </p>
                 </div>
                 <div aria-hidden style={{ position: "relative", flex: "1 1 auto", minHeight: 228, overflow: "hidden", display: "flex", alignItems: "center" }}>
@@ -1067,7 +1078,7 @@ export default function Home() {
         <section id="partners" data-screen-label="Premier partners" style={{ padding: "clamp(64px,9vw,96px) 0", borderBottom: "1px solid #E3E5E8" }}>
           <div style={{ maxWidth: 1280, margin: "0 auto", padding: "0 clamp(20px,4vw,40px)" }}>
             <div className="amz-head" style={{ maxWidth: 680, margin: "0 auto 56px", textAlign: "center" }}>
-              <Eyebrow>Premier partners</Eyebrow>
+              <Eyebrow>Premier Partners</Eyebrow>
               <h2 style={{ fontFamily: "var(--font-display)", fontWeight: 700, fontSize: "clamp(1.625rem,1.17rem + 1.94vw,2.4375rem)", lineHeight: 1.15, letterSpacing: "-.012em", margin: "0 0 20px" }}>
                 <a
                   className="amz-linecard-link"
@@ -1080,7 +1091,7 @@ export default function Home() {
                   <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#1462A7" strokeWidth="2" strokeLinecap="butt" strokeLinejoin="miter" aria-hidden="true" style={{ flex: "none" }}>
                     <path d="M4 12h16M14 6l6 6-6 6" />
                   </svg>
-                  <span className="sr-only">(opens in a new tab)</span>
+                  <span className="sr-only">(Opens In A New Tab)</span>
                 </a>
               </h2>
               <p style={{ fontSize: "clamp(1.0625rem,.98rem + .35vw,1.25rem)", lineHeight: 1.6, color: "#444444", margin: 0 }}>
@@ -1089,7 +1100,7 @@ export default function Home() {
             </div>
             <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(min(100%,290px),1fr))", gap: "clamp(16px,1.8vw,24px)" }}>
               {PARTNER_CARDS.map((p, i) => (
-                <article key={p.alt} className="amz-partner-card amz-quick amz-leaf" style={{ display: "flex", flexDirection: "column", background: "#FFFFFF", border: "1px solid #E3E5E8", borderRadius: 16, padding: 26 }}>
+                <a key={p.alt} href={p.href} target="_blank" rel="noopener noreferrer" aria-label={`${p.alt} product range (opens in a new tab)`} className="amz-partner-card amz-quick amz-leaf" style={{ display: "flex", flexDirection: "column", background: "#FFFFFF", border: "1px solid #E3E5E8", borderRadius: 16, padding: 26, color: "inherit", textDecoration: "none" }}>
                   <div className="amz-pcard-logo" style={{ position: "relative" }}>
                     {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img src={p.logo} alt={p.alt} style={{ maxHeight: 40, maxWidth: 170, width: "auto", height: "auto" }} />
@@ -1100,22 +1111,22 @@ export default function Home() {
                     {p.category}
                   </p>
                   <p style={{ fontSize: 14, lineHeight: 1.65, color: "#444444", margin: "0 0 22px" }}>{p.text}</p>
-                  <a href="#partners" className="amz-link-arrow" style={{ marginTop: "auto", display: "inline-flex", alignItems: "center", gap: 8, fontFamily: "var(--font-display)", fontWeight: 600, fontSize: 14, color: "#1462A7", textDecoration: "none" }}>
+                  <span className="amz-link-arrow" style={{ marginTop: "auto", display: "inline-flex", alignItems: "center", gap: 8, fontFamily: "var(--font-display)", fontWeight: 600, fontSize: 14, color: "#1462A7", textDecoration: "none" }}>
                     Product range
                     <span className="amz-arrow-slide"><ArrowIcon /></span>
-                  </a>
-                </article>
+                  </span>
+                </a>
               ))}
             </div>
           </div>
         </section>
 
-        {/* Testimonials ring */}
-        <section id="testimonials" data-screen-label="Testimonials" style={{ padding: "clamp(64px,9vw,96px) 0", background: "#F9FAFB", borderBottom: "1px solid #E3E5E8", overflow: "hidden" }}>
+        {/* Testimonials ring, temporarily hidden until reviews are ready. */}
+        <section hidden id="testimonials" data-screen-label="Testimonials" style={{ padding: "clamp(64px,9vw,96px) 0", background: "#F9FAFB", borderBottom: "1px solid #E3E5E8", overflow: "hidden" }}>
           <div style={{ maxWidth: 1280, margin: "0 auto", padding: "0 clamp(20px,4vw,40px)" }}>
             <div className="amz-head" style={{ maxWidth: 640, margin: "0 auto 56px", textAlign: "center" }}>
-              <Eyebrow>In their words</Eyebrow>
-              <h2 style={{ fontFamily: "var(--font-display)", fontWeight: 700, fontSize: "clamp(1.625rem,1.17rem + 1.94vw,2.4375rem)", lineHeight: 1.15, letterSpacing: "-.012em", margin: 0 }}>Every side <span className="amz-accent">of the work</span></h2>
+              <Eyebrow>In Their Words</Eyebrow>
+              <h2 style={{ fontFamily: "var(--font-display)", fontWeight: 700, fontSize: "clamp(1.625rem,1.17rem + 1.94vw,2.4375rem)", lineHeight: 1.15, letterSpacing: "-.012em", margin: 0 }}>Every Side <span className="amz-accent">Of The Work</span></h2>
             </div>
 
             <div className="amz-ring" style={{ position: "relative", width: "min(100%,calc(var(--r) * 2 + var(--av) + 24px))", margin: "0 auto", aspectRatio: "1 / 1", display: "flex", alignItems: "center", justifyContent: "center" }}>
@@ -1272,9 +1283,9 @@ export default function Home() {
         <section id="impact" data-screen-label="Social impact" style={{ padding: "clamp(64px,9vw,96px) 0", borderBottom: "1px solid #E3E5E8" }}>
           <div style={{ maxWidth: 1280, margin: "0 auto", padding: "0 clamp(20px,4vw,40px)" }}>
             <div className="amz-head" style={{ maxWidth: 700, margin: "0 auto 56px", textAlign: "center" }}>
-              <Eyebrow>Social impact</Eyebrow>
+              <Eyebrow>Social Impact</Eyebrow>
               <h2 style={{ fontFamily: "var(--font-display)", fontWeight: 700, fontSize: "clamp(1.625rem,1.17rem + 1.94vw,2.4375rem)", lineHeight: 1.15, letterSpacing: "-.012em", margin: "0 0 20px" }}>
-                The second half of <span className="amz-accent">&ldquo;buildings and communities&rdquo;</span>
+                The Second Half Of <span className="amz-accent">&ldquo;Buildings And Communities&rdquo;</span>
               </h2>
               <p style={{ fontSize: "clamp(1.0625rem,.98rem + .35vw,1.25rem)", lineHeight: 1.6, color: "#444444", margin: 0 }}>
                 Crew time, equipment and know-how given to organisations in the counties we work in. Hours and partners are published, not estimated.
@@ -1343,7 +1354,7 @@ export default function Home() {
           <div className="amz-contact-grid" style={{ position: "relative", maxWidth: 1080, margin: "0 auto", padding: "clamp(56px,8vw,88px) clamp(20px,4vw,40px)" }}>
             <div>
             <h2 style={{ fontFamily: "var(--font-display)", fontWeight: 700, fontSize: "clamp(1.625rem,1.17rem + 1.94vw,2.4375rem)", lineHeight: 1.15, letterSpacing: "-.012em", margin: "0 0 16px", color: "#FFFFFF" }}>
-              Tell us what the building is <span className="amz-accent amz-accent-light">doing</span>
+              Tell Us What The Building Is <span className="amz-accent amz-accent-light">Doing</span>
             </h2>
             <p style={{ fontSize: "clamp(1.0625rem,.98rem + .35vw,1.25rem)", lineHeight: 1.6, color: "rgba(255,255,255,.86)", margin: "0 0 32px", maxWidth: "36ch" }}>We&rsquo;ll come and measure. We reply to every request within one business day.</p>
             <address style={{ fontStyle: "normal", display: "flex", alignItems: "center", gap: 10, fontSize: 15, lineHeight: 1.6, color: "rgba(255,255,255,.80)", margin: "0 0 28px" }}>

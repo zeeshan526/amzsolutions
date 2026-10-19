@@ -5,8 +5,8 @@ import { LINE_CARD_BLOB_PATHNAME, LINE_CARD_FALLBACK_PATH } from "../../../_lib/
 
 /* The permanent, public "Our Line Card" link used across the site. It never points at
    Blob storage directly, so the underlying URL can change (a new upload, a different
-   store) without ever touching a link in the markup. Before the first upload — or if
-   Blob storage isn't reachable — it falls back to the PDF bundled in /public so the
+   store) without ever touching a link in the markup. Before the first upload, or if
+   Blob storage isn't reachable, it falls back to the PDF bundled in /public so the
    button is never broken. No password required: the file itself is public. */
 
 export async function GET(request: NextRequest) {

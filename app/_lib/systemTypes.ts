@@ -1,4 +1,4 @@
-/* Product lines organised by system type — the same grouping used on the live site's
+/* Product lines organised by system type, the same grouping used on the live site's
    Technologies & Services menu. Manufacturer names and product lines are real; the
    framing copy is ours. */
 
@@ -17,7 +17,7 @@ export const SYSTEM_CATEGORIES: SystemCategory[] = [
     slug: "air-handlers-fan-coils",
     title: "Air Handlers & Fan Coils",
     short: "Air handling",
-    blurb: "Custom and semi-custom AHUs down to stock fan coils — sized from the load, not the catalogue page.",
+    blurb: "Custom and semi-custom AHUs down to stock fan coils, sized from the load, not the catalogue page.",
     lines: [
       { brand: "XNRGY", products: "Custom AHUs, fan arrays" },
       { brand: "Dunham-Bush", products: "Semi-custom AHUs" },
@@ -46,7 +46,7 @@ export const SYSTEM_CATEGORIES: SystemCategory[] = [
     slug: "chillers-boilers",
     title: "Chillers & Boilers",
     short: "Chillers & boilers",
-    blurb: "Central plant equipment — air- and water-cooled chillers through to modular and condensing boilers.",
+    blurb: "Central plant equipment, air- and water-cooled chillers through to modular and condensing boilers.",
     lines: [
       { brand: "Dunham-Bush", products: "Air-cooled chillers, water-cooled chillers" },
       { brand: "AERMEC", products: "Air-cooled chillers, modular water-cooled chillers" },
@@ -59,7 +59,7 @@ export const SYSTEM_CATEGORIES: SystemCategory[] = [
     slug: "heat-rejection-heat-exchangers",
     title: "Heat Rejection & Heat Exchangers",
     short: "Heat rejection",
-    blurb: "Cooling towers, fluid coolers and plate heat exchangers — including rebuilds into an existing footprint.",
+    blurb: "Cooling towers, fluid coolers and plate heat exchangers, including rebuilds into an existing footprint.",
     lines: [
       { brand: "American Cooling Tower", products: "Cooling towers, custom replacements, OEM tower parts" },
       { brand: "Kelvion", products: "Plate heat exchangers, fluid coolers, adiabatic coolers" },
@@ -86,7 +86,7 @@ export const SYSTEM_CATEGORIES: SystemCategory[] = [
       { brand: "NEXGEN", products: "DOAS rooftops, split systems, heat recovery" },
       { brand: "Dunham-Bush", products: "Packaged rooftop units, water-cooled DX" },
       { brand: "Compu-Aire", products: "Precision cooling systems, CRAC units" },
-      { brand: "Vents-US", products: "ERVs — core and wheel, single-room or ducted" },
+      { brand: "Vents-US", products: "ERVs, core and wheel, single-room or ducted" },
       { brand: "Thermoplus", products: "Water-cooled DX DOAS, heat recovery option" },
       { brand: "Nu-Air", products: "Energy recovery ventilators" },
     ],
@@ -134,7 +134,7 @@ export const SYSTEM_CATEGORIES: SystemCategory[] = [
   },
   {
     slug: "air-water-treatment",
-    title: "Air and Water Treatment",
+    title: "Air And Water Treatment",
     short: "Water treatment",
     blurb: "Filtration and water treatment that protects the chiller and boiler plant it feeds.",
     lines: [

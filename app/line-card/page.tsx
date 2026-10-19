@@ -6,9 +6,9 @@ import SiteHeader from "../_components/SiteHeader";
 import { LINE_CARD_HREF } from "../_lib/lineCard";
 
 export const metadata: Metadata = {
-  title: "Line Card — AMZ Energy Systems",
+  title: "Line Card | AMZ Energy Systems",
   description:
-    "Download the current AMZ Energy Systems product line card — every manufacturer we represent, organised by category.",
+    "Download the current AMZ Energy Systems product line card, every manufacturer we represent, organised by category.",
 };
 
 export default function LineCardPage() {
@@ -19,7 +19,7 @@ export default function LineCardPage() {
         <PageMasthead
           eyebrow="Line Card"
           title="AMZ Energy Systems Product Line Card"
-          intro="Every manufacturer we represent, organised by category, in one PDF — kept current as the lines we carry change. This link always serves whatever version is current; bookmark it rather than the PDF itself."
+          intro="Every manufacturer we represent, organised by category, in one PDF, kept current as the lines we carry change. This link always serves whatever version is current; bookmark it rather than the PDF itself."
         />
 
         <section style={{ padding: "clamp(64px,9vw,96px) 0" }}>

@@ -70,7 +70,7 @@ a {
 .amz-hdr {
   container-type: inline-size;
 }
-/* Explicit heights, not content-driven ones — a height that comes from the logo inside
+/* Explicit heights, not content-driven ones, a height that comes from the logo inside
    cannot be transitioned, which is what made the condense snap instead of animate. */
 .amz-bar { height: 104px; }
 .amz-hdr.amz-stuck .amz-bar { height: 78px !important; min-height: 78px !important; }
@@ -131,7 +131,7 @@ a {
 .amz-hdr.amz-stuck .amz-logo-stuck { opacity: 1; }
 .amz-hdr.amz-stuck .amz-logo-words { display: flex; }
 /* On a phone the condensed pill cannot hold the logo, the typeset wordmark, the CTA and
-   the burger at once — the burger was the one pushed off-screen. The colour logo already
+   the burger at once, the burger was the one pushed off-screen. The colour logo already
    carries the name, so the typeset copy of it is what goes. */
 @container (max-width: 520px) {
   .amz-hdr.amz-stuck .amz-logo-words { display: none !important; }
@@ -153,7 +153,7 @@ a {
   .amz-btn-accent:hover { background: #DC8109 !important; }
   .amz-btn-outline-light:hover { border-color: #FFFFFF !important; background: rgba(255,255,255,.10) !important; }
   .amz-btn-solid-light:hover { background: #F1F2F4 !important; }
-  .amz-link-arrow:hover { text-decoration: underline; text-decoration-thickness: 2px; }
+  .amz-link-arrow:hover { text-decoration: none; text-decoration-thickness: 2px; }
   .amz-menu-item:hover { background: #EEF5FC !important; color: #1462A7 !important; }
   .amz-mobile-item:hover { background: #2D3034 !important; color: #FFFFFF !important; }
   .amz-step-card:hover, .amz-partner-card:hover {
@@ -163,7 +163,7 @@ a {
   }
   .amz-vert-link:hover { transform: translateY(-4px); }
   .amz-bcard:hover { border-color: rgba(125, 185, 237, .42); }
-  .amz-footer-link:hover { color: #FFFFFF !important; text-decoration: underline; }
+  .amz-footer-link:hover { color: #FFFFFF !important; text-decoration: none; }
   .amz-footer-tel:hover { opacity: .76; }
   .amz-cookie-primary:hover { background: #0F4E85 !important; }
   .amz-cookie-outline:hover { border-color: #444444 !important; background: rgba(255,255,255,.80) !important; }
@@ -193,7 +193,7 @@ a {
 /* Serif-italic accent word inside a sans heading. */
 .amz-accent { font: inherit; color: inherit; }
 
-/* One generous corner — the shape language shared by cards, tiles and photos. */
+/* One generous corner, the shape language shared by cards, tiles and photos. */
 .amz-leaf { border-radius: 16px !important; }
 .amz-tint-1 { background: #EEF5FC !important; }
 .amz-tint-2 { background: #E6EFF0 !important; }
@@ -343,6 +343,9 @@ a {
 @keyframes amz-marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
 .amz-marquee { animation: amz-marquee 38s linear infinite; }
 .amz-marquee-wrap:hover .amz-marquee { animation-play-state: paused; }
+.amz-marquee-wrap:focus-within .amz-marquee { animation-play-state: paused; }
+.amz-partner-logo { display: inline-flex; align-items: center; flex: none; min-height: 44px; border-radius: 4px; }
+.amz-partner-logo:focus-visible { outline: 2px solid #1462A7; outline-offset: 4px; }
 .amz-tq { opacity: 0; visibility: hidden; }
 .amz-tq-on { opacity: 1 !important; visibility: visible !important; }
 .amz-dot-on { background: #1462A7 !important; }
@@ -699,11 +702,11 @@ select.amz-field {
 }
 
 /* Light contact-form focus state + info cards. */
-.amz-contact-form input:focus, .amz-contact-form textarea:focus {
+.amz-contact-form input:focus, .amz-contact-form textarea:focus, .amz-contact-form select:focus {
   border-color: #1462A7 !important;
   box-shadow: 0 0 0 3px rgba(20, 98, 167, .16);
 }
-.amz-contact-form input, .amz-contact-form textarea { font-family: var(--font-body); }
+.amz-contact-form input, .amz-contact-form textarea, .amz-contact-form select { font-family: var(--font-body); }
 .amz-contact-form input::placeholder, .amz-contact-form textarea::placeholder { font-family: var(--font-body); color: #8A9099; }
 .amz-file { font-size: 15px !important; color: #444444 !important; }
 .amz-file::file-selector-button {
@@ -729,12 +732,12 @@ select.amz-field {
 
 /* ---------- Masthead swoosh lines: draw in and flash bright once on load ---------- */
 /* pathLength="1" on the <path> makes the dasharray trick work regardless of the arc's
-   actual length in its own coordinate system — always exactly one full dash.
+   actual length in its own coordinate system, always exactly one full dash.
 
    The dash/offset endpoints below are read from custom properties instead of written
    as bare numbers: Lightning CSS's build-time minifier "helpfully" appends px to a bare
    number on stroke-dashoffset specifically (stroke-dasharray is left alone), which
-   silently breaks the pathLength normalisation — "1" stops meaning "one full path
+   silently breaks the pathLength normalisation, "1" stops meaning "one full path
    length" and starts meaning one physical pixel. Custom property values are unparsed
    per spec, so they pass through untouched. */
 :root {
@@ -748,7 +751,7 @@ select.amz-field {
 }
 /* Gentle ease-in-out over a longer run: the old ease-out front-loaded nearly the whole
    line into the first few hundred ms, then crawled, which read as a jolt. No filter is
-   animated any more — brightness() on a 130%-wide stretched SVG forced a repaint of the
+   animated any more, brightness() on a 130%-wide stretched SVG forced a repaint of the
    whole masthead every frame. */
 .amz-swoosh {
   stroke-dasharray: 1;
@@ -780,13 +783,16 @@ select.amz-field {
 .amz-hero-stage { position: sticky; top: 0; height: 100vh; height: 100svh; overflow: hidden; padding-top: var(--amz-hdr-h); display: flex; align-items: flex-end; }
 .amz-hero-media { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; pointer-events: none; }
 .amz-hero-poster { transition: opacity 400ms ease; }
-.amz-hero-copy { position: relative; width: 100%; min-width: 0; max-width: 1360px; margin: 0 auto; padding: 0 clamp(20px,4vw,56px) clamp(44px,8vh,104px); display: grid; }
+.amz-hero-shade {
+  background: linear-gradient(180deg, rgba(0,0,0,.18) 0%, transparent 30%, rgba(0,0,0,.16) 50%, rgba(0,0,0,.55) 72%, rgba(0,0,0,.85) 90%, #000 100%);
+}
+.amz-hero-copy { position: relative; width: 100%; min-width: 0; margin: 0 auto; padding: 0 clamp(20px,4vw,64px) clamp(44px,8vh,104px); display: grid; }
 .amz-hero-overlay { will-change: opacity, transform; transition: opacity 400ms ease, transform 400ms ease; }
 .amz-hero-loading { position: absolute; top: calc(var(--amz-hdr-h) + 20px); right: 24px; color: #fff; font-size: 12px; letter-spacing: .06em; transition: opacity 400ms; }
 .amz-hero-progress { position: absolute; bottom: 0; left: 0; right: 0; height: 3px; background: rgba(255,255,255,.2); }
 .amz-hero-progress > div { position: relative; width: 0; height: 100%; background: #F99615; }
 .amz-hero-progress > div::after { content: ''; position: absolute; right: -3px; top: -2px; width: 7px; height: 7px; border-radius: 50%; background: #F99615; box-shadow: 0 0 10px #F99615; }
-.amz-hero-text-link:hover { text-decoration: underline !important; }
+.amz-hero-text-link:hover { text-decoration: none !important; }
 @media (max-width: 768px) {
   .amz-hero-copy { padding: 0 24px 48px; }
   .amz-hero-overlay { max-width: 100% !important; }
@@ -796,4 +802,148 @@ select.amz-field {
 @media (prefers-reduced-motion: reduce) {
   .amz-hero-overlay { will-change: auto; }
   .amz-hero-poster { transition-duration: 400ms !important; }
+}
+
+/* Insights listing and article reading experience. */
+.amz-insights-container { max-width: 1280px; margin: 0 auto; padding: 0 clamp(20px,4vw,40px); }
+.amz-insights-section { padding: clamp(48px,7vw,88px) 0; }
+.amz-insight-eyebrow { font-family: var(--font-display); font-size: 12px; font-weight: 700; letter-spacing: .13em; text-transform: uppercase; color: #1462A7; margin: 0 0 22px; }
+.amz-insights-grid { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 28px; }
+.amz-insight-card { display: flex; flex-direction: column; overflow: hidden; border: 1px solid #E3E5E8; border-radius: 16px; background: white; color: inherit; text-decoration: none; }
+.amz-insight-image { position: relative; aspect-ratio: 16 / 10; overflow: hidden; background: #EAF2F8; }
+.amz-insight-image img { object-fit: cover; transition: transform 300ms ease; }
+.amz-insight-card-copy { display: flex; flex-direction: column; flex: 1; padding: clamp(22px,2.5vw,32px); }
+.amz-insight-meta { display: flex; flex-wrap: wrap; gap: 8px 16px; font-size: 12px; color: #5A6068; margin: 0 0 18px; }
+.amz-insight-meta span:first-child { color: #1462A7; font-weight: 600; }
+.amz-insight-card h2 { font-family: var(--font-display); font-size: clamp(23px,2vw,28px); line-height: 1.18; letter-spacing: -.02em; margin: 0 0 16px; }
+.amz-insight-dek { font-size: 15px; line-height: 1.7; color: #50565D; margin: 0 0 26px; }
+.amz-insight-read { display: inline-flex; align-items: center; gap: 10px; margin-top: auto; font-size: 14px; font-weight: 600; color: #1462A7; text-decoration: none; }
+.amz-insight-featured { display: grid; grid-template-columns: 1.2fr 1fr; background: #F5F8FA; }
+.amz-insight-featured .amz-insight-image { aspect-ratio: auto; min-height: 400px; }
+.amz-insight-featured .amz-insight-card-copy { justify-content: center; padding: clamp(28px,4vw,54px); }
+.amz-insight-featured h2 { font-size: clamp(30px,3.4vw,44px); }
+.amz-insight-featured .amz-insight-read { margin-top: 8px; }
+.amz-insights-heading { display: flex; justify-content: space-between; align-items: baseline; flex-wrap: wrap; gap: 16px; margin: 64px 0 28px; }
+.amz-insights-heading h2 { font-family: var(--font-display); font-size: clamp(28px,3vw,36px); margin: 0; letter-spacing: -.02em; }
+.amz-insights-heading > span, .amz-insights-heading > a { font-size: 14px; color: #5A6068; }
+.amz-insight-card:focus-visible { outline: 3px solid #1462A7; outline-offset: 4px; }
+@media (hover: hover) { .amz-insight-card:hover .amz-insight-image img { transform: scale(1.035); } .amz-insight-card:hover h2 { color: #1462A7; } }
+.amz-article-header { background: #F3F7FA; padding: calc(var(--amz-hdr-h) + 28px) 0 48px; }
+.amz-article-breadcrumb { display: flex; flex-wrap: wrap; gap: 12px; font-size: 13px; color: #5A6068; margin-bottom: 44px; }
+.amz-article-breadcrumb a { color: inherit; text-decoration: none; }
+.amz-article-header h1 { max-width: 950px; font-family: var(--font-display); font-size: clamp(36px,4.8vw,64px); line-height: 1.08; letter-spacing: -.025em; margin: 0 0 24px; }
+.amz-article-intro { max-width: 780px; font-size: clamp(18px,2vw,21px); line-height: 1.65; color: #50565D; margin: 0 0 30px; }
+.amz-article-byline { display: flex; flex-wrap: wrap; gap: 12px 24px; font-size: 13px; color: #5A6068; }
+.amz-article-byline span:first-child { font-weight: 600; color: #191C1F; }
+.amz-article-cover { position: relative; aspect-ratio: 2.4; border-radius: 16px; overflow: hidden; margin-top: 36px; background: #EAF2F8; }
+.amz-article-cover img { object-fit: cover; }
+.amz-article-layout { display: grid; grid-template-columns: 240px minmax(0,720px); gap: clamp(32px,6vw,88px); padding: 64px 0 80px; }
+.amz-article-sidebar { align-self: start; position: sticky; top: calc(var(--amz-hdr-h) + 32px); }
+.amz-article-sidebar nav { border-left: 2px solid #E3E5E8; padding-left: 20px; }
+.amz-article-sidebar nav a { display: block; color: #50565D; font-size: 14px; line-height: 1.5; text-decoration: none; margin-bottom: 18px; }
+.amz-article-sidebar a:hover { color: #1462A7; text-decoration: none; }
+.amz-article-back { display: inline-block; margin-top: 24px; color: #1462A7; font-size: 14px; text-decoration: none; }
+.amz-article-body > section { margin-bottom: 44px; scroll-margin-top: calc(var(--amz-hdr-h) + 32px); }
+.amz-article-body h2 { font-family: var(--font-display); font-size: clamp(26px,2.7vw,32px); line-height: 1.25; letter-spacing: -.015em; margin: 0 0 20px; }
+.amz-article-body p { font-size: 17px; line-height: 1.85; color: #3E454D; margin: 0 0 20px; }
+.amz-article-contact { padding: clamp(24px,3vw,36px); background: #F3F7FA; border-radius: 12px; border-top: 3px solid #F99615; }
+.amz-article-contact .amz-insight-eyebrow { font-size: 11px; line-height: 1.5; color: #1462A7; }
+.amz-insights-related { background: #F7F9FA; border-top: 1px solid #E3E5E8; }
+.amz-insights-related .amz-insights-heading { margin-top: 0; }
+@media (max-width: 900px) { .amz-insights-grid { grid-template-columns: repeat(2,minmax(0,1fr)); } .amz-article-layout { grid-template-columns: 190px minmax(0,1fr); gap: 32px; } }
+@media (max-width: 760px) {
+  .amz-insight-featured, .amz-insights-grid, .amz-article-layout { grid-template-columns: 1fr; }
+  .amz-insight-featured .amz-insight-image { min-height: 0; aspect-ratio: 16 / 10; }
+  .amz-insights-heading { margin-top: 44px; }
+  .amz-article-sidebar { position: static; }
+  .amz-article-cover { aspect-ratio: 16 / 10; }
+  .amz-article-layout { padding-top: 36px; gap: 36px; }
+}
+@media (prefers-reduced-motion: reduce) { .amz-insight-image img { transition: none; } }
+
+/* Shared Technologies & Services overview. */
+.amz-services-section { padding: clamp(56px,8vw,96px) 0; background: #F5F8FA; border-block: 1px solid #E3E5E8; }
+.amz-services-container { max-width: 1280px; margin: 0 auto; padding: 0 clamp(20px,4vw,40px); }
+.amz-services-heading { display: flex; justify-content: space-between; align-items: end; gap: 32px; margin-bottom: 36px; }
+.amz-services-heading h2 { font-family: var(--font-display); font-size: clamp(30px,3.6vw,44px); line-height: 1.12; letter-spacing: -.02em; max-width: 620px; margin: 0; }
+.amz-services-heading > p { max-width: 340px; margin: 0; color: #50565D; font-size: 16px; line-height: 1.7; }
+.amz-services-heading > a { display: inline-flex; align-items: center; gap: 10px; font-size: 14px; font-weight: 600; color: #1462A7; text-decoration: none; }
+.amz-services-grid { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 28px; }
+.amz-service-card { display: flex; flex-direction: column; border-radius: 16px; overflow: hidden; background: white; border: 1px solid #E3E5E8; color: inherit; text-decoration: none; }
+.amz-service-image { position: relative; aspect-ratio: 2; overflow: hidden; background: #EAF2F8; }
+.amz-service-image img { object-fit: cover; transition: transform 300ms ease; }
+.amz-service-image > span { position: absolute; bottom: 16px; left: 20px; padding: 6px 10px; background: #FFFFFF; border-radius: 5px; color: #1462A7; font-family: var(--font-mono); font-size: 12px; }
+.amz-service-copy { padding: clamp(24px,3vw,32px); display: flex; flex-direction: column; flex: 1; }
+.amz-service-copy h3 { font-family: var(--font-display); font-size: clamp(24px,2.5vw,30px); line-height: 1.2; margin: 0 0 14px; }
+.amz-service-copy p { color: #50565D; font-size: 15px; line-height: 1.7; margin: 0 0 24px; }
+.amz-service-card:focus-visible { outline: 3px solid #1462A7; outline-offset: 4px; }
+@media (hover: hover) { .amz-service-card:hover h3 { color: #1462A7; } .amz-service-card:hover img { transform: scale(1.035); } }
+@media (max-width: 700px) { .amz-services-grid { grid-template-columns: 1fr; } .amz-services-heading { flex-direction: column; align-items: start; gap: 22px; } }
+@media (prefers-reduced-motion: reduce) { .amz-service-image img { transition: none; } }
+.amz-insight-card h2 a { color: inherit; text-decoration: none; }
+.amz-insight-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 18px; margin-top: auto; }
+.amz-insight-actions .amz-insight-read { margin-top: 0; }
+.amz-insight-resource { display: inline-flex; align-items: center; justify-content: center; gap: 10px; align-self: start; padding: 14px 18px; border-radius: 6px; background: #1462A7; color: #FFF; font-size: 14px; font-weight: 600; line-height: 1.5; text-decoration: none; }
+.amz-insight-resource:hover { background: #0F4E85; }
+.amz-insight-resource:focus-visible, .amz-insight-card a:focus-visible { outline: 3px solid #F99615; outline-offset: 4px; }
+
+/* Homepage services: four glass cards, with room for their imagery. */
+.amz-services-home { position: relative; isolation: isolate; background: radial-gradient(ellipse at 8% 15%, rgba(125,185,237,.25), transparent 48%), radial-gradient(ellipse at 94% 85%, rgba(249,150,21,.12), transparent 45%), #EDF3F8; }
+.amz-services-home .amz-services-container { max-width: 1520px; }
+.amz-services-home .amz-services-grid { grid-template-columns: repeat(4,minmax(0,1fr)); gap: 20px; }
+.amz-services-home .amz-service-card { background: rgba(255,255,255,.56); border: 1px solid rgba(255,255,255,.88); backdrop-filter: blur(18px) saturate(130%); -webkit-backdrop-filter: blur(18px) saturate(130%); box-shadow: inset 0 1px 0 rgba(255,255,255,.95), 0 12px 32px rgba(28,64,96,.07); transition: box-shadow 220ms ease, border-color 220ms ease; }
+.amz-services-home .amz-service-image { aspect-ratio: 1.5; margin: 10px 10px 0; border-radius: 10px; }
+.amz-services-home .amz-service-copy { padding: 24px 22px 26px; }
+.amz-services-home .amz-service-copy h3 { font-size: clamp(21px,1.7vw,26px); line-height: 1.22; }
+.amz-services-home .amz-service-copy p { font-size: 14px; line-height: 1.7; }
+.amz-services-home .amz-insight-read { font-size: 13px; }
+@media (hover: hover) { .amz-services-home .amz-service-card:hover { border-color: #AFD3F3; box-shadow: inset 0 1px 0 #FFF, 0 16px 36px rgba(28,64,96,.13); } }
+@media (max-width: 1100px) { .amz-services-home .amz-services-grid { grid-template-columns: repeat(2,minmax(0,1fr)); } }
+@media (max-width: 700px) { .amz-services-home .amz-services-grid { grid-template-columns: 1fr; } .amz-services-home .amz-service-image { aspect-ratio: 16 / 9; } }
+@media (prefers-reduced-motion: reduce) { .amz-services-home .amz-service-card { transition: none; } }
+
+/* Each market is a visible section, with direct links from across the site. */
+.amz-market-sections { display: flex; flex-direction: column; gap: clamp(40px,6vw,72px); }
+.amz-market-section { scroll-margin-top: calc(var(--amz-hdr-h) + 36px); }
+.amz-market-section-reverse .amz-market-panel > div:first-child:not(:last-child) { order: 2; }
+.amz-market-section-reverse .amz-market-panel { grid-template-columns: minmax(0,1.15fr) minmax(0,1fr) !important; }
+@media (max-width: 760px) {
+  .amz-market-section .amz-market-panel { grid-template-columns: minmax(0,1fr) !important; }
+  .amz-market-section-reverse .amz-market-panel > div:first-child:not(:last-child) { order: 0; }
+}
+
+/* Compact mobile CTAs, keeping a comfortable touch target. */
+@media (max-width: 768px) {
+  .amz-btn-accent,
+  .amz-btn-outline-light,
+  .amz-btn-solid-light,
+  .amz-linecard-cta,
+  .amz-insight-resource {
+    min-height: 44px !important;
+    height: auto !important;
+    max-width: 100%;
+    padding: 10px 20px !important;
+    gap: 8px !important;
+    font-size: 14px !important;
+    line-height: 1.4 !important;
+    justify-content: center;
+    text-align: center;
+  }
+  .amz-hdr .amz-btn-accent {
+    padding: 10px 16px !important;
+    font-size: 13px !important;
+    flex: none;
+  }
+  .amz-hero-text-link {
+    min-height: 44px !important;
+    font-size: 14px !important;
+    gap: 8px !important;
+  }
+  .amz-btn-accent > svg,
+  .amz-btn-outline-light > svg,
+  .amz-btn-solid-light > svg {
+    width: 14px;
+    height: 14px;
+    flex: none;
+  }
 }

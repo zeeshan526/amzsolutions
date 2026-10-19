@@ -16,7 +16,7 @@ const monogram = (name: string) =>
 
 /* Search box + category chips over a card grid. With 36 manufacturers and only eight
    logo marks on hand, the rest fall back to a monogram badge rather than a broken
-   <img> — same brand-forward layout either way. */
+   <img>, same brand-forward layout either way. */
 
 export default function ManufacturerDirectory() {
   const [query, setQuery] = useState("");

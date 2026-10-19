@@ -7,22 +7,22 @@ import SiteFooter from "../_components/SiteFooter";
 import SiteHeader from "../_components/SiteHeader";
 
 export const metadata: Metadata = {
-  title: "About Us — AMZ Energy Systems",
+  title: "About Us | AMZ Energy Systems",
   description:
     "A locally-owned Philadelphia-area mechanical contractor bringing decades of HVAC expertise to high-efficiency systems, low-carbon heating and healthy buildings across Eastern Pennsylvania, South Jersey and Delaware.",
 };
 
 const PILLARS = [
   {
-    title: "High-efficiency mechanical systems",
-    text: "Chillers, air handling and heat rejection selected against the measured load, not a rule of thumb — so the efficiency gain is real and holds up at part load.",
+    title: "High-Efficiency Mechanical Systems",
+    text: "Chillers, air handling and heat rejection selected against the measured load, not a rule of thumb, so the efficiency gain is real and holds up at part load.",
   },
   {
-    title: "Low-carbon heating solutions",
+    title: "Low-Carbon Heating Solutions",
     text: "Heat pump and electrified heating options specified alongside conventional plant, so an owner can see the real trade-off before committing to a gas-free path.",
   },
   {
-    title: "Healthy, sustainable systems",
+    title: "Healthy, Sustainable Systems",
     text: "Filtration, ventilation rate and humidity control treated as ESG and occupant-health line items, not an afterthought to the temperature setpoint.",
   },
 ] as const;
@@ -37,7 +37,7 @@ const VALUES = [
     text: "A locally-owned Philadelphia-area business that prioritizes doing right by clients over closing the next job fast.",
   },
   {
-    title: "Social impact",
+    title: "Social Impact",
     text: "Crew time and equipment given to local and national charitable organisations in the counties we work in.",
   },
 ] as const;
@@ -51,8 +51,8 @@ export default function AboutPage() {
       <main id="main">
         <PageMasthead
           eyebrow="About Us"
-          title="A Philadelphia-area mechanical contractor, built for the long service life"
-          intro="Decades of HVAC expertise brought to bear on high-efficiency mechanical systems, low-carbon heating and healthy buildings — for the engineers, owners and contractors across Eastern Pennsylvania, South Jersey and Delaware who have to live with the selection long after we leave site."
+          title="A Philadelphia-Area Mechanical Contractor, Built For The Long Service Life"
+          intro="Decades of HVAC expertise brought to bear on high-efficiency mechanical systems, low-carbon heating and healthy buildings, for the engineers, owners and contractors across Eastern Pennsylvania, South Jersey and Delaware who have to live with the selection long after we leave site."
           stats={[
             { label: "Headquarters", value: "Philadelphia, PA" },
             { label: "Service area", value: "Eastern PA · S. NJ · DE" },
@@ -65,10 +65,10 @@ export default function AboutPage() {
           <div style={{ maxWidth: 1280, margin: "0 auto", padding: "0 clamp(20px,4vw,40px)" }}>
             <div style={{ maxWidth: 720, margin: "0 auto 48px", textAlign: "center" }}>
               <h2 style={{ fontFamily: "var(--font-display)", fontWeight: 700, fontSize: "clamp(1.625rem,1.17rem + 1.94vw,2.4375rem)", lineHeight: 1.15, letterSpacing: "-.012em", margin: "0 0 16px" }}>
-                Three pillars, one building performance problem
+                Three Pillars, One Building Performance Problem
               </h2>
               <p style={{ fontSize: "clamp(1.0625rem,.98rem + .35vw,1.25rem)", lineHeight: 1.6, color: "#444444", margin: 0 }}>
-                Every project we take on sits under one of these — often more than one at once.
+                Every project we take on sits under one of these, often more than one at once.
               </p>
             </div>
             <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(min(100%,280px),1fr))", gap: "clamp(16px,1.8vw,24px)" }}>
@@ -93,7 +93,7 @@ export default function AboutPage() {
                 What we operate on
               </p>
               <h2 style={{ fontFamily: "var(--font-display)", fontWeight: 700, fontSize: "clamp(1.625rem,1.17rem + 1.94vw,2.4375rem)", lineHeight: 1.15, letterSpacing: "-.012em", margin: 0, color: "#FFFFFF" }}>
-                Three values, not a slogan wall
+                Three Values, Not A Slogan Wall
               </h2>
             </div>
             <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(min(100%,280px),1fr))", gap: "clamp(16px,1.8vw,24px)" }}>
@@ -111,7 +111,7 @@ export default function AboutPage() {
         <section style={{ padding: "clamp(56px,8vw,88px) 0" }}>
           <div style={{ maxWidth: 900, margin: "0 auto", padding: "0 clamp(20px,4vw,40px)", textAlign: "center" }}>
             <h2 style={{ fontFamily: "var(--font-display)", fontWeight: 700, fontSize: "clamp(1.375rem,1.2rem + .9vw,1.75rem)", lineHeight: 1.3, margin: "0 0 16px" }}>
-              Organisations we give crew time and equipment to
+              Organisations We Give Crew Time And Equipment To
             </h2>
             <p style={{ fontSize: 16, lineHeight: 1.7, color: "#444444", margin: "0 0 28px" }}>
               Social impact is one of the three things this company operates on, not a line in a values statement. A fuller account of the hours and partners is on the Social Impact page.
@@ -148,10 +148,10 @@ export default function AboutPage() {
         <section style={{ background: "#0F4E85", position: "relative", overflow: "hidden" }}>
           <div style={{ position: "relative", maxWidth: 1080, margin: "0 auto", padding: "clamp(48px,7vw,72px) clamp(20px,4vw,40px)", textAlign: "center" }}>
             <h2 style={{ fontFamily: "var(--font-display)", fontWeight: 700, fontSize: "clamp(1.5rem,1.2rem + 1.2vw,2rem)", lineHeight: 1.2, color: "#FFFFFF", margin: "0 0 16px" }}>
-              See how we run a project, start to finish
+              See How We Run A Project, Start To Finish
             </h2>
             <p style={{ fontSize: 16.5, lineHeight: 1.6, color: "rgba(255,255,255,.86)", margin: "0 0 28px", maxWidth: "52ch", marginInline: "auto" }}>
-              The process behind these pillars — and the four things mechanical engineers check before they&rsquo;ll put us on a spec.
+              The process behind these pillars, and the four things mechanical engineers check before they&rsquo;ll put us on a spec.
             </p>
             <Link
               href="/how-we-work"

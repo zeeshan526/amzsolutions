@@ -2,7 +2,7 @@ import Link from "next/link";
 
 import { AMZ_COMPANY } from "../_lib/contact";
 
-/* Shared masthead for interior (non-homepage) pages — a dark, breadcrumbed hero that
+/* Shared masthead for interior (non-homepage) pages, a dark, breadcrumbed hero that
    sits under the fixed SiteHeader. Modelled on LegalPage's masthead, but generic enough
    for the Technologies & Services pages and their stat strips. */
 

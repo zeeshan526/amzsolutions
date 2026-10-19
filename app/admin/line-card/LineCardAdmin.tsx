@@ -158,7 +158,7 @@ export default function LineCardAdmin() {
                   </>
                 ) : (
                   <p style={{ fontSize: 14.5, color: "#5A6068", margin: 0 }}>
-                    Nothing uploaded yet — the site is showing the default PDF that shipped with it.
+                    Nothing uploaded yet, the site is showing the default PDF that shipped with it.
                   </p>
                 )}
               </div>
@@ -186,7 +186,7 @@ export default function LineCardAdmin() {
                 )}
                 {uploaded && (
                   <p role="status" style={{ marginTop: 12, fontSize: 14, color: "#1B7A3D" }}>
-                    Uploaded. The site&rsquo;s Line Card link now serves this file — no redeploy needed.
+                    Uploaded. The site&rsquo;s Line Card link now serves this file, no redeploy needed.
                   </p>
                 )}
                 <button

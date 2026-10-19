@@ -5,7 +5,7 @@
 
 export const LINE_CARD_BLOB_PATHNAME = "amz-line-card.pdf";
 
-/* Public, permanent link — redirects to whatever is currently uploaded (see
+/* Public, permanent link, redirects to whatever is currently uploaded (see
    app/api/line-card/download/route.ts), falling back to the bundled PDF in /public
    until the first upload is made. Every "Our Line Card" link on the site should use
    this constant rather than linking to Blob storage or /public directly. */

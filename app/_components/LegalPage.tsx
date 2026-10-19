@@ -3,7 +3,7 @@ import Link from "next/link";
 import { AMZ_ADDRESS_LINES, AMZ_COMPANY, AMZ_PHONE_DISPLAY, AMZ_PHONE_HREF } from "../_lib/contact";
 
 /* Shared chrome for the footer's legal pages (/privacy, /terms, /accessibility).
-   Server component — static text, so nothing here needs the client. The contents
+   Server component, static text, so nothing here needs the client. The contents
    sidebar sticks via CSS alone (see .amz-legal-* in globals.css), which is why there
    is no scroll listener: no JS, and it keeps working before hydration. */
 
@@ -154,7 +154,7 @@ export default function LegalPage({
       {/* Body */}
       <div style={{ maxWidth: 1120, margin: "0 auto", padding: "clamp(40px,6vw,76px) clamp(20px,4vw,40px) clamp(56px,8vw,104px)" }}>
         <div className="amz-legal-grid">
-          {/* Contents — sidebar on desktop */}
+          {/* Contents, sidebar on desktop */}
           <nav className="amz-legal-toc" aria-label="On this page">
             <p style={{ fontFamily: "var(--font-display)", fontStretch: "75%", fontWeight: 700, fontSize: 11, letterSpacing: ".14em", textTransform: "uppercase", color: "#727983", margin: "0 0 14px" }}>On this page</p>
             <ol>
@@ -167,7 +167,7 @@ export default function LegalPage({
           </nav>
 
           <div>
-            {/* Contents — disclosure on narrow screens */}
+            {/* Contents, disclosure on narrow screens */}
             <details className="amz-legal-toc-mobile">
               <summary>On this page</summary>
               <ol>

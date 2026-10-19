@@ -26,7 +26,7 @@ const PROGRAMS: Program[] = [
     id: "nj-direct-install",
     state: "New Jersey",
     name: "New Jersey Direct Install Program",
-    summary: "A turnkey program for small and medium-sized businesses — up to 70% of the cost of eligible upgrades covered.",
+    summary: "A turnkey program for small and medium-sized businesses, up to 70% of the cost of eligible upgrades covered.",
     covers: ["Lighting", "HVAC systems", "Refrigeration"],
     process: ["Free energy assessment", "Turnkey scope and pricing at the discounted rate", "Full project management through the utility's contractor network", "Installed and commissioned under the program's requirements"],
     note: "Best fit for South Jersey facilities under the program's size threshold.",

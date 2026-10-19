@@ -5,27 +5,27 @@ import { useState } from "react";
 const STEPS = [
   {
     n: "01",
-    title: "Team collaboration",
-    text: "Our project engineer, your GC, the trades and the manufacturer rep are in the same conversation from kickoff — not introduced to each other at the first RFI.",
+    title: "Team Collaboration",
+    text: "Our project engineer, your GC, the trades and the manufacturer rep are in the same conversation from kickoff, not introduced to each other at the first RFI.",
   },
   {
     n: "02",
-    title: "Clear project objectives",
+    title: "Clear Project Objectives",
     text: "Deliverables, milestones and who owns what are written down before mobilisation, so a schedule slip has an obvious owner instead of an argument.",
   },
   {
     n: "03",
-    title: "Flexible problem-solving",
+    title: "Flexible Problem-Solving",
     text: "A blocked riser or a structural surprise gets a revised plan the same week, not a change-order fight that stalls the floor above it.",
   },
   {
     n: "04",
-    title: "Quality assurance",
+    title: "Quality Assurance",
     text: "Every connection is inspected against the submittal before it's closed up, and start-up readings are documented, not eyeballed.",
   },
 ] as const;
 
-/* A click-driven stepper rather than a static list — the four process pillars from the
+/* A click-driven stepper rather than a static list, the four process pillars from the
    live site's install-services copy, expandable one at a time so the page can carry
    the fuller explanation without a wall of text up front. */
 

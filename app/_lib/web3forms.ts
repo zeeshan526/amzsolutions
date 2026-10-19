@@ -1,6 +1,6 @@
 /* Web3Forms submission helper.
 
-   The access key is public by design — Web3Forms state it is safe in client-side code,
+   The access key is public by design, Web3Forms state it is safe in client-side code,
    and delivery is bound to the inbox the key was created with, not to anything sent in
    the payload. It still lives in an env var so the key isn't baked into source control;
    see .env.example. */
@@ -38,7 +38,7 @@ export async function submitToWeb3Forms(fields: Record<string, string>): Promise
 }
 
 /* Same submission, but for forms that can carry a file attachment (the Contact page).
-   Web3Forms accepts multipart/form-data for this — pass a FormData already populated
+   Web3Forms accepts multipart/form-data for this, pass a FormData already populated
    with your fields plus an optional File under whatever field name you gave it; the
    access key is added here so callers don't have to remember it. Deliberately no
    explicit Content-Type header: the browser sets the multipart boundary itself. */

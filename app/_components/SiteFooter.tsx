@@ -4,7 +4,7 @@ import { AMZ_FOOTER_COLUMNS } from "../_lib/nav";
 import { AMZ_PHONE_DISPLAY, AMZ_PHONE_HREF } from "../_lib/contact";
 import NewsletterForm from "./NewsletterForm";
 
-/* Shared footer for every page — static markup, so this stays a server component. */
+/* Shared footer for every page, static markup, so this stays a server component. */
 
 export default function SiteFooter() {
   return (
@@ -15,7 +15,7 @@ export default function SiteFooter() {
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src="/images/logo/amz-logo-white.png" alt="AMZ Energy Systems" width={471} height={574} style={{ display: "block", height: 76, width: "auto", marginBottom: 24 }} />
             <p style={{ fontSize: "clamp(1.0625rem,.98rem + .35vw,1.25rem)", lineHeight: 1.6, color: "#FFFFFF", margin: 0, maxWidth: "36ch" }}>
-              We engineer, install and maintain the mechanical systems that decide whether a building performs — and hand over the numbers that prove it.
+              We engineer, install and maintain the mechanical systems that decide whether a building performs, and hand over the numbers that prove it.
             </p>
           </div>
           <div style={{ minWidth: 0, display: "flex", flexDirection: "column", justifyContent: "center", gap: 2 }}>

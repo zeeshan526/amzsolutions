@@ -6,9 +6,9 @@ import SiteFooter from "../_components/SiteFooter";
 import SiteHeader from "../_components/SiteHeader";
 
 export const metadata: Metadata = {
-  title: "Social Impact — AMZ Energy Systems",
+  title: "Social Impact | AMZ Energy Systems",
   description:
-    "Crew time, equipment and know-how given to organisations across the Philadelphia area — Stop Soldiers Suicide, My Philly Parks, ACCT Philly, Caring for Friends and Habitat Philadelphia.",
+    "Crew time, equipment and know-how given to organisations across the Philadelphia area, Stop Soldiers Suicide, My Philly Parks, ACCT Philly, Caring for Friends and Habitat Philadelphia.",
 };
 
 const MOSAIC = [
@@ -20,11 +20,11 @@ const MOSAIC = [
 ] as const;
 
 const ORGS = [
-  { name: "Stop Soldiers Suicide", text: "Veteran suicide prevention — funding and volunteer hours toward a cause with a direct line to the families of the tradespeople we work alongside." },
+  { name: "Stop Soldiers Suicide", text: "Veteran suicide prevention, funding and volunteer hours toward a cause with a direct line to the families of the tradespeople we work alongside." },
   { name: "My Philly Parks", text: "Restoration and clean-up days in the city's public green spaces, the kind of infrastructure a mechanical contractor doesn't usually touch but can still show up for." },
-  { name: "ACCT Philly", text: "Philadelphia's animal care and control team — supply drives and shelter visits from the crew, not just a cheque." },
+  { name: "ACCT Philly", text: "Philadelphia's animal care and control team, supply drives and shelter visits from the crew, not just a cheque." },
   { name: "Caring for Friends", text: "Meal preparation and delivery support for homebound seniors across the region we already serve on the job." },
-  { name: "Habitat Philadelphia", text: "Build days alongside Habitat for Humanity's Philadelphia chapter — the same trades skills, pointed at a family's first home instead of a plant room." },
+  { name: "Habitat Philadelphia", text: "Build days alongside Habitat for Humanity's Philadelphia chapter, the same trades skills, pointed at a family's first home instead of a plant room." },
 ] as const;
 
 export default function ImpactPage() {
@@ -34,7 +34,7 @@ export default function ImpactPage() {
       <main id="main">
         <PageMasthead
           eyebrow="Social Impact"
-          title="The second half of “buildings and communities”"
+          title="The Second Half Of “Buildings And Communities”"
           intro="Crew time, equipment and know-how given to organisations in the counties we work in. Hours and partners are published here, not estimated."
           stats={[{ label: "Organisations supported", value: String(ORGS.length) }]}
         />
@@ -56,9 +56,9 @@ export default function ImpactPage() {
           <div style={{ maxWidth: 900, margin: "0 auto", padding: "0 clamp(20px,4vw,40px)" }}>
             <div style={{ textAlign: "center", marginBottom: 44 }}>
               <h2 style={{ fontFamily: "var(--font-display)", fontWeight: 700, fontSize: "clamp(1.625rem,1.17rem + 1.94vw,2.4375rem)", lineHeight: 1.15, letterSpacing: "-.012em", margin: "0 0 16px" }}>
-                Organisations we give time to
+                Organisations We Give Time To
               </h2>
-              <p style={{ fontSize: "clamp(1.0625rem,.98rem + .35vw,1.25rem)", lineHeight: 1.6, color: "#444444", margin: 0 }}>Five, so far — added to as new partnerships form.</p>
+              <p style={{ fontSize: "clamp(1.0625rem,.98rem + .35vw,1.25rem)", lineHeight: 1.6, color: "#444444", margin: 0 }}>Five, so far, added to as new partnerships form.</p>
             </div>
             <ul style={{ listStyle: "none", margin: 0, padding: 0, display: "flex", flexDirection: "column", gap: 16 }}>
               {ORGS.map((org) => (
@@ -74,7 +74,7 @@ export default function ImpactPage() {
         <section style={{ background: "#0F4E85", position: "relative", overflow: "hidden" }}>
           <div style={{ position: "relative", maxWidth: 1080, margin: "0 auto", padding: "clamp(48px,7vw,72px) clamp(20px,4vw,40px)", textAlign: "center" }}>
             <h2 style={{ fontFamily: "var(--font-display)", fontWeight: 700, fontSize: "clamp(1.5rem,1.2rem + 1.2vw,2rem)", lineHeight: 1.2, color: "#FFFFFF", margin: "0 0 16px" }}>
-              Know an organisation we should be working with?
+              Know An Organisation We Should Be Working With?
             </h2>
             <p style={{ fontSize: 16.5, lineHeight: 1.6, color: "rgba(255,255,255,.86)", margin: "0 0 28px", maxWidth: "52ch", marginInline: "auto" }}>
               Tell us who, and what the need is. We can&rsquo;t commit to everything, but we read every one of these.

@@ -84,9 +84,9 @@ export default function QuoteForm() {
         <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="#F99615" strokeWidth="2" aria-hidden="true" style={{ marginBottom: 16 }}>
           <path d="M4 12.5l5 5L20 6.5" />
         </svg>
-        <h3 style={{ fontFamily: "var(--font-display)", fontWeight: 700, fontSize: "clamp(1.25rem,1.1rem + .6vw,1.5rem)", color: "#FFFFFF", margin: "0 0 12px" }}>Request received</h3>
+        <h3 style={{ fontFamily: "var(--font-display)", fontWeight: 700, fontSize: "clamp(1.25rem,1.1rem + .6vw,1.5rem)", color: "#FFFFFF", margin: "0 0 12px" }}>Request Received</h3>
         <p style={{ fontSize: 16, lineHeight: 1.7, color: "rgba(255,255,255,.86)", margin: "0 0 20px" }}>
-          Thanks — we reply to every request within one business day. If the building needs attention sooner, call us and ask for the on-call engineer.
+          Thanks, we reply to every request within one business day. If the building needs attention sooner, call us and ask for the on-call engineer.
         </p>
         <a
           href={AMZ_PHONE_HREF}
@@ -101,7 +101,7 @@ export default function QuoteForm() {
           <button
             type="button"
             onClick={() => setState("idle")}
-            style={{ background: "none", border: 0, padding: 0, color: "rgba(255,255,255,.72)", fontFamily: "var(--font-body)", fontSize: 15, textDecoration: "underline", cursor: "pointer" }}
+            style={{ background: "none", border: 0, padding: 0, color: "rgba(255,255,255,.72)", fontFamily: "var(--font-body)", fontSize: 15, textDecoration: "none", cursor: "pointer" }}
           >
             Send another request
           </button>
@@ -112,7 +112,7 @@ export default function QuoteForm() {
 
   return (
     <form ref={formRef} onSubmit={handleSubmit} noValidate={false} style={{ textAlign: "left" }}>
-      {/* Honeypot — hidden from people, tempting to bots. */}
+      {/* Honeypot, hidden from people, tempting to bots. */}
       <input type="checkbox" name="botcheck" tabIndex={-1} autoComplete="off" aria-hidden="true" style={{ position: "absolute", width: 1, height: 1, opacity: 0, pointerEvents: "none" }} />
 
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(min(100%,220px),1fr))", gap: 18 }}>

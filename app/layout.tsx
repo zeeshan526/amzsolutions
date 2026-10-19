@@ -28,9 +28,9 @@ const plexMono = IBM_Plex_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "AMZ Energy Systems — Building Performance",
+  title: "AMZ Energy Systems | Building Performance",
   description:
-    "Integrated HVAC solutions for efficient, reliable, high-performing commercial buildings — specified from measured load, commissioned with the readings handed over.",
+    "Integrated HVAC solutions for efficient, reliable, high-performing commercial buildings, specified from measured load, commissioned with the readings handed over.",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {

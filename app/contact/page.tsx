@@ -7,17 +7,17 @@ import { AMZ_ADDRESS_LINES, AMZ_COMPANY, AMZ_PHONE_DISPLAY, AMZ_PHONE_HREF } fro
 import ContactForm from "./ContactForm";
 
 export const metadata: Metadata = {
-  title: "Contact — AMZ Energy Systems",
+  title: "Contact | AMZ Energy Systems",
   description:
-    "Reach AMZ Energy Systems in Philadelphia, PA — phone, office address and a contact form for engineers, building owners and contractors across Eastern Pennsylvania, South Jersey and Delaware.",
+    "Reach AMZ Energy Systems in Philadelphia, PA, phone, office address and a contact form for engineers, building owners and contractors across Eastern Pennsylvania, South Jersey and Delaware.",
 };
 
 const MAPS_HREF = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`${AMZ_COMPANY}, ${AMZ_ADDRESS_LINES.join(", ")}`)}`;
 
 const NEXT_STEPS = [
-  { n: "01", title: "You send the symptom", text: "Tell us what the building is doing, which system it is on and roughly when it started. Drawings and photos help." },
-  { n: "02", title: "An engineer replies", text: "A person reads it, not a queue. We answer every message within one business day." },
-  { n: "03", title: "We come and measure", text: "Where it needs it, we visit the building and take readings before anything is specified." },
+  { n: "01", title: "You Send The Symptom", text: "Tell us what the building is doing, which system it is on and roughly when it started. Drawings and photos help." },
+  { n: "02", title: "An Engineer Replies", text: "A person reads it, not a queue. We answer every message within one business day." },
+  { n: "03", title: "We Come And Measure", text: "Where it needs it, we visit the building and take readings before anything is specified." },
 ];
 
 const eyebrow: React.CSSProperties = {
@@ -64,8 +64,8 @@ export default function ContactPage() {
       <main id="main">
         <PageMasthead
           eyebrow="Contact"
-          title="Tell us what the building is doing"
-          intro="We'll come and measure. We reply to every message within one business day — and if it's urgent, call and ask for the on-call engineer."
+          title="Tell Us What The Building Is Doing"
+          intro="We'll come and measure. We reply to every message within one business day, and if it's urgent, call and ask for the on-call engineer."
           stats={[
             { label: "Response time", value: "1 business day" },
             { label: "Service area", value: "Eastern PA · S. NJ · DE" },
@@ -81,7 +81,7 @@ export default function ContactPage() {
                   Get in touch
                 </p>
                 <h2 style={{ fontFamily: "var(--font-display)", fontWeight: 600, fontSize: "clamp(1.625rem,1.17rem + 1.94vw,2.4375rem)", lineHeight: 1.15, letterSpacing: "-.012em", margin: "0 0 14px" }}>
-                  Talk to an engineer
+                  Talk To An Engineer
                 </h2>
                 <p style={{ fontSize: "clamp(1.0625rem,.98rem + .35vw,1.25rem)", lineHeight: 1.6, color: "#444444", margin: 0, maxWidth: "40ch" }}>
                   Call, visit, or send the form. Whichever you pick, the person who reads it is the person who can help.
@@ -139,7 +139,7 @@ export default function ContactPage() {
             </div>
 
             <div className="amz-reveal" style={{ background: "#FFFFFF", border: "1px solid #E3E5E8", borderRadius: 16, padding: "clamp(26px,3.4vw,42px)", boxShadow: "0 2px 4px rgba(25,28,31,.04), 0 12px 32px rgba(25,28,31,.06)" }}>
-              <h2 style={{ fontFamily: "var(--font-display)", fontWeight: 600, fontSize: 24, lineHeight: 1.2, letterSpacing: "-.01em", margin: "0 0 6px" }}>Send us a message</h2>
+              <h2 style={{ fontFamily: "var(--font-display)", fontWeight: 600, fontSize: 24, lineHeight: 1.2, letterSpacing: "-.01em", margin: "0 0 6px" }}>Send Us A Message</h2>
               <p style={{ fontSize: 15, lineHeight: 1.6, color: "#5A6068", margin: "0 0 26px" }}>Fields marked * are required.</p>
               <ContactForm />
             </div>
@@ -154,7 +154,7 @@ export default function ContactPage() {
                 What happens next
               </p>
               <h2 style={{ fontFamily: "var(--font-display)", fontWeight: 600, fontSize: "clamp(1.625rem,1.17rem + 1.94vw,2.4375rem)", lineHeight: 1.15, letterSpacing: "-.012em", margin: 0 }}>
-                From message to measurement
+                From Message To Measurement
               </h2>
             </div>
             <ol style={{ listStyle: "none", margin: 0, padding: 0, display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(min(100%,260px),1fr))", gap: 20 }}>

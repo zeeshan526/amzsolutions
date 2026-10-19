@@ -6,7 +6,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { LINE_CARD_BLOB_PATHNAME, LINE_CARD_MAX_BYTES } from "../../_lib/lineCard";
 
 /* Status (GET) and upload (POST) for the line card, gated by one shared password (see
-   LINE_CARD_ADMIN_PASSWORD in .env.example) rather than named accounts — this is a
+   LINE_CARD_ADMIN_PASSWORD in .env.example) rather than named accounts, this is a
    single internal PDF a couple of people replace a few times a year, not a feature that
    needs a user table. The public download redirect lives in ./download/route.ts and
    needs no password, since the file itself is meant to be public. */
