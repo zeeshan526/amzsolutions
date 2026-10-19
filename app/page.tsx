@@ -695,6 +695,7 @@ export default function Home() {
       {loading && (
         <div
           role="status"
+          aria-label="Loading"
           aria-live="polite"
           className={leaving ? "amz-load-out" : undefined}
           style={{
@@ -714,24 +715,6 @@ export default function Home() {
           <svg viewBox="0 0 1600 900" preserveAspectRatio="none" aria-hidden="true" style={{ position: "absolute", inset: 0, width: "100%", height: "100%", opacity: 0.5 }}>
             <path className="amz-swoosh" pathLength={1} d="M-160,760 A2400,2400 0 0 1 1760,300" fill="none" stroke="rgba(125,185,237,.22)" strokeWidth="22" />
           </svg>
-          <div style={{ position: "absolute", top: 24, left: 0, right: 0, display: "flex", alignItems: "center", justifyContent: "center", gap: 10 }}>
-            <svg className="amz-spin" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,.72)" strokeWidth="1.5" strokeLinecap="butt" aria-hidden="true">
-              <circle cx="12" cy="12" r="9" strokeDasharray="42 14" />
-            </svg>
-            <span
-              style={{
-                fontFamily: "var(--font-display)",
-                fontStretch: "75%",
-                fontWeight: 700,
-                fontSize: 12,
-                letterSpacing: ".16em",
-                textTransform: "uppercase",
-                color: "rgba(255,255,255,.72)",
-              }}
-            >
-              Measuring the building&hellip;
-            </span>
-          </div>
           <div className="amz-load-mark" style={{ textAlign: "center", display: "flex", flexDirection: "column", alignItems: "center" }}>
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
