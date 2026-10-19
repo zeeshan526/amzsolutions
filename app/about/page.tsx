@@ -51,6 +51,11 @@ export default function AboutPage() {
       <main id="main">
         <PageMasthead
           eyebrow="About Us"
+          collage={[
+            { src: "/images/services/systems.jpg", alt: "Commercial chiller plant with insulated pipework", caption: "Efficient Mechanical Systems" },
+            { src: "/images/services/installation.jpg", alt: "Project planning beside rooftop HVAC equipment", caption: "Collaborative Project Planning" },
+            { src: "/images/impact/meal-prep.jpg", alt: "Volunteers preparing meals at Caring for Friends", caption: "Community Involvement" },
+          ]}
           title="A Philadelphia-Area Mechanical Contractor, Built For The Long Service Life"
           intro="Decades of HVAC expertise brought to bear on high-efficiency mechanical systems, low-carbon heating and healthy buildings, for the engineers, owners and contractors across Eastern Pennsylvania, South Jersey and Delaware who have to live with the selection long after we leave site."
           stats={[

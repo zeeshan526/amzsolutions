@@ -947,3 +947,23 @@ select.amz-field {
     flex: none;
   }
 }
+
+/* Optional image beside an interior page introduction. */
+.amz-masthead-split { display: grid; grid-template-columns: minmax(0,1.2fr) minmax(0,1fr); align-items: start; gap: clamp(28px,4vw,56px); margin-bottom: 36px; }
+.amz-masthead-split h1 { font-size: clamp(34px,3.7vw,50px) !important; }
+.amz-masthead-split p:last-child { margin-bottom: 0 !important; }
+.amz-masthead-image { position: relative; aspect-ratio: 4 / 5; border-radius: 20px; overflow: hidden; border: 1px solid rgba(255,255,255,.3); box-shadow: 0 20px 48px rgba(0,0,0,.16); }
+.amz-masthead-image img { object-fit: cover; object-position: 55% center; }
+@media (max-width: 800px) {
+  .amz-masthead-split { grid-template-columns: 1fr; }
+  .amz-masthead-image { aspect-ratio: 16 / 10; }
+}
+
+/* About imagery connects mechanical systems, project support and community work. */
+.amz-about-collage { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); grid-template-rows: 280px 210px; gap: 12px; }
+.amz-about-collage figure { position: relative; overflow: hidden; border-radius: 16px; margin: 0; border: 1px solid rgba(255,255,255,.25); background: #123E64; }
+.amz-about-collage figure:first-child { grid-column: 1 / -1; }
+.amz-about-collage img { object-fit: cover; }
+.amz-about-collage figure:last-child img { object-position: 50% 65%; }
+.amz-about-collage figcaption { position: absolute; inset: auto 0 0; padding: 36px 16px 16px; background: linear-gradient(transparent,rgba(5,23,40,.86)); color: #FFF; font-family: var(--font-display); font-size: 14px; font-weight: 600; line-height: 1.4; }
+@media (max-width: 800px) { .amz-about-collage { grid-template-rows: clamp(210px,50vw,340px) clamp(180px,34vw,240px); } }

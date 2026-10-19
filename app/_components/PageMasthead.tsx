@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 
 import { AMZ_COMPANY } from "../_lib/contact";
 
@@ -15,12 +16,16 @@ export default function PageMasthead({
   stats,
   cta,
   breadcrumbSection,
+  image,
+  collage,
 }: {
   eyebrow: string;
   title: string;
   intro: string;
   stats?: MastheadStat[];
   cta?: { label: string; href: string };
+  image?: { src: string; alt: string };
+  collage?: { src: string; alt: string; caption: string }[];
   /** Middle breadcrumb crumb, e.g. "Technologies & Services". Omitted entirely when the
    *  page doesn't sit under a section (About, Contact, Insights, ...). */
   breadcrumbSection?: string;
@@ -69,6 +74,8 @@ export default function PageMasthead({
           </ol>
         </nav>
 
+        <div className={image || collage ? "amz-masthead-split" : undefined}>
+        <div>
         <p
           style={{
             display: "inline-flex",
@@ -133,6 +140,23 @@ export default function PageMasthead({
             </svg>
           </a>
         )}
+
+        </div>
+        {collage ? (
+          <div className="amz-about-collage" aria-label="Our Systems, Collaboration And Community">
+            {collage.map((item, index) => (
+              <figure key={item.src}>
+                <Image src={item.src} alt={item.alt} fill sizes={index === 0 ? "(max-width: 800px) 100vw, 480px" : "(max-width: 800px) 50vw, 240px"} preload={index === 0} />
+                <figcaption>{item.caption}</figcaption>
+              </figure>
+            ))}
+          </div>
+        ) : image && (
+          <div className="amz-masthead-image">
+            <Image src={image.src} alt={image.alt} fill sizes="(max-width: 800px) 100vw, 480px" preload />
+          </div>
+        )}
+        </div>
 
         {/* Meta strip */}
         {stats && stats.length > 0 && (
