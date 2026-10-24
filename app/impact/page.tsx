@@ -21,7 +21,7 @@ const MOSAIC = [
 
 const ORGS = [
   { name: "Stop Soldiers Suicide", text: "Veteran suicide prevention, funding and volunteer hours toward a cause with a direct line to the families of the tradespeople we work alongside." },
-  { name: "My Philly Parks", text: "Restoration and clean-up days in the city's public green spaces, the kind of infrastructure a mechanical contractor doesn't usually touch but can still show up for." },
+  { name: "My Philly Parks", text: "Restoration and clean-up days in the city's public green spaces, the kind of infrastructure an HVAC company doesn't usually touch but can still show up for." },
   { name: "ACCT Philly", text: "Philadelphia's animal care and control team, supply drives and shelter visits from the crew, not just a cheque." },
   { name: "Caring for Friends", text: "Meal preparation and delivery support for homebound seniors across the region we already serve on the job." },
   { name: "Habitat Philadelphia", text: "Build days alongside Habitat for Humanity's Philadelphia chapter, the same trades skills, pointed at a family's first home instead of a plant room." },
@@ -34,7 +34,7 @@ export default function ImpactPage() {
       <main id="main">
         <PageMasthead
           eyebrow="Social Impact"
-          title="The Second Half Of “Buildings And Communities”"
+          title="The Second Half of “Buildings and Communities”"
           intro="Crew time, equipment and know-how given to organisations in the counties we work in. Hours and partners are published here, not estimated."
           stats={[{ label: "Organisations supported", value: String(ORGS.length) }]}
         />
@@ -56,7 +56,7 @@ export default function ImpactPage() {
           <div style={{ maxWidth: 900, margin: "0 auto", padding: "0 clamp(20px,4vw,40px)" }}>
             <div style={{ textAlign: "center", marginBottom: 44 }}>
               <h2 style={{ fontFamily: "var(--font-display)", fontWeight: 700, fontSize: "clamp(1.625rem,1.17rem + 1.94vw,2.4375rem)", lineHeight: 1.15, letterSpacing: "-.012em", margin: "0 0 16px" }}>
-                Organisations We Give Time To
+                Organisations We Give Time to
               </h2>
               <p style={{ fontSize: "clamp(1.0625rem,.98rem + .35vw,1.25rem)", lineHeight: 1.6, color: "#444444", margin: 0 }}>Five, so far, added to as new partnerships form.</p>
             </div>
@@ -74,7 +74,7 @@ export default function ImpactPage() {
         <section style={{ background: "#0F4E85", position: "relative", overflow: "hidden" }}>
           <div style={{ position: "relative", maxWidth: 1080, margin: "0 auto", padding: "clamp(48px,7vw,72px) clamp(20px,4vw,40px)", textAlign: "center" }}>
             <h2 style={{ fontFamily: "var(--font-display)", fontWeight: 700, fontSize: "clamp(1.5rem,1.2rem + 1.2vw,2rem)", lineHeight: 1.2, color: "#FFFFFF", margin: "0 0 16px" }}>
-              Know An Organisation We Should Be Working With?
+              Know an Organisation We Should Be Working With?
             </h2>
             <p style={{ fontSize: 16.5, lineHeight: 1.6, color: "rgba(255,255,255,.86)", margin: "0 0 28px", maxWidth: "52ch", marginInline: "auto" }}>
               Tell us who, and what the need is. We can&rsquo;t commit to everything, but we read every one of these.

@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import LegalPage, { type LegalSection } from "../_components/LegalPage";
-import { AMZ_PHONE_DISPLAY } from "../_lib/contact";
 
 export const metadata: Metadata = {
   title: "Accessibility Statement | AMZ Energy Systems",
@@ -50,32 +49,32 @@ const SECTIONS: LegalSection[] = [
     ],
   },
   {
-    heading: "Getting The Information Another Way",
+    heading: "Getting the Information Another Way",
     body: [
-      "Nothing on this site is the only route to what we do. If any page, document or tool is difficult for you to use, call us and a person will walk you through it, take your enquiry directly, or send the material in a different format. There is no separate process and no charge for this.",
+      "Nothing on this site is the only route to what we do. If any page, document or tool is difficult for you to use, contact us and a person will walk you through it, take your enquiry directly, or send the material in a different format. There is no separate process and no charge for this.",
     ],
   },
   {
-    heading: "Tell Us About A Barrier",
+    heading: "Tell Us About a Barrier",
     body: [
       "We would rather hear about a problem than leave it in place. When you get in touch, it helps if you can tell us the page address, what you were trying to do, and the browser or assistive technology you were using, though please do report a barrier even if you cannot supply those details.",
       "We aim to respond to accessibility reports within two business days, and to tell you either what we have fixed or when we expect to fix it.",
     ],
   },
   {
-    heading: "How We Assess The Site",
+    heading: "How We Assess the Site",
     body: [
       "We review this site against WCAG 2.1 Level AA using a combination of automated checks and manual testing, including keyboard-only navigation and screen reader spot checks. Assessment is carried out by AMZ Energy Systems; the site has not yet been audited by an independent third party. New pages and features are checked before they go live, and feedback from visitors is treated as a defect report like any other.",
     ],
   },
   {
-    heading: "Our Buildings And Our Work",
+    heading: "Our Buildings and Our Work",
     body: [
       "This statement covers this website. Accessibility in the buildings we work on is governed by the applicable building codes and the Americans with Disabilities Act, and is handled as part of the design and installation for each project. If you have an accessibility requirement relating to a site visit, a service call or a meeting with our team, tell us in advance and we will make arrangements.",
     ],
   },
   {
-    heading: "Changes To This Statement",
+    heading: "Changes to This Statement",
     body: [
       "We update this page as the site changes and as we close the gaps listed above. The date at the top shows when it last changed.",
     ],
@@ -90,8 +89,8 @@ export default function AccessibilityPage() {
       intro="What we have done to keep this site usable for everyone, where we know it still falls short, and how to reach a person if something gets in your way."
       updated={UPDATED}
       sections={SECTIONS}
-      contactHeading="Report An Accessibility Barrier"
-      contactIntro={`Call us on ${AMZ_PHONE_DISPLAY} or write to the address below. Tell us the page and what went wrong, and we will get you the information another way while we fix it.`}
+      contactHeading="Report an Accessibility Barrier"
+      contactIntro={`Send us a message through our contact form or write to the address below. Tell us the page and what went wrong, and we will get you the information another way while we fix it.`}
     />
   );
 }

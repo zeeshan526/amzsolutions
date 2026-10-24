@@ -27,9 +27,9 @@ const COVERED = [
 
 const STEPS = [
   { n: "01", title: "Confirm You Qualify", text: "Local public procurement units and state-affiliated entities in Pennsylvania, school districts, municipalities, authorities, are eligible. Registration runs through the PA Department of General Services." },
-  { n: "02", title: "Tell Us The Scope", text: "Same conversation as any project: what the building is doing, the equipment category, the timeline. We price it against the COSTARS contract rather than a separate bid process." },
+  { n: "02", title: "Tell Us the Scope", text: "Same conversation as any project: what the building is doing, the equipment category, the timeline. We price it against the COSTARS contract rather than a separate bid process." },
   { n: "03", title: "Purchase Through COSTARS", text: "No separate competitive bid required on your end, that's the point of a cooperative purchasing program. The contract has already cleared that step." },
-  { n: "04", title: "Install, Same As Any Job", text: "Design-build, utility incentive management and commissioning run exactly as described on our Installation Services page, COSTARS changes the procurement path, not the field work." },
+  { n: "04", title: "Install, Same as Any Job", text: "Design-build, utility incentive management and commissioning run exactly as described on our Installation Services page, COSTARS changes the procurement path, not the field work." },
 ] as const;
 
 export default function CostarsProgramPage() {
@@ -39,7 +39,7 @@ export default function CostarsProgramPage() {
       <main id="main">
         <PageMasthead
           eyebrow="COSTARS Program"
-          title="A Faster Procurement Path For Pennsylvania Public Entities"
+          title="A Faster Procurement Path for Pennsylvania Public Entities"
           intro="The Commonwealth of Pennsylvania's Cooperative Purchasing Program (COSTARS) helps local public procurement units and state-affiliated entities find suppliers and purchase goods and services at competitive prices, without running a separate bid. AMZ Energy Systems is a COSTARS member."
           cta={{ label: "Discuss Your COSTARS Project", href: "#costars-contact" }}
           stats={[
@@ -66,7 +66,7 @@ export default function CostarsProgramPage() {
         <section style={{ padding: "clamp(56px,8vw,88px) 0", background: "#F9FAFB", borderTop: "1px solid #E3E5E8", borderBottom: "1px solid #E3E5E8" }}>
           <div style={{ maxWidth: 1120, margin: "0 auto", padding: "0 clamp(20px,4vw,40px)" }}>
             <h2 style={{ fontFamily: "var(--font-display)", fontWeight: 700, fontSize: "clamp(1.375rem,1.2rem + .9vw,1.75rem)", lineHeight: 1.3, margin: "0 0 32px", textAlign: "center" }}>
-              Product And Service Categories Covered
+              Product and Service Categories Covered
             </h2>
             <ul style={{ listStyle: "none", margin: 0, padding: 0, display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(min(100%,260px),1fr))", gap: 12 }}>
               {COVERED.map((c) => (
@@ -83,7 +83,7 @@ export default function CostarsProgramPage() {
           <div style={{ maxWidth: 1280, margin: "0 auto", padding: "0 clamp(20px,4vw,40px)" }}>
             <div style={{ maxWidth: 680, margin: "0 auto 48px", textAlign: "center" }}>
               <h2 style={{ fontFamily: "var(--font-display)", fontWeight: 700, fontSize: "clamp(1.625rem,1.17rem + 1.94vw,2.4375rem)", lineHeight: 1.15, letterSpacing: "-.012em", margin: "0 0 20px" }}>
-                How A COSTARS Purchase Runs
+                How a COSTARS Purchase Runs
               </h2>
             </div>
             <ol style={{ listStyle: "none", margin: 0, padding: 0, display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(min(100%,232px),1fr))", gap: 20 }}>

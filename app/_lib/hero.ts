@@ -27,38 +27,32 @@ export function progressToTime(progress: number) {
 export const HERO_OVERLAYS: HeroOverlay[] = [
   {
     start: 0, end: 0.05, align: "center", poster: "/hero/poster-01-hero.jpg",
-    eyebrow: "COMMERCIAL MECHANICAL SYSTEMS", heading: "Making Buildings And Communities Better",
-    body: "High-efficiency HVAC solutions that reduce the carbon footprint of the built environment across the Greater Philadelphia area.",
+    eyebrow: "COMMERCIAL MECHANICAL SYSTEMS", heading: "Making Buildings and Communities Better",
+    body: "High-efficiency HVAC solutions that reduce the carbon footprint of the built environment across Eastern Pennsylvania, South Jersey, and Delaware.",
     ctas: [{ label: "Explore Our Solutions", href: "/technologies-services", variant: "primary" }],
-  },
-  {
-    start: 0.13, end: 0.24, align: "left", poster: "/hero/poster-02-collaboration.jpg",
-    eyebrow: "HOW WE WORK", heading: "Solved Together",
-    body: "Collaborative problem solving with engineers, contractors, and owners to provide high-efficiency HVAC solutions for any commercial built environment.",
-    ctas: [{ label: "About AMZ", href: "/about", variant: "primary" }],
   },
   {
     start: 0.31, end: 0.41, align: "left", poster: "/hero/poster-03-chillers.jpg",
     eyebrow: "HIGH-RISE COMMERCIAL OFFICES", heading: "Chiller Plants",
-    body: "High-efficiency chilled water solutions for commercial office towers, featuring our partner Dunham-Bush, with over 125 years of HVAC manufacturing.",
+    body: "High-efficiency chilled water plants for commercial office towers, selected for part-load efficiency, reliability and a long service life.",
     ctas: [{ label: "View Chiller Solutions", href: "/technologies-services#chillers", variant: "primary" }],
   },
   {
     start: 0.48, end: 0.58, align: "left", poster: "/hero/poster-04-healthcare.jpg",
     eyebrow: "HEALTHCARE", heading: "Custom Air Handlers",
-    body: "We design and support air handling unit installations, from catalogue to fully custom with XNRGY, to deliver consistent airflow, comfort, and indoor air quality.",
+    body: "We design and support air handling unit installations, from catalogue to fully custom, to deliver consistent airflow, comfort, and indoor air quality.",
     ctas: [{ label: "Explore Air Handling", href: "/technologies-services#air-handling", variant: "primary" }],
   },
   {
     start: 0.65, end: 0.86, align: "left", poster: "/hero/poster-05-datacenter-hall.jpg",
     eyebrow: "DATA CENTERS", heading: "Mission-Critical Cooling",
     body: "A wide range of solutions for mission-critical and hyperscale cooling, built to reduce energy use and achieve the lowest power usage effectiveness (PUE).",
-    ctas: [{ label: "View Data Center Solutions", href: "/markets-served#data-center", variant: "primary" }],
+    ctas: [{ label: "View Data Center Solutions", href: "/#verticals", variant: "primary" }],
   },
   {
     start: 0.92, end: 1, align: "left", poster: "/hero/poster-07-education.jpg",
     eyebrow: "EDUCATION", heading: "Cooling Towers",
-    body: "Efficient, reliable cooling towers from American Cooling Tower, with installation services and utility incentive support that help schools invest in energy-saving upgrades.",
-    ctas: [{ label: "Start a Project", href: "/contact", variant: "primary" }, { label: "View Line Card", href: LINE_CARD_HREF, variant: "text" }],
+    body: "Efficient, reliable cooling towers, with installation services and utility incentive support that help schools invest in energy-saving upgrades.",
+    ctas: [{ label: "Contact Us", href: "/contact", variant: "primary" }, { label: "View Line Card", href: LINE_CARD_HREF, variant: "text" }],
   },
 ];

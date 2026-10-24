@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import LegalPage, { type LegalSection } from "../_components/LegalPage";
-import { AMZ_PHONE_DISPLAY } from "../_lib/contact";
 
 export const metadata: Metadata = {
   title: "Privacy Policy | AMZ Energy Systems",
@@ -79,18 +78,18 @@ const SECTIONS: LegalSection[] = [
   {
     heading: "How We Protect It",
     body: [
-      "We use reasonable administrative, technical and physical safeguards appropriate to the sensitivity of the information, and we limit access to staff and partners who need it for their work. No website or email system is perfectly secure, so please do not send confidential material to us through an unsecured channel, call us and we will arrange a better route.",
+      "We use reasonable administrative, technical and physical safeguards appropriate to the sensitivity of the information, and we limit access to staff and partners who need it for their work. No website or email system is perfectly secure, so please do not send confidential material to us through an unsecured channel, contact us and we will arrange a better route.",
     ],
   },
   {
-    heading: "Cookies And Analytics",
+    heading: "Cookies and Analytics",
     body: [
       "This site uses essential cookies so that pages load and your preferences, such as dismissing the cookie notice, are remembered. Where we use analytics, it is to understand which pages are read and where visitors run into trouble, not to build advertising profiles.",
       "You can block or delete cookies in your browser settings. Essential cookies cannot be switched off from within the site without affecting how it works, and blocking them in your browser may break parts of it.",
     ],
   },
   {
-    heading: "Your Choices And Rights",
+    heading: "Your Choices and Rights",
     body: [
       "You can ask us to tell you what personal information we hold about you, correct it if it is wrong, delete it where we are not required to keep it, or stop using it for marketing. Contact us using the details below and tell us what you would like done. We may need to confirm who you are before we act, and we will tell you if a legal or contractual obligation means we have to keep something.",
       "Depending on where you live, state law may give you additional rights over your personal information. We apply the choices described here to everyone who asks, regardless of where they are.",
@@ -109,7 +108,7 @@ const SECTIONS: LegalSection[] = [
     ],
   },
   {
-    heading: "Changes To This Policy",
+    heading: "Changes to This Policy",
     body: [
       "We will update this page when our practices change. The date at the top shows when it last changed. If a change materially affects how we use information you have already given us, we will take reasonable steps to tell you directly.",
     ],
@@ -125,7 +124,7 @@ export default function PrivacyPolicyPage() {
       updated={UPDATED}
       sections={SECTIONS}
       contactHeading="Questions About Your Information"
-      contactIntro={`To ask what we hold, correct it, delete it or opt out of marketing, call us on ${AMZ_PHONE_DISPLAY} or write to us at the address below. Tell us what you would like done and we will come back to you.`}
+      contactIntro={`To ask what we hold, correct it, delete it or opt out of marketing, send us a message through our contact form or write to us at the address below. Tell us what you would like done and we will come back to you.`}
     />
   );
 }

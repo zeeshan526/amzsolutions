@@ -3,32 +3,27 @@
    resolve correctly from pages other than the homepage. */
 
 export const AMZ_TECH_MENU = [
-  { label: "Products By System Type", href: "/products-by-system-type" },
-  { label: "Products By Manufacturer", href: "/manufacturers" },
+  { label: "Products by System Type", href: "/products-by-system-type" },
+  { label: "Products by Manufacturer", href: "/manufacturers" },
   { label: "Installation Services", href: "/installation-services" },
   { label: "Utility Incentive Management", href: "/utility-incentive-management" },
 ] as const;
 
-/* These four mirror the live site's own primary nav (Home / About Us / Technologies &
-   Services / Markets Served / Insights / Contact / Line Card / COSTARS Program), the
-   four highest-traffic destinations after Technologies & Services get a header slot;
-   the rest live in the footer so the header doesn't have to grow past its tested width.
-   "Partners" was dropped entirely: it duplicated Products by Manufacturer, which is
-   already one click away under Technologies & Services. */
-export const AMZ_NAV_LINKS = [
-  { label: "About", href: "/about" },
-  { label: "Markets Served", href: "/markets-served" },
-  { label: "Insights", href: "/insights" },
-  { label: "Contact", href: "/contact" },
-] as const;
+/* The header ribbon lists the four Technologies & Services pages directly, followed by
+   About; Markets Served, Insights and Contact were taken out of it at the client's request
+   (contact now lives behind the "Contact Us" button). The rest stay reachable from the
+   footer. */
+export const AMZ_NAV_LINKS = [...AMZ_TECH_MENU, { label: "About", href: "/about" }] as const;
+
+export const AMZ_CONTACT_HREF = "/contact";
 
 export const AMZ_FOOTER_COLUMNS = [
   {
     heading: "Technologies & Services",
     links: [
       { label: "Overview", href: "/technologies-services" },
-      { label: "Products By System Type", href: "/products-by-system-type" },
-      { label: "Products By Manufacturer", href: "/manufacturers" },
+      { label: "Products by System Type", href: "/products-by-system-type" },
+      { label: "Products by Manufacturer", href: "/manufacturers" },
       { label: "Installation Services", href: "/installation-services" },
       { label: "Utility Incentive Management", href: "/utility-incentive-management" },
     ],
@@ -36,11 +31,11 @@ export const AMZ_FOOTER_COLUMNS = [
   {
     heading: "Markets Served",
     links: [
-      { label: "Data Centers", href: "/markets-served#data-center" },
-      { label: "Healthcare", href: "/markets-served#healthcare" },
-      { label: "High-Rise Residential", href: "/markets-served#high-rise-residential" },
-      { label: "Education", href: "/markets-served#education" },
-      { label: "Industrial & Manufacturing", href: "/markets-served#industrial-manufacturing" },
+      { label: "Data Centers", href: "/#verticals" },
+      { label: "Healthcare", href: "/#verticals" },
+      { label: "High-Rise Residential", href: "/#verticals" },
+      { label: "Education", href: "/#verticals" },
+      { label: "Industrial & Manufacturing", href: "/#verticals" },
     ],
   },
   {
@@ -49,7 +44,7 @@ export const AMZ_FOOTER_COLUMNS = [
       { label: "About Us", href: "/about" },
       { label: "How We Work", href: "/how-we-work" },
       { label: "Social Impact", href: "/impact" },
-      { label: "Contact", href: "/contact" },
+      { label: "Contact Us", href: "/contact" },
     ],
   },
   {

@@ -143,7 +143,7 @@ export default function PageMasthead({
 
         </div>
         {collage ? (
-          <div className="amz-about-collage" aria-label="Our Systems, Collaboration And Community">
+          <div className="amz-about-collage" aria-label="Our Systems, Collaboration and Community">
             {collage.map((item, index) => (
               <figure key={item.src}>
                 <Image src={item.src} alt={item.alt} fill sizes={index === 0 ? "(max-width: 800px) 100vw, 480px" : "(max-width: 800px) 50vw, 240px"} preload={index === 0} />

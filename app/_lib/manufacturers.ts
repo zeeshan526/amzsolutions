@@ -11,7 +11,6 @@ export type Manufacturer = {
 
 export const MANUFACTURERS: Manufacturer[] = [
   { name: "Aermec", category: "Chillers & Boilers", categorySlug: "chillers-boilers", logo: "/images/partners/aermec.png" },
-  { name: "Epocha", category: "VRF, Splits & VTACs", categorySlug: "vrf-splits-vtacs" },
   { name: "Compu-Aire", category: "DX & Heat Recovery", categorySlug: "dx-heat-recovery" },
   { name: "Innovative Air", category: "Humidity Control", categorySlug: "humidity-control" },
   { name: "Dunham-Bush", category: "Chillers & Boilers", categorySlug: "chillers-boilers", logo: "/images/partners/dunham-bush.png" },
@@ -48,4 +47,61 @@ export const MANUFACTURERS: Manufacturer[] = [
   { name: "Nu-Air", category: "DX & Heat Recovery", categorySlug: "dx-heat-recovery" },
 ];
 
+/* Shown alphabetically everywhere they're listed. */
+MANUFACTURERS.sort((a, b) => a.name.localeCompare(b.name));
+
 export const MANUFACTURER_CATEGORIES = Array.from(new Set(MANUFACTURERS.map((m) => m.category))).sort();
+
+/* Official sites, checked October 2026. General Water Systems and Rosemex are left out
+   until a working URL is confirmed, so their cards stay unlinked rather than pointing at
+   a guess. */
+const WEBSITES: Record<string, string> = {
+  "ACE Heaters": "https://aceheaters.com/",
+  Aermec: "https://aermec-na.com/",
+  "American Cooling Tower": "https://www.americancoolingtower.com/",
+  "Blue Frontier": "https://bluefrontierac.com/",
+  "Compu-Aire": "https://www.compu-aire.com/",
+  "Direct Coil": "https://directcoil.com/",
+  "Dunham-Bush": "https://dbamericas.com/",
+  "EB Air Control": "https://ebaircontrol.com/",
+  Enertech: "https://enertechusa.com/",
+  "Engineered Air": "https://www.engineeredair.com/",
+  Floaire: "https://www.floaire.com/",
+  Galletti: "https://www.galletti-na.com/",
+  "Go Fog": "https://www.gofoginc.com/",
+  "Hisense VRF": "https://hisensecomfort.com/",
+  "Innovative Air": "https://www.dehumidifiers.com/",
+  Kelvion: "https://www.kelvion.com/",
+  "King Electric": "https://king-electric.com/",
+  "Mainstream Fans": "https://mainstream-corp.com/",
+  Multiaqua: "https://multiaqua.com/",
+  "NEXGEN DOAS": "https://www.nexgendoas.com/",
+  "Nu-Air": "https://nu-airventilation.com/",
+  "S&P Fans": "https://www.solerpalau-usa.com/",
+  Schwank: "https://www.schwankgroup.com/",
+  Steamovap: "https://steamovap.com/",
+  "Sterling HVAC": "https://www.sterlinghvac.com/",
+  "Superior Rex": "https://www.superiorrex.com/",
+  Thermo2000: "https://www.thermo2000.com/en/",
+  Thermoplus: "https://thermoplus.com/",
+  "Unilux HVAC": "https://uniluxhvac.com/",
+  "Vents-US": "https://vents-us.com/",
+  "Warren HVAC": "https://www.warrenhvac.com/",
+  "Wilo Pumps": "https://wilo.com/us/en_us/",
+  XNRGY: "https://www.xnrgy.com/",
+  "ZAMBA HVAC": "https://www.zambahvac.com/",
+};
+
+/* systemTypes.ts uses shorter brand names in places; map them onto the names above. */
+const ALIASES: Record<string, string> = {
+  AERMEC: "Aermec",
+  Mainstream: "Mainstream Fans",
+  NEXGEN: "NEXGEN DOAS",
+  "S&P": "S&P Fans",
+  Sterling: "Sterling HVAC",
+  Warren: "Warren HVAC",
+};
+
+export function manufacturerWebsite(name: string): string | undefined {
+  return WEBSITES[ALIASES[name] ?? name];
+}

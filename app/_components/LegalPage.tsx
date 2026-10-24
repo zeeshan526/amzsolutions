@@ -1,6 +1,6 @@
 import Link from "next/link";
 
-import { AMZ_ADDRESS_LINES, AMZ_COMPANY, AMZ_PHONE_DISPLAY, AMZ_PHONE_HREF } from "../_lib/contact";
+import { AMZ_ADDRESS_LINES, AMZ_COMPANY } from "../_lib/contact";
 
 /* Shared chrome for the footer's legal pages (/privacy, /terms, /accessibility).
    Server component, static text, so nothing here needs the client. The contents
@@ -223,26 +223,13 @@ export default function LegalPage({
                 <p style={{ fontSize: 16.5, lineHeight: 1.7, color: "rgba(255,255,255,.88)", margin: "0 0 28px", maxWidth: "58ch" }}>{contactIntro}</p>
                 <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(min(100%,220px),1fr))", gap: "24px 40px" }}>
                   <div>
-                    <p style={{ fontFamily: "var(--font-display)", fontStretch: "75%", fontWeight: 700, fontSize: 11, letterSpacing: ".14em", textTransform: "uppercase", color: "rgba(255,255,255,.56)", margin: "0 0 10px" }}>Phone</p>
-                    <a
-                      href={AMZ_PHONE_HREF}
-                      style={{
-                        display: "inline-flex",
-                        alignItems: "center",
-                        gap: 10,
-                        fontFamily: "var(--font-display)",
-                        fontWeight: 700,
-                        fontSize: "clamp(20px,2.2vw,24px)",
-                        color: "#FFFFFF",
-                        textDecoration: "none",
-                        fontVariantNumeric: "tabular-nums",
-                      }}
+                    <p style={{ fontFamily: "var(--font-display)", fontStretch: "75%", fontWeight: 700, fontSize: 11, letterSpacing: ".14em", textTransform: "uppercase", color: "rgba(255,255,255,.56)", margin: "0 0 10px" }}>Message</p>
+                    <Link
+                      href="/contact"
+                      style={{ display: "inline-flex", alignItems: "center", gap: 10, fontFamily: "var(--font-display)", fontWeight: 700, fontSize: "clamp(20px,2.2vw,24px)", color: "#FFFFFF", textDecoration: "none" }}
                     >
-                      <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#F99615" strokeWidth="2" aria-hidden="true">
-                        <path d="M4 3h5l2 5-3 2a12 12 0 0 0 6 6l2-3 5 2v5h-2A15 15 0 0 1 4 5z" />
-                      </svg>
-                      {AMZ_PHONE_DISPLAY}
-                    </a>
+                      Send a Message &rarr;
+                    </Link>
                   </div>
                   <div>
                     <p style={{ fontFamily: "var(--font-display)", fontStretch: "75%", fontWeight: 700, fontSize: 11, letterSpacing: ".14em", textTransform: "uppercase", color: "rgba(255,255,255,.56)", margin: "0 0 10px" }}>Post</p>

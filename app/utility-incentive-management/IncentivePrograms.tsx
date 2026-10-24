@@ -10,6 +10,7 @@ type Program = {
   covers: string[];
   process: string[];
   note: string;
+  links: { label: string; href: string }[];
 };
 
 const PROGRAMS: Program[] = [
@@ -21,6 +22,7 @@ const PROGRAMS: Program[] = [
     covers: ["Lighting upgrades", "HVAC equipment", "Insulation improvements", "Smart thermostats"],
     process: ["Free energy audit and assessment", "Equipment scope matched to eligible measures", "Application filed alongside the mechanical proposal", "Rebate processed after install and inspection"],
     note: "Covers most of our Eastern Pennsylvania install base.",
+    links: [{ label: "PECO business incentives", href: "https://www.peco.com/business" }],
   },
   {
     id: "nj-direct-install",
@@ -30,6 +32,7 @@ const PROGRAMS: Program[] = [
     covers: ["Lighting", "HVAC systems", "Refrigeration"],
     process: ["Free energy assessment", "Turnkey scope and pricing at the discounted rate", "Full project management through the utility's contractor network", "Installed and commissioned under the program's requirements"],
     note: "Best fit for South Jersey facilities under the program's size threshold.",
+    links: [{ label: "Atlantic City Electric Direct Install program", href: "https://homeenergysavings.atlanticcityelectric.com/business/direct-install-program" }],
   },
   {
     id: "de-other",
@@ -39,6 +42,10 @@ const PROGRAMS: Program[] = [
     covers: ["Utility-specific commercial rebates", "State energy-office programs", "Federal tax incentives where equipment qualifies"],
     process: ["Identify which programs apply to the utility account", "Estimate the incentive value against the proposed scope", "File and track the application to approval", "Hand over the paperwork trail with the closeout package"],
     note: "We tell you up front if nothing applies rather than promising a rebate that isn't there.",
+    links: [
+      { label: "Delaware Energy Efficiency Investment Fund", href: "https://dnrec.delaware.gov/climate-coastal-energy/energy-office/programs/eeif/" },
+      { label: "Energize Delaware for business", href: "https://energizedelaware.org/business/" },
+    ],
   },
 ];
 
@@ -146,7 +153,17 @@ export default function IncentivePrograms() {
               </li>
             ))}
           </ul>
-          <p style={{ fontSize: 13.5, lineHeight: 1.6, color: "#5A6068", margin: 0, fontStyle: "italic" }}>{active.note}</p>
+          <p style={{ fontSize: 13.5, lineHeight: 1.6, color: "#5A6068", margin: "0 0 18px", fontStyle: "italic" }}>{active.note}</p>
+          <p style={{ fontFamily: "var(--font-display)", fontStretch: "75%", fontWeight: 700, fontSize: 11, letterSpacing: ".12em", textTransform: "uppercase", color: "#5A6068", margin: "0 0 10px" }}>Program summary</p>
+          <ul style={{ listStyle: "none", margin: 0, padding: 0, display: "flex", flexDirection: "column", gap: 8 }}>
+            {active.links.map((l) => (
+              <li key={l.href}>
+                <a href={l.href} target="_blank" rel="noopener noreferrer" className="amz-link-arrow" style={{ fontFamily: "var(--font-display)", fontWeight: 600, fontSize: 14.5, color: "#1462A7", textDecoration: "none" }}>
+                  {l.label} ↗<span className="sr-only"> (opens in a new tab)</span>
+                </a>
+              </li>
+            ))}
+          </ul>
         </div>
         <div>
           <p style={{ fontFamily: "var(--font-display)", fontStretch: "75%", fontWeight: 700, fontSize: 11, letterSpacing: ".12em", textTransform: "uppercase", color: "#5A6068", margin: "0 0 14px" }}>How we run it</p>

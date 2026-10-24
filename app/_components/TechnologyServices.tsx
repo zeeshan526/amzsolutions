@@ -15,7 +15,7 @@ export default function TechnologyServices({ overview = false }: { overview?: bo
     <section className={`amz-services-section${overview ? "" : " amz-services-home"}`} aria-labelledby="services-heading" data-screen-label="Technologies & Services">
       <div className="amz-services-container">
         <div className="amz-services-heading">
-          <div><p className="amz-insight-eyebrow">Technologies &amp; Services</p><h2 id="services-heading">{overview ? "Find The Right Support For Your Project." : "Better Systems. Support At Every Step."}</h2></div>
+          <div><p className="amz-insight-eyebrow">Technologies &amp; Services</p><h2 id="services-heading">{overview ? "Find the Right Support for Your Project." : "Better Systems. Support at Every Step."}</h2></div>
           {overview ? <p>Explore our equipment, manufacturer partners and services to plan your next building upgrade.</p> : <Link href="/technologies-services">Explore All Technologies &amp; Services <ArrowIcon /></Link>}
         </div>
         <div className="amz-services-grid">

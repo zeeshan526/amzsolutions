@@ -3,12 +3,12 @@
 import { useEffect, useRef, useState } from "react";
 
 import ArrowIcon from "./_components/ArrowIcon";
-import QuoteForm from "./_components/QuoteForm";
+import ContactSection from "./_components/ContactSection";
 import SiteFooter from "./_components/SiteFooter";
 import SiteHeader from "./_components/SiteHeader";
 import TechnologyServices from "./_components/TechnologyServices";
-import { AMZ_PHONE_DISPLAY, AMZ_PHONE_HREF } from "./_lib/contact";
 import { LINE_CARD_HREF } from "./_lib/lineCard";
+import { MARKET_SEGMENTS } from "./_lib/markets";
 import { TIMELINE, HERO_OVERLAYS, HERO_VIDEO, HERO_HEIGHT, HERO_FADE, progressToTime, type HeroOverlay } from "./_lib/hero";
 
 /* ---------------------------------------------------------------------- */
@@ -28,15 +28,18 @@ const PARTNER_LOGOS = [
 ];
 
 const STEPS = [
-  { n: "01", title: "Walk The Building", text: "Plant room, risers, the zones that complain. Before any selection is made." },
-  { n: "02", title: "Measure And Model", text: "Metered load where it exists, modelled where it doesn’t, and we always say which." },
+  { n: "01", title: "Walk the Building", text: "Plant room, risers, the zones that complain. Before any selection is made." },
+  { n: "02", title: "Measure and Model", text: "Metered load where it exists, modelled where it doesn’t, and we always say which." },
   { n: "03", title: "Specify Together", text: "Options priced side by side, with the trade-off stated in plain terms." },
-  { n: "04", title: "Commission And Hand Over", text: "Start-up attended, readings documented, one name to call afterwards." },
+  { n: "04", title: "Commission and Hand Over", text: "Start-up attended, readings documented, one name to call afterwards." },
 ];
 
+/* Homepage market cards. Each flips over to the "What we design around" bullets, which are
+   read from MARKET_SEGMENTS by slug so the copy only lives in one place. */
 const VERTICALS = [
   {
     n: "01",
+    slug: "high-rise-residential",
     tag: "Commercial",
     title: "High-Rise Office & Residential",
     text: "Central chiller plant, tenant churn, and no tolerance for downtime on occupied floors. Staged replacement without emptying the building.",
@@ -45,6 +48,7 @@ const VERTICALS = [
   },
   {
     n: "02",
+    slug: "healthcare",
     tag: "Healthcare",
     title: "Hospitals",
     text: "Pressure relationships, air-change rates and filtration that must hold continuously and be provable on inspection.",
@@ -53,21 +57,32 @@ const VERTICALS = [
   },
   {
     n: "03",
-    tag: "Mission critical",
-    title: "Data Centres",
+    slug: "data-center",
+    tag: "Mission Critical",
+    title: "Data Centers",
     text: "Rising rack density, redundancy that must be real rather than nominal, and a cooling plant judged on its worst hour.",
     img: "/images/verticals/datacenter.webp",
-    alt: "Data centre CRAH row",
+    alt: "Data center CRAH row",
   },
   {
     n: "04",
+    slug: "education",
     tag: "Education",
     title: "Schools",
     text: "A summer-shutdown window, a public budget cycle, and classrooms where noise and fresh air matter as much as capacity.",
     img: "/images/verticals/schools.webp",
     alt: "School rooftop units",
   },
-];
+  {
+    n: "05",
+    slug: "industrial-manufacturing",
+    tag: "Industrial",
+    title: "Industrial & Manufacturing",
+    text: "Process load, not comfort load, drives the design, so carbon reduction has to come from real efficiency gains and heat recovery.",
+    img: undefined,
+    alt: "",
+  },
+].map((v) => ({ ...v, considerations: MARKET_SEGMENTS.find((m) => m.slug === v.slug)?.considerations ?? [] }));
 
 const PARTNER_CARDS = [
   {
@@ -582,6 +597,65 @@ function HeroOverlayCopy({
   );
 }
 
+/** One market card. Clicking anywhere on it (or the toggle button, for keyboard users)
+ *  flips it between the summary and the "What we design around" list; the hidden face is
+ *  made inert so focus and screen readers only ever see the visible one. */
+function MarketCard({ market }: { market: (typeof VERTICALS)[number] }) {
+  const [flipped, setFlipped] = useState(false);
+  const flipIcon = (
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="butt" strokeLinejoin="miter" aria-hidden="true">
+      <path d="M3 12a9 9 0 0 1 15.5-6.2L21 8M21 3v5h-5M21 12a9 9 0 0 1-15.5 6.2L3 16M3 21v-5h5" />
+    </svg>
+  );
+  return (
+    <div className={`amz-flip${flipped ? " is-flipped" : ""}`} onClick={() => setFlipped((f) => !f)}>
+      <div className="amz-flip-inner">
+        <article className="amz-flip-face amz-flip-front" inert={flipped} aria-hidden={flipped}>
+          <div style={{ position: "relative", aspectRatio: "4 / 3", background: "#E3E5E8", flex: "none" }}>
+            {market.img ? (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img src={market.img} alt={market.alt} loading="lazy" style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover" }} />
+            ) : (
+              <span aria-hidden style={{ position: "absolute", inset: 0, display: "flex", alignItems: "center", justifyContent: "center", background: "radial-gradient(circle at 30% 20%,#1B77C6 0%,#0F4E85 55%,#08304F 100%)", color: "#AFD3F3" }}>
+                <svg width="76" height="76" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.3" strokeLinecap="butt" strokeLinejoin="miter">
+                  <path d="M2 21h20M3 21V11l5 3V11l5 3V11l5 3V5h3v16" />
+                  <path d="M7 18h2M12 18h2M17 18h2" />
+                </svg>
+              </span>
+            )}
+          </div>
+          <div style={{ display: "flex", flexDirection: "column", flex: "1 1 auto", padding: "22px 24px 18px" }}>
+            <p style={{ display: "flex", alignItems: "center", gap: 10, fontFamily: "var(--font-display)", fontStretch: "75%", fontWeight: 700, fontSize: 12, letterSpacing: ".14em", textTransform: "uppercase", color: "#5A6068", margin: "0 0 10px" }}>
+              <span aria-hidden style={{ width: 18, height: 1, background: "#1462A7", flex: "none" }} />
+              {market.tag}
+            </p>
+            <h3 style={{ fontFamily: "var(--font-display)", fontWeight: 600, fontSize: "clamp(20px,2vw,24px)", lineHeight: 1.3, letterSpacing: "-.004em", margin: "0 0 10px" }}>{market.title}</h3>
+            <p style={{ fontSize: 14, lineHeight: 1.65, color: "#444444", margin: "0 0 18px" }}>{market.text}</p>
+            <button type="button" className="amz-flip-toggle" aria-expanded={flipped} style={{ color: "#1462A7" }}>
+              What we design around {flipIcon}
+            </button>
+          </div>
+        </article>
+        <div className="amz-flip-face amz-flip-back" inert={!flipped} aria-hidden={!flipped} style={{ padding: "26px 24px 18px" }}>
+          <p style={{ fontFamily: "var(--font-display)", fontStretch: "75%", fontWeight: 700, fontSize: 12, letterSpacing: ".14em", textTransform: "uppercase", color: "#7DB9ED", margin: "0 0 8px" }}>What we design around</p>
+          <h3 style={{ fontFamily: "var(--font-display)", fontWeight: 600, fontSize: "clamp(20px,2vw,24px)", lineHeight: 1.3, letterSpacing: "-.004em", margin: "0 0 18px", color: "#FFFFFF" }}>{market.title}</h3>
+          <ul style={{ listStyle: "none", margin: "0 0 18px", padding: 0, display: "flex", flexDirection: "column", gap: 12 }}>
+            {market.considerations.map((c) => (
+              <li key={c} style={{ display: "flex", gap: 12, fontSize: 14, lineHeight: 1.55, color: "rgba(255,255,255,.9)" }}>
+                <span aria-hidden style={{ flex: "none", width: 7, height: 7, marginTop: 7, borderRadius: 999, background: "#F99615" }} />
+                {c}
+              </li>
+            ))}
+          </ul>
+          <button type="button" className="amz-flip-toggle" aria-expanded={flipped} style={{ color: "#FFFFFF" }}>
+            {flipIcon} Back to overview
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 /* ---------------------------------------------------------------------- */
 /*  Page                                                                  */
 /* ---------------------------------------------------------------------- */
@@ -809,7 +883,7 @@ export default function Home() {
             <div className="amz-head" style={{ maxWidth: 760, margin: "0 auto 56px", textAlign: "center" }}>
               <Eyebrow>How We Work</Eyebrow>
               <h2 style={{ fontFamily: "var(--font-display)", fontWeight: 700, fontSize: "clamp(1.625rem,1.17rem + 1.94vw,2.4375rem)", lineHeight: 1.15, letterSpacing: "-.012em", margin: "0 0 20px" }}>
-                We Solve The Mechanical Problem <span className="amz-accent">With You,</span> Not For You
+                We Solve the Mechanical Problem <span className="amz-accent">With You,</span> Not For You
               </h2>
               <p style={{ fontSize: "clamp(1.0625rem,.98rem + .35vw,1.25rem)", lineHeight: 1.6, color: "#444444", margin: 0 }}>
                 Most mechanical problems arrive already half-diagnosed. The useful work happens in the room where the engineer, the contractor and the owner are all looking at the same numbers, so we start on the drawings, not the catalogue.
@@ -836,31 +910,17 @@ export default function Home() {
             <div className="amz-head" style={{ maxWidth: 680, margin: "0 auto 56px", textAlign: "center" }}>
               <Eyebrow>Markets We Serve</Eyebrow>
               <h2 style={{ fontFamily: "var(--font-display)", fontWeight: 700, fontSize: "clamp(1.625rem,1.17rem + 1.94vw,2.4375rem)", lineHeight: 1.15, letterSpacing: "-.012em", margin: "0 0 20px" }}>
-                Four Buildings, <span className="amz-accent">Four Different Problems</span>
+                Many Industries, <span className="amz-accent">Many Solutions</span>
               </h2>
               <p style={{ fontSize: "clamp(1.0625rem,.98rem + .35vw,1.25rem)", lineHeight: 1.6, color: "#444444", margin: 0 }}>The equipment overlaps. The constraints do not, and the constraint is what decides the selection.</p>
             </div>
-            <div className="amz-mkt amz-row" style={{ display: "grid", gap: "clamp(20px,2.4vw,32px)" }}>
+            <ul className="amz-mkt amz-row" style={{ listStyle: "none", margin: 0, padding: 0, display: "grid", gap: "clamp(20px,2.4vw,32px)" }}>
               {VERTICALS.map((v, vi) => (
-                <article key={v.n} className={vi < 2 ? "amz-slide-l" : "amz-slide-r"} style={{ display: "flex", flexDirection: "column" }}>
-                  <a href="#contact" aria-label={`${v.title}, see the market`} className="amz-vert-link amz-reveal amz-leaf" style={{ position: "relative", display: "block", aspectRatio: "3 / 4", background: "#E3E5E8", borderRadius: 18, overflow: "hidden", textDecoration: "none" }}>
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img src={v.img} alt={v.alt} style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover" }} />
-                    <span aria-hidden style={{ position: "absolute", top: 16, left: 16, zIndex: 2, display: "inline-flex", alignItems: "center", height: 28, padding: "0 12px", borderRadius: 999, background: "rgba(10,16,23,.78)", color: "#FFFFFF", fontFamily: "var(--font-mono)", fontSize: 12, letterSpacing: ".06em" }}>
-                      {v.n}
-                    </span>
-                  </a>
-                  <div style={{ padding: "22px 2px 0" }}>
-                    <p style={{ display: "flex", alignItems: "center", gap: 10, fontFamily: "var(--font-display)", fontStretch: "75%", fontWeight: 700, fontSize: 12, letterSpacing: ".14em", textTransform: "uppercase", color: "#5A6068", margin: "0 0 10px" }}>
-                      <span aria-hidden style={{ width: 18, height: 1, background: "#1462A7", flex: "none" }} />
-                      {v.tag}
-                    </p>
-                    <h3 style={{ fontFamily: "var(--font-display)", fontWeight: 600, fontSize: "clamp(20px,2vw,25px)", lineHeight: 1.3, letterSpacing: "-.004em", margin: "0 0 10px" }}>{v.title}</h3>
-                    <p style={{ fontSize: 14, lineHeight: 1.65, color: "#444444", margin: 0 }}>{v.text}</p>
-                  </div>
-                </article>
+                <li key={v.n} className={vi % 2 === 0 ? "amz-slide-l" : "amz-slide-r"}>
+                  <MarketCard market={v} />
+                </li>
               ))}
-            </div>
+            </ul>
           </div>
         </section>
 
@@ -878,7 +938,7 @@ export default function Home() {
           />
           <div style={{ position: "relative", maxWidth: 1280, margin: "0 auto", padding: "0 clamp(20px,4vw,40px)" }}>
             <div style={{ maxWidth: 660, margin: "0 auto clamp(40px,5vw,60px)", textAlign: "center" }}>
-              <Eyebrow dark>For The Design Community</Eyebrow>
+              <Eyebrow dark>For the Design Community</Eyebrow>
               <h2 style={{ fontFamily: "var(--font-display)", fontWeight: 700, fontSize: "clamp(1.75rem,1.2rem + 2.2vw,2.75rem)", lineHeight: 1.1, letterSpacing: "-.016em", margin: "0 0 18px", color: "#FFFFFF" }}>
                 Why Mechanical Engineers Choose AMZ
               </h2>
@@ -923,7 +983,7 @@ export default function Home() {
               {/* Card 2, in the design meeting */}
               <article className="amz-bcard" style={{ background: "#0F1418", border: "1px solid rgba(255,255,255,.10)", borderRadius: 20, overflow: "hidden", display: "flex", flexDirection: "column" }}>
                 <div style={{ padding: "clamp(24px,2.6vw,32px) clamp(24px,2.6vw,32px) 0" }}>
-                  <h3 style={{ fontFamily: "var(--font-display)", fontWeight: 600, fontSize: "clamp(19px,2vw,23px)", lineHeight: 1.3, letterSpacing: "-.006em", margin: "0 0 10px", color: "#FFFFFF" }}>In The Design Meeting, Not Just The Bid</h3>
+                  <h3 style={{ fontFamily: "var(--font-display)", fontWeight: 600, fontSize: "clamp(19px,2vw,23px)", lineHeight: 1.3, letterSpacing: "-.006em", margin: "0 0 10px", color: "#FFFFFF" }}>In the Design Meeting, Not Just the Bid</h3>
                   <p style={{ fontSize: 14, lineHeight: 1.65, color: "rgba(255,255,255,.72)", margin: 0, maxWidth: "42ch" }}>
                     We sit in the review while the scheme is still moving. If a cheaper line meets your spec you hear it before submittals, not after.
                   </p>
@@ -1006,7 +1066,7 @@ export default function Home() {
               {/* Card 4, one engineer */}
               <article className="amz-bcard" style={{ background: "#0F1418", border: "1px solid rgba(255,255,255,.10)", borderRadius: 20, overflow: "hidden", display: "flex", flexDirection: "column" }}>
                 <div style={{ padding: "clamp(24px,2.6vw,32px) clamp(24px,2.6vw,32px) 0" }}>
-                  <h3 style={{ fontFamily: "var(--font-display)", fontWeight: 600, fontSize: "clamp(19px,2vw,23px)", lineHeight: 1.3, letterSpacing: "-.006em", margin: "0 0 10px", color: "#FFFFFF" }}>One Engineer, Start To Finish</h3>
+                  <h3 style={{ fontFamily: "var(--font-display)", fontWeight: 600, fontSize: "clamp(19px,2vw,23px)", lineHeight: 1.3, letterSpacing: "-.006em", margin: "0 0 10px", color: "#FFFFFF" }}>One Engineer, Start to Finish</h3>
                   <p style={{ fontSize: 14, lineHeight: 1.65, color: "rgba(255,255,255,.72)", margin: 0, maxWidth: "42ch" }}>
                     The person who sized it attends start-up and signs the readings, one named contact, no handover to a service desk halfway through the job.
                   </p>
@@ -1074,7 +1134,7 @@ export default function Home() {
                   <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#1462A7" strokeWidth="2" strokeLinecap="butt" strokeLinejoin="miter" aria-hidden="true" style={{ flex: "none" }}>
                     <path d="M4 12h16M14 6l6 6-6 6" />
                   </svg>
-                  <span className="sr-only">(Opens In A New Tab)</span>
+                  <span className="sr-only">(Opens in a New Tab)</span>
                 </a>
               </h2>
               <p style={{ fontSize: "clamp(1.0625rem,.98rem + .35vw,1.25rem)", lineHeight: 1.6, color: "#444444", margin: 0 }}>
@@ -1109,7 +1169,7 @@ export default function Home() {
           <div style={{ maxWidth: 1280, margin: "0 auto", padding: "0 clamp(20px,4vw,40px)" }}>
             <div className="amz-head" style={{ maxWidth: 640, margin: "0 auto 56px", textAlign: "center" }}>
               <Eyebrow>In Their Words</Eyebrow>
-              <h2 style={{ fontFamily: "var(--font-display)", fontWeight: 700, fontSize: "clamp(1.625rem,1.17rem + 1.94vw,2.4375rem)", lineHeight: 1.15, letterSpacing: "-.012em", margin: 0 }}>Every Side <span className="amz-accent">Of The Work</span></h2>
+              <h2 style={{ fontFamily: "var(--font-display)", fontWeight: 700, fontSize: "clamp(1.625rem,1.17rem + 1.94vw,2.4375rem)", lineHeight: 1.15, letterSpacing: "-.012em", margin: 0 }}>Every Side <span className="amz-accent">of the Work</span></h2>
             </div>
 
             <div className="amz-ring" style={{ position: "relative", width: "min(100%,calc(var(--r) * 2 + var(--av) + 24px))", margin: "0 auto", aspectRatio: "1 / 1", display: "flex", alignItems: "center", justifyContent: "center" }}>
@@ -1268,7 +1328,7 @@ export default function Home() {
             <div className="amz-head" style={{ maxWidth: 700, margin: "0 auto 56px", textAlign: "center" }}>
               <Eyebrow>Social Impact</Eyebrow>
               <h2 style={{ fontFamily: "var(--font-display)", fontWeight: 700, fontSize: "clamp(1.625rem,1.17rem + 1.94vw,2.4375rem)", lineHeight: 1.15, letterSpacing: "-.012em", margin: "0 0 20px" }}>
-                The Second Half Of <span className="amz-accent">&ldquo;Buildings And Communities&rdquo;</span>
+                The Second Half of <span className="amz-accent">&ldquo;Buildings And Communities&rdquo;</span>
               </h2>
               <p style={{ fontSize: "clamp(1.0625rem,.98rem + .35vw,1.25rem)", lineHeight: 1.6, color: "#444444", margin: 0 }}>
                 Crew time, equipment and know-how given to organisations in the counties we work in. Hours and partners are published, not estimated.
@@ -1326,45 +1386,7 @@ export default function Home() {
           )}
         </section>
 
-        {/* CTA band */}
-        <section id="contact" data-screen-label="CTA band" style={{ background: "#0F4E85", position: "relative", overflow: "hidden" }}>
-          <svg viewBox="0 0 1600 340" preserveAspectRatio="none" aria-hidden="true" style={{ position: "absolute", inset: 0, width: "130%", height: "100%", opacity: 0.13 }}>
-            <path className="amz-swoosh" pathLength={1} d="M-160,300 A1900,1900 0 0 1 1740,120" fill="none" stroke="#FFFFFF" strokeWidth="28" />
-          </svg>
-          <svg viewBox="0 0 1600 340" preserveAspectRatio="none" aria-hidden="true" style={{ position: "absolute", inset: 0, width: "130%", height: "100%" }}>
-            <path className="amz-swoosh-glint" pathLength={1} d="M-160,300 A1900,1900 0 0 1 1740,120" fill="none" strokeWidth="4" />
-          </svg>
-          <div className="amz-contact-grid" style={{ position: "relative", maxWidth: 1080, margin: "0 auto", padding: "clamp(56px,8vw,88px) clamp(20px,4vw,40px)" }}>
-            <div>
-            <h2 style={{ fontFamily: "var(--font-display)", fontWeight: 700, fontSize: "clamp(1.625rem,1.17rem + 1.94vw,2.4375rem)", lineHeight: 1.15, letterSpacing: "-.012em", margin: "0 0 16px", color: "#FFFFFF" }}>
-              Tell Us What The Building Is <span className="amz-accent amz-accent-light">Doing</span>
-            </h2>
-            <p style={{ fontSize: "clamp(1.0625rem,.98rem + .35vw,1.25rem)", lineHeight: 1.6, color: "rgba(255,255,255,.86)", margin: "0 0 32px", maxWidth: "36ch" }}>We&rsquo;ll come and measure. We reply to every request within one business day.</p>
-            <address style={{ fontStyle: "normal", display: "flex", alignItems: "center", gap: 10, fontSize: 15, lineHeight: 1.6, color: "rgba(255,255,255,.80)", margin: "0 0 28px" }}>
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,.62)" strokeWidth="2" strokeLinecap="butt" strokeLinejoin="miter" aria-hidden="true" style={{ flex: "none" }}>
-                <path d="M12 21s7-6.2 7-11a7 7 0 1 0-14 0c0 4.8 7 11 7 11z" />
-                <circle cx="12" cy="10" r="2.6" />
-              </svg>
-              100 W Oxford Street, Suite W1200, Philadelphia, PA 19122
-            </address>
-            <div style={{ display: "flex", flexWrap: "wrap", gap: 14, alignItems: "center" }}>
-              <a
-                href={AMZ_PHONE_HREF}
-                className="amz-btn-outline-light"
-                style={{ display: "inline-flex", alignItems: "center", gap: 10, height: 58, padding: "0 28px", borderRadius: 999, border: "1.5px solid rgba(255,255,255,.56)", fontFamily: "var(--font-display)", fontWeight: 600, fontSize: 16, color: "#FFFFFF", textDecoration: "none" }}
-              >
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" strokeWidth="2" strokeLinecap="butt" strokeLinejoin="miter" aria-hidden="true">
-                  <path d="M4 3h5l2 5-3 2a12 12 0 0 0 6 6l2-3 5 2v5h-2A15 15 0 0 1 4 5z" />
-                </svg>
-                {AMZ_PHONE_DISPLAY}
-              </a>
-            </div>
-            </div>
-            <div>
-              <QuoteForm />
-            </div>
-          </div>
-        </section>
+        <ContactSection />
       </main>
 
       <SiteFooter />

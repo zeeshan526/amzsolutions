@@ -2,7 +2,6 @@
 
 import { useId, useRef, useState } from "react";
 
-import { AMZ_PHONE_DISPLAY, AMZ_PHONE_HREF } from "../_lib/contact";
 import { submitFormDataToWeb3Forms } from "../_lib/web3forms";
 
 /* Fuller than the homepage's QuoteForm, this mirrors the live site's own contact form
@@ -81,12 +80,9 @@ export default function ContactForm({ productOptions }: { productOptions?: reado
           <path d="M4 12.5l5 5L20 6.5" />
         </svg>
         <h3 style={{ fontFamily: "var(--font-display)", fontWeight: 700, fontSize: "clamp(1.25rem,1.1rem + .6vw,1.5rem)", color: "#191C1F", margin: "0 0 12px" }}>Message Received</h3>
-        <p style={{ fontSize: 16, lineHeight: 1.7, color: "#444444", margin: "0 0 20px" }}>
-          Thanks, we reply to every message within one business day. If it&rsquo;s urgent, call us and ask for the on-call engineer.
+        <p style={{ fontSize: 16, lineHeight: 1.7, color: "#444444", margin: 0 }}>
+          Thanks, we&rsquo;ve received your message and will reply by email.
         </p>
-        <a href={AMZ_PHONE_HREF} style={{ display: "inline-flex", alignItems: "center", gap: 10, fontFamily: "var(--font-display)", fontWeight: 700, fontSize: 19, color: "#1462A7", textDecoration: "none", fontVariantNumeric: "tabular-nums" }}>
-          {AMZ_PHONE_DISPLAY}
-        </a>
         <p style={{ margin: "24px 0 0" }}>
           <button type="button" onClick={() => setState("idle")} style={{ background: "none", border: 0, padding: 0, color: "#5A6068", fontFamily: "var(--font-body)", fontSize: 15, textDecoration: "none", cursor: "pointer" }}>
             Send another message
@@ -121,7 +117,7 @@ export default function ContactForm({ productOptions }: { productOptions?: reado
 
       {isCostars ? (
         <div style={{ marginBottom: 18 }}>
-          <label htmlFor={`${id}-product`} style={labelStyle}>COSTARS Product Of Interest *</label>
+          <label htmlFor={`${id}-product`} style={labelStyle}>COSTARS Product of Interest *</label>
           <select id={`${id}-product`} name="costars_product" required defaultValue="" style={fieldStyle}>
             <option value="" disabled>Select a product or service</option>
             {productOptions?.map(option => <option key={option} value={option}>{option}</option>)}
@@ -134,7 +130,7 @@ export default function ContactForm({ productOptions }: { productOptions?: reado
       </div>}
 
       <div style={{ marginBottom: 18 }}>
-        <label htmlFor={`${id}-message`} style={labelStyle}>{isCostars ? "Tell Us More About The Project *" : "Message *"}</label>
+        <label htmlFor={`${id}-message`} style={labelStyle}>{isCostars ? "Tell Us More About the Project *" : "Message *"}</label>
         <textarea id={`${id}-message`} name="message" required rows={4} style={{ ...fieldStyle, height: "auto", padding: "12px 14px", lineHeight: 1.6, resize: "vertical" }} />
       </div>
 
@@ -180,7 +176,7 @@ export default function ContactForm({ productOptions }: { productOptions?: reado
             opacity: state === "sending" ? 0.72 : 1,
           }}
         >
-          {state === "sending" ? "Sending…" : "Send message"}
+          {state === "sending" ? "Sending…" : "Send a Message"}
           {state !== "sending" && (
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#191C1F" strokeWidth="2" aria-hidden="true">
               <path d="M4 12h16M14 6l6 6-6 6" />
@@ -188,7 +184,7 @@ export default function ContactForm({ productOptions }: { productOptions?: reado
           )}
         </button>
         <p style={{ flex: "1 1 180px", fontSize: 13.5, lineHeight: 1.5, color: "#5A6068", margin: 0 }}>
-          We reply within one business day. Details are handled as described in our Privacy Policy.
+          Details are handled as described in our Privacy Policy.
         </p>
       </div>
     </form>

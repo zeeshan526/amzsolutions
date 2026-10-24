@@ -15,7 +15,7 @@ export async function submitToWeb3Forms(fields: Record<string, string>): Promise
   if (!WEB3FORMS_ACCESS_KEY) {
     return {
       ok: false,
-      error: "This form isn't connected yet. Please call us on 610-306-9027 and we'll take the details directly.",
+      error: "This form isn't connected yet. Please try again later.",
     };
   }
 
@@ -30,10 +30,10 @@ export async function submitToWeb3Forms(fields: Record<string, string>): Promise
 
     if (response.ok && data.success !== false) return { ok: true };
 
-    return { ok: false, error: data.message || "We couldn't send that. Please try again, or call us on 610-306-9027." };
+    return { ok: false, error: data.message || "We couldn't send that. Please try again." };
   } catch {
     // Network failure, offline, or the request was blocked.
-    return { ok: false, error: "We couldn't reach our server. Check your connection, or call us on 610-306-9027." };
+    return { ok: false, error: "We couldn't reach our server. Check your connection and try again." };
   }
 }
 
@@ -46,7 +46,7 @@ export async function submitFormDataToWeb3Forms(formData: FormData): Promise<Sub
   if (!WEB3FORMS_ACCESS_KEY) {
     return {
       ok: false,
-      error: "This form isn't connected yet. Please call us on 610-306-9027 and we'll take the details directly.",
+      error: "This form isn't connected yet. Please try again later.",
     };
   }
 
@@ -63,8 +63,8 @@ export async function submitFormDataToWeb3Forms(formData: FormData): Promise<Sub
 
     if (response.ok && data.success !== false) return { ok: true };
 
-    return { ok: false, error: data.message || "We couldn't send that. Please try again, or call us on 610-306-9027." };
+    return { ok: false, error: data.message || "We couldn't send that. Please try again." };
   } catch {
-    return { ok: false, error: "We couldn't reach our server. Check your connection, or call us on 610-306-9027." };
+    return { ok: false, error: "We couldn't reach our server. Check your connection and try again." };
   }
 }

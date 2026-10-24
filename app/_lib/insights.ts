@@ -38,7 +38,7 @@ export const INSIGHT_ARTICLES: InsightArticle[] = [
         ],
       },
       {
-        heading: "What This Looks Like In A Selection",
+        heading: "What This Looks Like in a Selection",
         body: [
           "On a chiller or boiler replacement, that's the difference between specifying against a measured load and specifying against the nameplate of the equipment coming out. On a rooftop unit, it's deciding whether a heat-recovery DOAS pays for itself in the energy it isn't buying twice. None of this is abstract policy, it shows up directly in the equipment schedule and the commissioning numbers we hand over at the end of a job.",
         ],
@@ -51,7 +51,7 @@ export const INSIGHT_ARTICLES: InsightArticle[] = [
     category: "Policy & planning",
     image: "/hero/poster-01-hero.jpg",
     imageAlt: "City skyline and commercial buildings beside a river",
-    title: "The Philadelphia Carbon Neutral Playbook, And What It Means For Building Owners",
+    title: "The Philadelphia Carbon Neutral Playbook, and What It Means for Building Owners",
     dek: "The city set a 2050 target under Mayor Jim Kenney. Buildings are the largest single piece of that target, which makes this a mechanical-systems story, not just a policy one.",
     readTime: "5 min read",
     sections: [
@@ -62,14 +62,14 @@ export const INSIGHT_ARTICLES: InsightArticle[] = [
         ],
       },
       {
-        heading: "Why Buildings Carry Most Of The Weight",
+        heading: "Why Buildings Carry Most of the Weight",
         body: [
           "The Playbook's own accounting puts buildings at over 75% of all carbon emissions in the city. That's not evenly distributed across every building type, a data center and a garden-style apartment building get to that number through completely different equipment, but it does mean that any citywide reduction has to come substantially from mechanical retrofits, not just vehicle electrification or grid cleanup, both of which matter but neither of which touches the biggest slice of the pie on its own.",
           "For an owner, the practical reading is: building-level decarbonization isn't a side project running alongside normal capital planning, it's going to be woven into normal capital planning, because that's where three-quarters of the city's emissions actually live.",
         ],
       },
       {
-        heading: "What We Do Differently Because Of It",
+        heading: "What We Do Differently Because of It",
         body: [
           "When we scope a replacement in Philadelphia, we price the all-electric or hybrid-electric option alongside the conventional one as a matter of course, even when the client hasn't asked for it, because a plant that's already been evaluated against a 2050 target is a plant that doesn't need a second retrofit in fifteen years. We also flag where a utility incentive (see our piece on PECO's stacking rules) can offset a chunk of that first cost, since the honest trade-off between upfront price and long-run compliance is usually the real decision an owner is making.",
         ],
@@ -82,12 +82,12 @@ export const INSIGHT_ARTICLES: InsightArticle[] = [
     category: "Utility incentives",
     image: "/images/specifier.webp",
     imageAlt: "Outdoor HVAC units installed alongside a commercial building",
-    title: "PECO Utility Incentives Available For HVAC Upgrades",
+    title: "PECO Utility Incentives Available for HVAC Upgrades",
     dek: "Rebates exist for lighting, HVAC, insulation and smart thermostats, and stacking measures earns a meaningful bonus on top. Here's how the stacking actually works.",
     readTime: "4 min read",
     sections: [
       {
-        heading: "What's On The Table",
+        heading: "What's on the Table",
         body: [
           "PECO's incentive program covers a handful of measure categories that show up on almost every commercial retrofit: lighting upgrades, HVAC equipment, insulation improvements and smart thermostats. Depending on the measure, that comes back as a rebate, a grant, or a straight discount on qualifying equipment, and PECO will run a free energy audit or assessment as the starting point, which is useful even on its own before a single dollar of incentive is involved.",
         ],
@@ -113,12 +113,12 @@ export const INSIGHT_ARTICLES: InsightArticle[] = [
     category: "Building strategy",
     image: "/images/verticals/office.webp",
     imageAlt: "Exterior of a large building",
-    title: "Decarbonization In Multifamily Buildings",
+    title: "Decarbonization in Multifamily Buildings",
     dek: "Roughly 30% of Philadelphia's greenhouse gas emissions come from multifamily buildings, a sector with its own specific retrofit constraints that a single-family playbook doesn't solve.",
     readTime: "5 min read",
     sections: [
       {
-        heading: "The Scale Of It",
+        heading: "The Scale of It",
         body: [
           "Multifamily properties account for roughly 30% of the greenhouse gas emissions in Philadelphia, which puts the sector in an unusual position: large enough that it can't be decarbonized as an afterthought to single-family retrofit programs, but structured differently enough, shared central plant, mixed ownership, tenants who don't control the capital budget, that the standard residential playbook doesn't transfer cleanly.",
         ],

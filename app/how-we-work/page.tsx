@@ -12,10 +12,10 @@ export const metadata: Metadata = {
 };
 
 const STEPS = [
-  { n: "01", title: "Walk The Building", text: "Plant room, risers, the zones that complain. Before any selection is made, we look at what's actually there, not what the as-builts say should be there." },
-  { n: "02", title: "Measure And Model", text: "Metered load where it exists, modelled where it doesn't, and we always say which. A selection built on an assumption gets the assumption labelled, not hidden." },
+  { n: "01", title: "Walk the Building", text: "Plant room, risers, the zones that complain. Before any selection is made, we look at what's actually there, not what the as-builts say should be there." },
+  { n: "02", title: "Measure and Model", text: "Metered load where it exists, modelled where it doesn't, and we always say which. A selection built on an assumption gets the assumption labelled, not hidden." },
   { n: "03", title: "Specify Together", text: "Options priced side by side, with the trade-off stated in plain terms: first cost against part-load efficiency, sound power against footprint, service life against lead time." },
-  { n: "04", title: "Commission And Hand Over", text: "Start-up attended by the person who sized it, readings documented, one name to call afterwards, not a service desk ticket number." },
+  { n: "04", title: "Commission and Hand Over", text: "Start-up attended by the person who sized it, readings documented, one name to call afterwards, not a service desk ticket number." },
 ] as const;
 
 const CHECKS = [
@@ -24,7 +24,7 @@ const CHECKS = [
     text: "Every selection arrives with its load basis, part-load curve and sound data. Where we modelled instead of measured, the copy says so.",
   },
   {
-    title: "In The Design Meeting, Not Just The Bid",
+    title: "In the Design Meeting, Not Just the Bid",
     text: "We sit in the review while the scheme is still moving. If a cheaper line meets your spec, you hear it before submittals, not after.",
   },
   {
@@ -32,7 +32,7 @@ const CHECKS = [
     text: "Equipment moves, spec sections don't. We keep the schedule and the blocks current, so today's spec still matches what lands on site.",
   },
   {
-    title: "One Engineer, Start To Finish",
+    title: "One Engineer, Start to Finish",
     text: "The person who sized it attends start-up and signs the readings, one named contact, no handover to a service desk halfway through the job.",
   },
 ] as const;
@@ -44,7 +44,7 @@ export default function HowWeWorkPage() {
       <main id="main">
         <PageMasthead
           eyebrow="How We Work"
-          title="We Solve The Mechanical Problem With You, Not For You"
+          title="We Solve the Mechanical Problem With You, Not for You"
           intro="Most mechanical problems arrive already half-diagnosed. The useful work happens in the room where the engineer, the contractor and the owner are all looking at the same numbers, so we start on the drawings, not the catalogue."
           stats={[
             { label: "Process steps", value: "4" },
@@ -94,17 +94,17 @@ export default function HowWeWorkPage() {
         <section style={{ background: "#0F4E85", position: "relative", overflow: "hidden" }}>
           <div style={{ position: "relative", maxWidth: 1080, margin: "0 auto", padding: "clamp(48px,7vw,72px) clamp(20px,4vw,40px)", textAlign: "center" }}>
             <h2 style={{ fontFamily: "var(--font-display)", fontWeight: 700, fontSize: "clamp(1.5rem,1.2rem + 1.2vw,2rem)", lineHeight: 1.2, color: "#FFFFFF", margin: "0 0 16px" }}>
-              Bring Us The Drawings, Not Just The Equipment List
+              Bring Us the Drawings, Not Just the Equipment List
             </h2>
             <p style={{ fontSize: 16.5, lineHeight: 1.6, color: "rgba(255,255,255,.86)", margin: "0 0 28px", maxWidth: "52ch", marginInline: "auto" }}>
               We&rsquo;d rather be in the design meeting than the bid pile.
             </p>
             <Link
-              href="/#contact"
+              href="/contact"
               className="amz-btn-accent"
               style={{ display: "inline-flex", alignItems: "center", gap: 10, height: 56, padding: "0 32px", borderRadius: 999, background: "#F99615", color: "#191C1F", fontFamily: "var(--font-display)", fontWeight: 600, fontSize: 16, textDecoration: "none" }}
             >
-              Start a project
+              Contact Us
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#191C1F" strokeWidth="2.4" strokeLinecap="butt" strokeLinejoin="miter" aria-hidden="true">
                 <path d="M4 12h16M14 6l6 6-6 6" />
               </svg>

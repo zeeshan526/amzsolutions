@@ -13,21 +13,6 @@ export const metadata: Metadata = {
     "Design-build construction, utility incentive management and integrated financing, how AMZ Energy Systems plans and runs a mechanical installation from plant room to rooftop.",
 };
 
-const DISCIPLINES = [
-  {
-    title: "Central Plant & Water-Cooled Chillers",
-    text: "Our installation teams coordinate equipment placement, chilled-water piping, controls, pumps, electrical systems and mechanical connections inside the central plant room.",
-  },
-  {
-    title: "Cooling Tower & Rooftop Installation",
-    text: "From crane coordination and structural positioning to condenser-water piping and final alignment, every rooftop installation is carefully planned and executed.",
-  },
-  {
-    title: "Air Handling & Precision Air",
-    text: "We install and integrate air-handling units, filtration systems, cooling coils, controls and ductwork to deliver consistent airflow, comfort and indoor air quality.",
-  },
-] as const;
-
 const PILLARS = [
   {
     title: "Design-Build Construction",
@@ -44,7 +29,7 @@ const PILLARS = [
   {
     title: "Integrated Financing Solutions",
     text: "Where the upfront cost is the obstacle, our funding-partner network gets project financing in front of you alongside the mechanical proposal, not after it.",
-    href: "/#contact",
+    href: "/contact",
     linkLabel: "Ask about financing",
   },
 ] as const;
@@ -62,7 +47,6 @@ export default function InstallationServicesPage() {
           stats={[
             { label: "Service area", value: "Eastern PA · S. NJ · DE" },
             { label: "Process pillars", value: "4" },
-            { label: "Core disciplines", value: "3" },
           ]}
         />
 
@@ -71,7 +55,7 @@ export default function InstallationServicesPage() {
           <div style={{ maxWidth: 1280, margin: "0 auto", padding: "0 clamp(20px,4vw,40px)" }}>
             <div style={{ maxWidth: 720, margin: "0 auto 48px", textAlign: "center" }}>
               <h2 style={{ fontFamily: "var(--font-display)", fontWeight: 700, fontSize: "clamp(1.625rem,1.17rem + 1.94vw,2.4375rem)", lineHeight: 1.15, letterSpacing: "-.012em", margin: "0 0 16px" }}>
-                What&rsquo;s Included In An AMZ Installation
+                What&rsquo;s Included in an AMZ Installation
               </h2>
               <p style={{ fontSize: "clamp(1.0625rem,.98rem + .35vw,1.25rem)", lineHeight: 1.6, color: "#444444", margin: 0 }}>
                 The mechanical work is the visible part. These three run underneath it on every project.
@@ -89,29 +73,6 @@ export default function InstallationServicesPage() {
                 </article>
               ))}
             </div>
-          </div>
-        </section>
-
-        {/* Disciplines */}
-        <section style={{ padding: "clamp(56px,8vw,88px) 0", background: "#F9FAFB", borderTop: "1px solid #E3E5E8", borderBottom: "1px solid #E3E5E8" }}>
-          <div style={{ maxWidth: 1280, margin: "0 auto", padding: "0 clamp(20px,4vw,40px)" }}>
-            <div style={{ maxWidth: 720, margin: "0 auto 48px", textAlign: "center" }}>
-              <h2 style={{ fontFamily: "var(--font-display)", fontWeight: 700, fontSize: "clamp(1.625rem,1.17rem + 1.94vw,2.4375rem)", lineHeight: 1.15, letterSpacing: "-.012em", margin: "0 0 16px" }}>
-                Three Places The Work Actually Happens
-              </h2>
-              <p style={{ fontSize: "clamp(1.0625rem,.98rem + .35vw,1.25rem)", lineHeight: 1.6, color: "#444444", margin: 0 }}>Plant room, rooftop, air-side, different crews, same job number.</p>
-            </div>
-            <ol style={{ listStyle: "none", margin: 0, padding: 0, display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(min(100%,260px),1fr))", gap: 20 }}>
-              {DISCIPLINES.map((d, i) => (
-                <li key={d.title} className="amz-step-card" style={{ background: "#FFFFFF", border: "1px solid #E3E5E8", borderRadius: 16, padding: "26px 24px" }}>
-                  <p style={{ fontFamily: "var(--font-display)", fontWeight: 700, fontSize: 30, lineHeight: 1, letterSpacing: "-.02em", fontVariantNumeric: "tabular-nums", color: "#AFD3F3", margin: "0 0 18px" }}>
-                    {String(i + 1).padStart(2, "0")}
-                  </p>
-                  <h3 style={{ fontFamily: "var(--font-display)", fontWeight: 600, fontSize: 19, lineHeight: 1.35, margin: "0 0 10px" }}>{d.title}</h3>
-                  <p style={{ fontSize: 14, lineHeight: 1.6, color: "#444444", margin: 0 }}>{d.text}</p>
-                </li>
-              ))}
-            </ol>
           </div>
         </section>
 
@@ -137,7 +98,7 @@ export default function InstallationServicesPage() {
                 How a job runs
               </p>
               <h2 style={{ fontFamily: "var(--font-display)", fontWeight: 700, fontSize: "clamp(1.625rem,1.17rem + 1.94vw,2.4375rem)", lineHeight: 1.15, letterSpacing: "-.012em", margin: 0, color: "#FFFFFF" }}>
-                The Four Things That Keep A Schedule Honest
+                The Four Things That Keep a Schedule Honest
               </h2>
             </div>
             <InstallationProcessStepper />
@@ -148,17 +109,17 @@ export default function InstallationServicesPage() {
         <section style={{ background: "#0F4E85", position: "relative", overflow: "hidden" }}>
           <div style={{ position: "relative", maxWidth: 1080, margin: "0 auto", padding: "clamp(48px,7vw,72px) clamp(20px,4vw,40px)", textAlign: "center" }}>
             <h2 style={{ fontFamily: "var(--font-display)", fontWeight: 700, fontSize: "clamp(1.5rem,1.2rem + 1.2vw,2rem)", lineHeight: 1.2, color: "#FFFFFF", margin: "0 0 16px" }}>
-              Tell Us The Scope And The Schedule Constraint
+              Tell Us the Scope and the Schedule Constraint
             </h2>
             <p style={{ fontSize: 16.5, lineHeight: 1.6, color: "rgba(255,255,255,.86)", margin: "0 0 28px", maxWidth: "52ch", marginInline: "auto" }}>
               A summer shutdown window, an occupied floor, a rooftop crane pick, tell us the constraint first and the install plan follows.
             </p>
             <Link
-              href="/#contact"
+              href="/contact"
               className="amz-btn-accent"
               style={{ display: "inline-flex", alignItems: "center", gap: 10, height: 56, padding: "0 32px", borderRadius: 999, background: "#F99615", color: "#191C1F", fontFamily: "var(--font-display)", fontWeight: 600, fontSize: 16, textDecoration: "none" }}
             >
-              Start a project
+              Contact Us
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#191C1F" strokeWidth="2.4" strokeLinecap="butt" strokeLinejoin="miter" aria-hidden="true">
                 <path d="M4 12h16M14 6l6 6-6 6" />
               </svg>

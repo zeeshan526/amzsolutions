@@ -2,10 +2,9 @@
 
 import { useId, useRef, useState } from "react";
 
-import { AMZ_PHONE_DISPLAY, AMZ_PHONE_HREF } from "../_lib/contact";
 import { submitToWeb3Forms } from "../_lib/web3forms";
 
-const BUILDING_TYPES = ["High-rise office", "Hospital / healthcare", "Data centre", "School / campus", "Multifamily", "Industrial", "Other"];
+const BUILDING_TYPES = ["High-rise office", "Hospital / healthcare", "Data center", "School / campus", "Multifamily", "Industrial", "Other"];
 
 const labelStyle: React.CSSProperties = {
   display: "block",
@@ -55,7 +54,7 @@ export default function QuoteForm() {
 
     const name = String(data.get("name") ?? "");
     const result = await submitToWeb3Forms({
-      subject: `Quote request from ${name || "the AMZ website"}`,
+      subject: `Website message from ${name || "the AMZ website"}`,
       from_name: "AMZ website",
       replyto: String(data.get("email") ?? ""),
       name,
@@ -84,26 +83,17 @@ export default function QuoteForm() {
         <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="#F99615" strokeWidth="2" aria-hidden="true" style={{ marginBottom: 16 }}>
           <path d="M4 12.5l5 5L20 6.5" />
         </svg>
-        <h3 style={{ fontFamily: "var(--font-display)", fontWeight: 700, fontSize: "clamp(1.25rem,1.1rem + .6vw,1.5rem)", color: "#FFFFFF", margin: "0 0 12px" }}>Request Received</h3>
-        <p style={{ fontSize: 16, lineHeight: 1.7, color: "rgba(255,255,255,.86)", margin: "0 0 20px" }}>
-          Thanks, we reply to every request within one business day. If the building needs attention sooner, call us and ask for the on-call engineer.
+        <h3 style={{ fontFamily: "var(--font-display)", fontWeight: 700, fontSize: "clamp(1.25rem,1.1rem + .6vw,1.5rem)", color: "#FFFFFF", margin: "0 0 12px" }}>Message Received</h3>
+        <p style={{ fontSize: 16, lineHeight: 1.7, color: "rgba(255,255,255,.86)", margin: 0 }}>
+          Thanks, we&rsquo;ve received your message and will reply by email.
         </p>
-        <a
-          href={AMZ_PHONE_HREF}
-          style={{ display: "inline-flex", alignItems: "center", gap: 10, fontFamily: "var(--font-display)", fontWeight: 700, fontSize: 19, color: "#FFFFFF", textDecoration: "none", fontVariantNumeric: "tabular-nums" }}
-        >
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#F99615" strokeWidth="2" aria-hidden="true">
-            <path d="M4 3h5l2 5-3 2a12 12 0 0 0 6 6l2-3 5 2v5h-2A15 15 0 0 1 4 5z" />
-          </svg>
-          {AMZ_PHONE_DISPLAY}
-        </a>
         <p style={{ margin: "24px 0 0" }}>
           <button
             type="button"
             onClick={() => setState("idle")}
             style={{ background: "none", border: 0, padding: 0, color: "rgba(255,255,255,.72)", fontFamily: "var(--font-body)", fontSize: 15, textDecoration: "none", cursor: "pointer" }}
           >
-            Send another request
+            Send another message
           </button>
         </p>
       </div>
@@ -201,7 +191,7 @@ export default function QuoteForm() {
             opacity: state === "sending" ? 0.72 : 1,
           }}
         >
-          {state === "sending" ? "Sending…" : "Request a quote"}
+          {state === "sending" ? "Sending…" : "Send a Message"}
           {state !== "sending" && (
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#191C1F" strokeWidth="2" aria-hidden="true">
               <path d="M4 12h16M14 6l6 6-6 6" />
@@ -209,7 +199,7 @@ export default function QuoteForm() {
           )}
         </button>
         <p style={{ fontSize: 14, lineHeight: 1.55, color: "rgba(255,255,255,.66)", margin: 0, maxWidth: "34ch" }}>
-          We reply within one business day. Details are handled as described in our Privacy Policy.
+          Details are handled as described in our Privacy Policy.
         </p>
       </div>
     </form>

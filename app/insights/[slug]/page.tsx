@@ -58,7 +58,7 @@ export default async function InsightArticlePage(props: PageProps<"/insights/[sl
                     {section.body.map((para, j) => <p key={j}>{para}</p>)}
                   </section>
                 ))}
-                <div className="amz-article-contact"><p className="amz-insight-eyebrow">Put ideas into practice</p><h2>What Does This Mean For Your Building?</h2><p>Talk with our team about equipment, project planning and the next step for your facility.</p><Link href="/contact" className="amz-insight-read">Discuss your project →</Link></div>
+                <div className="amz-article-contact"><p className="amz-insight-eyebrow">Put ideas into practice</p><h2>What Does This Mean for Your Building?</h2><p>Talk with our team about equipment, project planning and the next step for your facility.</p><Link href="/contact" className="amz-insight-read">Discuss your project →</Link></div>
               </div>
             </div>
           </div>

@@ -4,6 +4,7 @@ import { useMemo, useState } from "react";
 import Link from "next/link";
 
 import ArrowIcon from "../_components/ArrowIcon";
+import { manufacturerWebsite } from "../_lib/manufacturers";
 import { SYSTEM_CATEGORIES } from "../_lib/systemTypes";
 
 /* Chip rail + detail panel. Picking a category swaps the panel below rather than
@@ -121,17 +122,40 @@ export default function SystemTypeExplorer({ initialSlug }: { initialSlug?: stri
           <p style={{ fontSize: 15, color: "#5A6068", margin: 0 }}>No manufacturer in {active.title.toLowerCase()} matches “{query}”.</p>
         ) : (
           <ul style={{ listStyle: "none", margin: 0, padding: 0, display: "grid", gridTemplateColumns: "repeat(auto-fill,minmax(min(100%,260px),1fr))", gap: 14 }}>
-            {rows.map((line) => (
-              <li key={line.brand} style={{ background: "#FFFFFF", border: "1px solid #E3E5E8", borderRadius: 14, padding: "18px 20px" }}>
-                <p style={{ fontFamily: "var(--font-display)", fontWeight: 700, fontSize: 16, letterSpacing: "-.004em", margin: "0 0 6px", color: "#191C1F" }}>{line.brand}</p>
-                <p style={{ fontSize: 14, lineHeight: 1.55, color: "#444444", margin: 0 }}>{line.products}</p>
-              </li>
-            ))}
+            {rows.map((line) => {
+              const website = manufacturerWebsite(line.brand);
+              const body = (
+                <>
+                  <p style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 10, fontFamily: "var(--font-display)", fontWeight: 700, fontSize: 16, letterSpacing: "-.004em", margin: "0 0 6px", color: "#191C1F" }}>
+                    {line.brand}
+                    {website && (
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#1462A7" strokeWidth="2.4" strokeLinecap="butt" strokeLinejoin="miter" aria-hidden="true" style={{ flex: "none" }}>
+                        <path d="M7 17L17 7M9 7h8v8" />
+                      </svg>
+                    )}
+                  </p>
+                  <p style={{ fontSize: 14, lineHeight: 1.55, color: "#444444", margin: 0 }}>{line.products}</p>
+                </>
+              );
+              const card: React.CSSProperties = { display: "block", height: "100%", background: "#FFFFFF", border: "1px solid #E3E5E8", borderRadius: 14, padding: "18px 20px", textDecoration: "none" };
+              return (
+                <li key={line.brand}>
+                  {website ? (
+                    <a href={website} target="_blank" rel="noopener noreferrer" className="amz-partner-card" style={card}>
+                      {body}
+                      <span className="sr-only"> (opens the manufacturer&rsquo;s website in a new tab)</span>
+                    </a>
+                  ) : (
+                    <div style={card}>{body}</div>
+                  )}
+                </li>
+              );
+            })}
           </ul>
         )}
 
         <div style={{ display: "flex", flexWrap: "wrap", alignItems: "center", gap: 20, marginTop: 26, paddingTop: 22, borderTop: "1px solid #E3E5E8" }}>
-          <Link href="/#contact" className="amz-link-arrow" style={{ display: "inline-flex", alignItems: "center", gap: 8, fontFamily: "var(--font-display)", fontWeight: 600, fontSize: 14.5, color: "#1462A7", textDecoration: "none" }}>
+          <Link href="/contact" className="amz-link-arrow" style={{ display: "inline-flex", alignItems: "center", gap: 8, fontFamily: "var(--font-display)", fontWeight: 600, fontSize: 14.5, color: "#1462A7", textDecoration: "none" }}>
             Ask an engineer about {active.short.toLowerCase()}
             <ArrowIcon />
           </Link>

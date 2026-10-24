@@ -16,7 +16,7 @@ export default function InsightsPage() {
     <div style={{ fontFamily: "var(--font-body)", color: "#191C1F", background: "#FFFFFF" }}>
       <SiteHeader />
       <main id="main">
-        <PageMasthead eyebrow="Insights" title="Ideas For Better Buildings." intro="Explore the systems, policies and practical decisions shaping a more efficient built environment. Insights for the people who design, own and operate buildings." />
+        <PageMasthead eyebrow="Insights" title="Ideas for Better Buildings." intro="Explore the systems, policies and practical decisions shaping a more efficient built environment. Insights for the people who design, own and operate buildings." />
         <section className="amz-insights-section" aria-labelledby="featured-heading">
           <div className="amz-insights-container">
             <p className="amz-insight-eyebrow" id="featured-heading">Featured article</p>

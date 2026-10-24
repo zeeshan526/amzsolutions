@@ -1,7 +1,6 @@
 import Link from "next/link";
 
 import { AMZ_FOOTER_COLUMNS } from "../_lib/nav";
-import { AMZ_PHONE_DISPLAY, AMZ_PHONE_HREF } from "../_lib/contact";
 import NewsletterForm from "./NewsletterForm";
 
 /* Shared footer for every page, static markup, so this stays a server component. */
@@ -19,14 +18,10 @@ export default function SiteFooter() {
             </p>
           </div>
           <div style={{ minWidth: 0, display: "flex", flexDirection: "column", justifyContent: "center", gap: 2 }}>
-            <a href={AMZ_PHONE_HREF} className="amz-footer-tel" style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 20, padding: "18px 0", borderBottom: "1px solid rgba(255,255,255,.12)", textDecoration: "none" }}>
-              <span style={{ fontFamily: "var(--font-display)", fontStretch: "75%", fontWeight: 700, fontSize: 12, letterSpacing: ".14em", textTransform: "uppercase", color: "rgba(255,255,255,.56)" }}>Main line</span>
-              <span style={{ fontFamily: "var(--font-display)", fontWeight: 700, fontSize: "clamp(18px,2vw,22px)", color: "#FFFFFF", fontVariantNumeric: "tabular-nums" }}>{AMZ_PHONE_DISPLAY}</span>
-            </a>
-            <a href={AMZ_PHONE_HREF} className="amz-footer-tel" style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 20, padding: "18px 0", borderBottom: "1px solid rgba(255,255,255,.12)", textDecoration: "none" }}>
-              <span style={{ fontFamily: "var(--font-display)", fontStretch: "75%", fontWeight: 700, fontSize: 12, letterSpacing: ".14em", textTransform: "uppercase", color: "#F0A9A4" }}>24/7 emergency</span>
-              <span style={{ fontFamily: "var(--font-display)", fontWeight: 700, fontSize: "clamp(18px,2vw,22px)", color: "#F0A9A4", fontVariantNumeric: "tabular-nums" }}>{AMZ_PHONE_DISPLAY}</span>
-            </a>
+            <Link href="/contact" className="amz-footer-tel" style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 20, padding: "18px 0", borderBottom: "1px solid rgba(255,255,255,.12)", textDecoration: "none" }}>
+              <span style={{ fontFamily: "var(--font-display)", fontStretch: "75%", fontWeight: 700, fontSize: 12, letterSpacing: ".14em", textTransform: "uppercase", color: "rgba(255,255,255,.56)" }}>Get in touch</span>
+              <span style={{ fontFamily: "var(--font-display)", fontWeight: 700, fontSize: "clamp(18px,2vw,22px)", color: "#FFFFFF" }}>Send a Message &rarr;</span>
+            </Link>
             <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: 20, padding: "18px 0" }}>
               <span style={{ fontFamily: "var(--font-display)", fontStretch: "75%", fontWeight: 700, fontSize: 12, letterSpacing: ".14em", textTransform: "uppercase", color: "rgba(255,255,255,.56)", paddingTop: 3 }}>Office</span>
               <address style={{ fontStyle: "normal", textAlign: "right", fontSize: 15, lineHeight: 1.6, color: "#FFFFFF", margin: 0 }}>

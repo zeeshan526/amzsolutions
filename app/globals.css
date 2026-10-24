@@ -106,7 +106,7 @@ a {
 }
 .amz-hdr.amz-stuck { padding: 14px clamp(16px, 3vw, 32px) 0 !important; }
 .amz-hdr.amz-stuck .amz-bar {
-  max-width: 1120px !important;
+  max-width: 1320px !important;
   min-height: 64px !important;
   border-radius: 999px !important;
   background: rgba(255, 255, 255, .82) !important;
@@ -136,16 +136,17 @@ a {
 @container (max-width: 520px) {
   .amz-hdr.amz-stuck .amz-logo-words { display: none !important; }
 }
-.amz-hdr.amz-stuck .amz-nav-a { color: #444444 !important; }
+.amz-hdr.amz-stuck .amz-nav-a { color: #444444 !important; font-size: 14.5px !important; }
 .amz-hdr.amz-stuck .amz-burger { background: #191C1F !important; }
 @media (hover: hover) and (pointer: fine) {
   .amz-nav-a:hover { opacity: .72; }
 }
-@container (max-width: 1139px) { .amz-w { display: none !important; } }
-@container (min-width: 1140px) { .amz-n { display: none !important; } }
+/* Five ribbon links need ~1280px to sit in the condensed pill; below that the burger takes over. */
+@container (max-width: 1279px) { .amz-w { display: none !important; } }
+@container (min-width: 1280px) { .amz-n { display: none !important; } }
 @supports not (container-type: inline-size) {
-  @media (max-width: 1139px) { .amz-w { display: none !important; } }
-  @media (min-width: 1140px) { .amz-n { display: none !important; } }
+  @media (max-width: 1279px) { .amz-w { display: none !important; } }
+  @media (min-width: 1280px) { .amz-n { display: none !important; } }
 }
 
 /* ---------- Hover utilities (design canvas "style-hover" translated to real CSS) ---------- */
@@ -354,10 +355,48 @@ a {
 .amz-row h3 { text-wrap: pretty; }
 .amz-mkt article > a { will-change: transform; }
 
-/* Four fixed markets: 4-across, then 2x2, then 1-up. */
-.amz-mkt { grid-template-columns: repeat(4, minmax(0, 1fr)); }
-@media (max-width: 1000px) { .amz-mkt { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
-@media (max-width: 520px) { .amz-mkt { grid-template-columns: minmax(0, 1fr); } }
+/* Five markets: 3 + 2 (second row centred), then 2-up, then 1-up. */
+.amz-mkt { grid-template-columns: repeat(6, minmax(0, 1fr)); }
+.amz-mkt > * { grid-column: span 2; }
+.amz-mkt > :nth-child(4) { grid-column: 2 / span 2; }
+@media (max-width: 1000px) {
+  .amz-mkt { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .amz-mkt > *, .amz-mkt > :nth-child(4) { grid-column: auto; }
+}
+@media (max-width: 600px) { .amz-mkt { grid-template-columns: minmax(0, 1fr); } }
+
+/* Market flip cards: the front is the photo and summary, the back is the "What we design
+   around" list. Both faces share one grid cell, so the card is as tall as the taller face. */
+.amz-flip { perspective: 1800px; cursor: pointer; height: 100%; }
+.amz-flip-inner {
+  display: grid;
+  height: 100%;
+  transform-style: preserve-3d;
+  transition: transform 700ms cubic-bezier(0.36,0,0.24,1);
+}
+.amz-flip.is-flipped .amz-flip-inner { transform: rotateY(180deg); }
+.amz-flip-face {
+  grid-area: 1 / 1;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  border-radius: 18px;
+  overflow: hidden;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+.amz-flip-front { background: #FFFFFF; border: 1px solid #E3E5E8; }
+.amz-flip-back { transform: rotateY(180deg); background: #0F4E85; color: #FFFFFF; }
+.amz-flip-toggle {
+  display: inline-flex; align-items: center; gap: 8px; min-height: 44px; margin-top: auto;
+  padding: 0; background: none; border: 0; cursor: pointer;
+  font-family: var(--font-display); font-weight: 600; font-size: 14px; text-align: left;
+}
+.amz-flip-toggle:focus-visible { outline: 2px solid currentColor; outline-offset: 4px; border-radius: 4px; }
+@media (hover: hover) and (pointer: fine) {
+  .amz-flip:not(.is-flipped):hover .amz-flip-front { border-color: #7DB9ED; box-shadow: 0 2px 4px rgba(25,28,31,.05), 0 10px 24px rgba(25,28,31,.08); }
+}
+@media (prefers-reduced-motion: reduce) { .amz-flip-inner { transition: none; } }
 
 /* Social-impact mosaic. */
 .amz-mosaic { grid-template-columns: repeat(6, minmax(0, 1fr)); grid-auto-rows: clamp(96px, 10.5vw, 148px); }

@@ -14,7 +14,7 @@ export default function TechnologiesServicesPage() {
     <div style={{ fontFamily: "var(--font-body)", color: "#191C1F", background: "#FFFFFF" }}>
       <SiteHeader />
       <main id="main">
-        <PageMasthead eyebrow="Technologies & Services" title="Solutions For Every Stage Of Your Building Project." intro="Connect efficient HVAC technology with the expertise to select, install and fund it. Explore our four areas of support below." />
+        <PageMasthead eyebrow="Technologies & Services" title="Solutions for Every Stage of Your Building Project." intro="Connect efficient HVAC technology with the expertise to select, install and fund it. Explore our four areas of support below." />
         <TechnologyServices overview />
       </main>
       <SiteFooter />

@@ -16,7 +16,7 @@ export const SYSTEM_CATEGORIES: SystemCategory[] = [
   {
     slug: "air-handlers-fan-coils",
     title: "Air Handlers & Fan Coils",
-    short: "Air handling",
+    short: "Air Handling",
     blurb: "Custom and semi-custom AHUs down to stock fan coils, sized from the load, not the catalogue page.",
     lines: [
       { brand: "XNRGY", products: "Custom AHUs, fan arrays" },
@@ -31,7 +31,7 @@ export const SYSTEM_CATEGORIES: SystemCategory[] = [
   {
     slug: "coils-dampers-fans",
     title: "Coils, Dampers & Fans",
-    short: "Coils & fans",
+    short: "Coils & Fans",
     blurb: "The parts inside the box: replacement and custom coils, fan arrays, dampers and exhaust.",
     lines: [
       { brand: "Direct Coil", products: "Standard and custom coils (CHW, HW, DX)" },
@@ -45,7 +45,7 @@ export const SYSTEM_CATEGORIES: SystemCategory[] = [
   {
     slug: "chillers-boilers",
     title: "Chillers & Boilers",
-    short: "Chillers & boilers",
+    short: "Chillers & Boilers",
     blurb: "Central plant equipment, air- and water-cooled chillers through to modular and condensing boilers.",
     lines: [
       { brand: "Dunham-Bush", products: "Air-cooled chillers, water-cooled chillers" },
@@ -58,7 +58,7 @@ export const SYSTEM_CATEGORIES: SystemCategory[] = [
   {
     slug: "heat-rejection-heat-exchangers",
     title: "Heat Rejection & Heat Exchangers",
-    short: "Heat rejection",
+    short: "Heat Rejection",
     blurb: "Cooling towers, fluid coolers and plate heat exchangers, including rebuilds into an existing footprint.",
     lines: [
       { brand: "American Cooling Tower", products: "Cooling towers, custom replacements, OEM tower parts" },
@@ -70,17 +70,16 @@ export const SYSTEM_CATEGORIES: SystemCategory[] = [
   {
     slug: "vrf-splits-vtacs",
     title: "VRF, Splits & VTACs",
-    short: "VRF & splits",
+    short: "VRF & Splits",
     blurb: "Variable refrigerant flow and packaged terminal equipment for tenant fit-outs and additions.",
     lines: [
       { brand: "Hisense VRF", products: "VRF systems, mini-splits, integrated domestic hot water" },
-      { brand: "Epocha", products: "Heat pump VTACs, heat pump PTACs" },
     ],
   },
   {
     slug: "dx-heat-recovery",
     title: "DX & Heat Recovery",
-    short: "DX & recovery",
+    short: "DX & Recovery",
     blurb: "Packaged DOAS, precision cooling and energy recovery ventilation.",
     lines: [
       { brand: "NEXGEN", products: "DOAS rooftops, split systems, heat recovery" },
@@ -94,7 +93,7 @@ export const SYSTEM_CATEGORIES: SystemCategory[] = [
   {
     slug: "terminal-heating-cooling",
     title: "Terminal Heating & Cooling",
-    short: "Terminal units",
+    short: "Terminal Units",
     blurb: "Unit heaters, radiant panels and chilled beams for spaces a central system doesn't reach well.",
     lines: [
       { brand: "Sterling", products: "Unit heaters, make-up air units, infrared heaters" },
@@ -109,7 +108,7 @@ export const SYSTEM_CATEGORIES: SystemCategory[] = [
   {
     slug: "heat-pumps",
     title: "Heat Pumps",
-    short: "Heat pumps",
+    short: "Heat Pumps",
     blurb: "Air-source and water-source heat pumps, from vertical-stack retrofit chassis to air-to-water plant.",
     lines: [
       { brand: "AERMEC", products: "Air-source heat pumps, water-cooled heat pumps" },
@@ -122,7 +121,7 @@ export const SYSTEM_CATEGORIES: SystemCategory[] = [
   {
     slug: "humidity-control",
     title: "Humidity Control",
-    short: "Humidity control",
+    short: "Humidity Control",
     blurb: "Desiccant dehumidification and humidification for spaces where the setpoint that matters is RH, not temperature.",
     lines: [
       { brand: "Innovative Air", products: "Desiccant dehumidifiers" },
@@ -134,8 +133,8 @@ export const SYSTEM_CATEGORIES: SystemCategory[] = [
   },
   {
     slug: "air-water-treatment",
-    title: "Air And Water Treatment",
-    short: "Water treatment",
+    title: "Air and Water Treatment",
+    short: "Water Treatment",
     blurb: "Filtration and water treatment that protects the chiller and boiler plant it feeds.",
     lines: [
       { brand: "General Water Systems", products: "Sand filters, separator systems, pot feeders, non-chemical water treatment" },

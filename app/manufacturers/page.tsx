@@ -7,7 +7,7 @@ import { MANUFACTURER_CATEGORIES, MANUFACTURERS } from "../_lib/manufacturers";
 import ManufacturerDirectory from "./ManufacturerDirectory";
 
 export const metadata: Metadata = {
-  title: "Products By Manufacturer | AMZ Energy Systems",
+  title: "Products by Manufacturer | AMZ Energy Systems",
   description:
     "The manufacturer partners AMZ Energy Systems represents across chillers, air handling, VRF, terminal units, water treatment and more.",
 };
@@ -20,7 +20,7 @@ export default function ManufacturersPage() {
         <PageMasthead
           eyebrow="Technologies & Services"
           breadcrumbSection="Technologies & Services"
-          title="Products By Manufacturer"
+          title="Products by Manufacturer"
           intro="We represent manufacturers we'd put our own name behind, decades of field history, parts availability, and a rep we can get on the phone when a job needs it. Search or filter to find who covers what."
           stats={[
             { label: "Manufacturer partners", value: String(MANUFACTURERS.length) },

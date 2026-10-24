@@ -8,7 +8,7 @@ import { SYSTEM_CATEGORIES } from "../_lib/systemTypes";
 import SystemTypeExplorer from "./SystemTypeExplorer";
 
 export const metadata: Metadata = {
-  title: "Products By System Type | AMZ Energy Systems",
+  title: "Products by System Type | AMZ Energy Systems",
   description:
     "Air handlers, chillers, heat pumps, DX and heat recovery, humidity control and more, the equipment AMZ Energy Systems specifies and installs, organised by system type.",
 };
@@ -27,7 +27,7 @@ export default async function ProductsBySystemTypePage(props: PageProps<"/produc
         <PageMasthead
           eyebrow="Technologies & Services"
           breadcrumbSection="Technologies & Services"
-          title="Products By System Type"
+          title="Products by System Type"
           intro="Every job starts with the problem, not the equipment, but once the selection is made, this is where it comes from. Ten system types, the manufacturer lines we carry in each, and what they're actually good for."
           stats={[
             { label: "System types", value: String(SYSTEM_CATEGORIES.length) },
@@ -70,7 +70,7 @@ export default async function ProductsBySystemTypePage(props: PageProps<"/produc
                   Not sure which category fits
                 </p>
                 <h2 style={{ fontFamily: "var(--font-display)", fontWeight: 700, fontSize: "clamp(1.375rem,1.2rem + .9vw,1.75rem)", lineHeight: 1.3, color: "#FFFFFF", margin: "0 0 14px" }}>
-                  Send Us The Load And The Constraint, We&rsquo;ll Tell You The System Type
+                  Send Us the Load and the Constraint, We&rsquo;ll Tell You the System Type
                 </h2>
                 <p style={{ fontSize: 15.5, lineHeight: 1.65, color: "rgba(255,255,255,.78)", margin: 0, maxWidth: "48ch" }}>
                   Most enquiries arrive as a symptom (a hot floor, a noise complaint, a plant room that&rsquo;s out of capacity), not a part number. Tell us what the building is doing and we&rsquo;ll narrow it to the right category and the right line.
@@ -78,7 +78,7 @@ export default async function ProductsBySystemTypePage(props: PageProps<"/produc
               </div>
               <div style={{ display: "flex", flexDirection: "column", justifyContent: "center", gap: 12 }}>
                 <Link
-                  href="/#contact"
+                  href="/contact"
                   className="amz-btn-accent"
                   style={{
                     display: "inline-flex",

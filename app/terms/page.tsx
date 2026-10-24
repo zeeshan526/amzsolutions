@@ -1,9 +1,8 @@
 import type { Metadata } from "next";
 import LegalPage, { type LegalSection } from "../_components/LegalPage";
-import { AMZ_PHONE_DISPLAY } from "../_lib/contact";
 
 export const metadata: Metadata = {
-  title: "Terms Of Use | AMZ Energy Systems",
+  title: "Terms of Use | AMZ Energy Systems",
   description:
     "The terms that apply when you use the AMZ Energy Systems website, including how to treat the technical guidance, selection tools and product information published here.",
 };
@@ -19,21 +18,21 @@ const SECTIONS: LegalSection[] = [
     ],
   },
   {
-    heading: "Nothing Here Is A Design",
+    heading: "Nothing Here Is a Design",
     body: [
       "The technical material on this site, selection guidance, capacity and performance figures, sequences, schematics, specifier tools and line-card information, is published to help you shortlist equipment and frame a conversation with our engineers. It is general reference, not engineering advice for your building.",
       "No page on this site constitutes a design, a stamped submittal, a load calculation or a commissioning certificate for any specific project. Sizing and selection depend on measured load, site conditions, controls, the applicable code edition and the rest of the mechanical system. Always have a qualified engineer of record confirm any selection before it is specified, purchased or installed.",
     ],
   },
   {
-    heading: "Product And Availability Information",
+    heading: "Product and Availability Information",
     body: [
       "Manufacturers change specifications, model numbers, ratings, certifications and availability without notifying us. Product information here may be superseded at any time, and inclusion of a manufacturer or product is not a commitment that we can supply it, or supply it at a given price or lead time.",
       "Prices, lead times and incentive values shown or discussed on this site are indicative. Only a written quote from us is binding, and only for the period and on the conditions that quote states.",
     ],
   },
   {
-    heading: "Utility Incentives And Rebates",
+    heading: "Utility Incentives and Rebates",
     body: [
       "Incentive and rebate information is summarised from utility and programme documentation that changes frequently. Eligibility, funding availability, measure lists and payment amounts are set by the programme administrator, not by us. We will tell you what we understand a programme to offer and, where you engage us to, administer the application, but we cannot guarantee approval, timing or the amount paid.",
     ],
@@ -60,26 +59,26 @@ const SECTIONS: LegalSection[] = [
     ],
   },
   {
-    heading: "Enquiries And Material You Send Us",
+    heading: "Enquiries and Material You Send Us",
     body: [
-      "Please keep enquiries to what we need in order to help: the building, the problem and how to reach you. Do not send confidential, proprietary or personal information through this website that you would not want handled by email, call us instead and we will arrange a suitable route.",
+      "Please keep enquiries to what we need in order to help: the building, the problem and how to reach you. Do not send confidential, proprietary or personal information through this website that you would not want handled by email, contact us first and we will arrange a suitable route.",
       "Information you submit through this site is handled as described in our Privacy Policy. Sending an enquiry does not by itself create a contract, a professional engagement or a duty of care on our part; those begin when we agree work in writing.",
     ],
   },
   {
-    heading: "Availability Of The Site",
+    heading: "Availability of the Site",
     body: [
       "We aim to keep this site available and current, but we do not guarantee that it will be uninterrupted, error-free or up to date at any given moment. We may change, suspend or withdraw any part of it without notice. Our 24/7 emergency line, not this website, is the route for urgent service.",
     ],
   },
   {
-    heading: "Links To Other Sites",
+    heading: "Links to Other Sites",
     body: [
       "We link to manufacturers, utility programmes, standards bodies and other third parties for your convenience. We do not control those sites and are not responsible for their content, accuracy or availability. A link is not an endorsement of everything on the site it points to.",
     ],
   },
   {
-    heading: "Limitation Of Liability",
+    heading: "Limitation of Liability",
     body: [
       "To the fullest extent permitted by law, this site and its content are provided \"as is\", without warranties of any kind, express or implied, including any implied warranty of merchantability, fitness for a particular purpose or non-infringement.",
       "To the fullest extent permitted by law, AMZ Energy Systems will not be liable for any indirect, incidental, special or consequential loss, or for lost profits, lost savings, business interruption or equipment damage, arising from your use of this site or from reliance on information published here. Nothing in these terms limits liability that cannot be limited under applicable law, and nothing here affects the terms of any contract we have signed with you.",
@@ -92,7 +91,7 @@ const SECTIONS: LegalSection[] = [
     ],
   },
   {
-    heading: "Changes To These Terms",
+    heading: "Changes to These Terms",
     body: [
       "We may revise these terms as the site and our services change. The date at the top shows when they last changed, and the version published here is the one that applies to your use of the site.",
     ],
@@ -103,12 +102,12 @@ export default function TermsOfUsePage() {
   return (
     <LegalPage
       eyebrow="Legal"
-      title="Terms Of Use"
+      title="Terms of Use"
       intro="The rules for using this website, and the limits of the technical information published on it."
       updated={UPDATED}
       sections={SECTIONS}
       contactHeading="Questions About These Terms"
-      contactIntro={`If anything here is unclear, or you want to confirm whether guidance on this site applies to your building, call us on ${AMZ_PHONE_DISPLAY} or write to the address below.`}
+      contactIntro={`If anything here is unclear, or you want to confirm whether guidance on this site applies to your building, send us a message through our contact form or write to the address below.`}
     />
   );
 }

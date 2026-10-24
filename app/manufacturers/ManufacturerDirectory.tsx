@@ -3,7 +3,7 @@
 import { useMemo, useState } from "react";
 import Link from "next/link";
 
-import { MANUFACTURER_CATEGORIES, MANUFACTURERS } from "../_lib/manufacturers";
+import { MANUFACTURER_CATEGORIES, MANUFACTURERS, manufacturerWebsite } from "../_lib/manufacturers";
 
 const monogram = (name: string) =>
   name
@@ -78,7 +78,7 @@ export default function ManufacturerDirectory() {
             whiteSpace: "nowrap",
           }}
         >
-          All categories
+          All Categories
         </button>
         {MANUFACTURER_CATEGORIES.map((c) => {
           const isActive = category === c;
@@ -155,16 +155,27 @@ export default function ManufacturerDirectory() {
               >
                 {m.category}
               </p>
+              {manufacturerWebsite(m.name) && (
+                <a
+                  href={manufacturerWebsite(m.name)}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="amz-link-arrow"
+                  style={{ marginTop: "auto", marginBottom: 10, fontFamily: "var(--font-display)", fontWeight: 600, fontSize: 13.5, color: "#1462A7", textDecoration: "none" }}
+                >
+                  Visit website ↗<span className="sr-only"> (opens in a new tab)</span>
+                </a>
+              )}
               {m.categorySlug ? (
                 <Link
                   href={`/products-by-system-type?category=${m.categorySlug}`}
                   className="amz-link-arrow"
-                  style={{ marginTop: "auto", fontFamily: "var(--font-display)", fontWeight: 600, fontSize: 13.5, color: "#1462A7", textDecoration: "none" }}
+                  style={{ marginTop: manufacturerWebsite(m.name) ? 0 : "auto", fontFamily: "var(--font-display)", fontWeight: 600, fontSize: 13.5, color: "#1462A7", textDecoration: "none" }}
                 >
                   View product range →
                 </Link>
               ) : (
-                <span style={{ marginTop: "auto", fontSize: 13.5, color: "#9CA2AB" }}>Ask an engineer for specifics</span>
+                <span style={{ marginTop: manufacturerWebsite(m.name) ? 0 : "auto", fontSize: 13.5, color: "#9CA2AB" }}>Ask an engineer for specifics</span>
               )}
             </li>
           ))}

@@ -1,47 +1,18 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 
-import { AMZ_NAV_LINKS, AMZ_TECH_MENU } from "../_lib/nav";
-import { AMZ_PHONE_DISPLAY, AMZ_PHONE_HREF } from "../_lib/contact";
+import { AMZ_CONTACT_HREF, AMZ_NAV_LINKS } from "../_lib/nav";
 
-/* Shared chrome for every page: the fixed header (with its Technologies & Services
-   mega-menu), the mobile slide-over menu, and the accessibility skip link. Extracted
+/* Shared chrome for every page: the fixed header, the mobile slide-over menu, and the
+   accessibility skip link. Extracted
    from the homepage so the same nav, and the same condense-on-scroll behaviour,
    works identically on the service pages that link off it. */
 
-const EASE_MOVE = "cubic-bezier(0.36,0,0.24,1)";
-
 export default function SiteHeader() {
   const [open, setOpen] = useState(false); // mobile menu
-  const [navOpen, setNavOpen] = useState(false); // technologies dropdown
   const [stuck, setStuck] = useState(false); // header scrolled state
-
-  const navTimerRef = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
-  const menuPanelRef = useRef<HTMLUListElement | null>(null);
-  const menuTriggerRef = useRef<HTMLButtonElement | null>(null);
-
-  // Escape/outside-click for the Technologies & Services dropdown.
-  useEffect(() => {
-    const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") setNavOpen(false);
-    };
-    const onDocClick = (e: MouseEvent) => {
-      const panel = menuPanelRef.current;
-      const trigger = menuTriggerRef.current;
-      const target = e.target as Node;
-      if (panel && panel.contains(target)) return;
-      if (trigger && trigger.contains(target)) return;
-      setNavOpen(false);
-    };
-    document.addEventListener("keydown", onKey);
-    document.addEventListener("click", onDocClick);
-    return () => {
-      document.removeEventListener("keydown", onKey);
-      document.removeEventListener("click", onDocClick);
-    };
-  }, []);
 
   // Header scroll state: read-driven, not event-latched.
   useEffect(() => {
@@ -60,15 +31,6 @@ export default function SiteHeader() {
       clearInterval(poll);
     };
   }, []);
-
-  const navEnter = () => {
-    clearTimeout(navTimerRef.current);
-    navTimerRef.current = setTimeout(() => setNavOpen(true), 120);
-  };
-  const navLeave = () => {
-    clearTimeout(navTimerRef.current);
-    navTimerRef.current = setTimeout(() => setNavOpen(false), 240);
-  };
 
   return (
     <>
@@ -134,100 +96,12 @@ export default function SiteHeader() {
           </Link>
 
           <nav aria-label="Main" className="amz-w" style={{ flex: "1 1 auto", minWidth: 0, display: "flex", justifyContent: "center" }}>
-            <ul style={{ listStyle: "none", margin: 0, padding: 0, display: "flex", alignItems: "center", gap: "clamp(16px,2.2vw,34px)" }}>
-              <li style={{ position: "relative", display: "flex", alignItems: "center", gap: 4 }} onMouseEnter={navEnter} onMouseLeave={navLeave}>
-                <Link href="/technologies-services" className="amz-nav-a" onClick={() => setNavOpen(false)} style={{ fontFamily: "var(--font-display)", fontWeight: 600, fontSize: 15, whiteSpace: "nowrap", color: "#FFFFFF", textDecoration: "none" }}>Technologies &amp; Services</Link>
-                <button
-                  ref={menuTriggerRef}
-                  type="button"
-                  className="amz-nav-a"
-                  onClick={() => setNavOpen((v) => !v)}
-                  aria-label="Toggle technologies and services submenu"
-                  aria-expanded={navOpen}
-                  aria-controls="amz-tech-menu"
-                  style={{
-                    position: "relative",
-                    display: "inline-flex",
-                    alignItems: "center",
-                    gap: 7,
-                    padding: "10px 4px",
-                    background: "transparent",
-                    border: 0,
-                    fontFamily: "var(--font-display)",
-                    fontWeight: 600,
-                    fontSize: 15,
-                    whiteSpace: "nowrap",
-                    cursor: "pointer",
-                    color: "#FFFFFF",
-                  }}
-                >
-                  <svg
-                    width="12"
-                    height="12"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2.6"
-                    strokeLinecap="butt"
-                    strokeLinejoin="miter"
-                    aria-hidden="true"
-                    style={{ transition: `transform 160ms ${EASE_MOVE}`, transform: navOpen ? "rotate(180deg)" : "rotate(0deg)" }}
-                  >
-                    <path d="M5 9l7 7 7-7" />
-                  </svg>
-                  <span aria-hidden style={{ position: "absolute", left: 0, right: 0, bottom: 0, height: 2, background: "currentColor", transition: `opacity 160ms ${EASE_MOVE}`, opacity: navOpen ? 1 : 0 }} />
-                </button>
-                {navOpen && (
-                  <ul
-                    ref={menuPanelRef}
-                    id="amz-tech-menu"
-                    style={{
-                      listStyle: "none",
-                      margin: 0,
-                      padding: 8,
-                      position: "absolute",
-                      top: "calc(100% + 14px)",
-                      left: -12,
-                      zIndex: 300,
-                      minWidth: 286,
-                      background: "#FFFFFF",
-                      border: "1px solid rgba(25,28,31,.10)",
-                      borderRadius: 14,
-                      boxShadow: "0 4px 8px rgba(25,28,31,.06),0 12px 28px rgba(25,28,31,.10)",
-                    }}
-                  >
-                    {AMZ_TECH_MENU.map((item) => (
-                      <li key={item.label}>
-                        <Link
-                          href={item.href}
-                          onClick={() => setNavOpen(false)}
-                          className="amz-menu-item"
-                          style={{
-                            display: "flex",
-                            alignItems: "center",
-                            minHeight: 48,
-                            padding: "0 16px",
-                            borderRadius: 10,
-                            fontFamily: "var(--font-display)",
-                            fontWeight: 600,
-                            fontSize: 15,
-                            color: "#444444",
-                            textDecoration: "none",
-                            whiteSpace: "nowrap",
-                          }}
-                        >
-                          {item.label}
-                        </Link>
-                      </li>
-                    ))}
-                  </ul>
-                )}
-              </li>
+            <ul style={{ listStyle: "none", margin: 0, padding: 0, display: "flex", alignItems: "center", gap: "clamp(14px,1.6vw,28px)" }}>
               {AMZ_NAV_LINKS.map((l) => (
                 <li key={l.label}>
-                  <a href={l.href} className="amz-nav-a" style={{ fontFamily: "var(--font-display)", fontWeight: 600, fontSize: 15, textDecoration: "none", whiteSpace: "nowrap", color: "#FFFFFF" }}>
+                  <Link href={l.href} className="amz-nav-a" style={{ fontFamily: "var(--font-display)", fontWeight: 600, fontSize: 15, textDecoration: "none", whiteSpace: "nowrap", color: "#FFFFFF" }}>
                     {l.label}
-                  </a>
+                  </Link>
                 </li>
               ))}
             </ul>
@@ -235,7 +109,7 @@ export default function SiteHeader() {
 
           <div className="amz-w" style={{ flex: "none", display: "flex", alignItems: "center", gap: 18 }}>
             <Link
-              href="/#contact"
+              href={AMZ_CONTACT_HREF}
               className="amz-btn-accent"
               style={{
                 display: "inline-flex",
@@ -254,7 +128,7 @@ export default function SiteHeader() {
                 whiteSpace: "nowrap",
               }}
             >
-              Start a project
+              Contact Us
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#191C1F" strokeWidth="2.4" strokeLinecap="butt" strokeLinejoin="miter" aria-hidden="true">
                 <path d="M7 17L17 7M9 7h8v8" />
               </svg>
@@ -263,7 +137,7 @@ export default function SiteHeader() {
 
           <div className="amz-n" style={{ flex: "1 1 auto" }} />
           <Link
-            href="/#contact"
+            href={AMZ_CONTACT_HREF}
             className="amz-n amz-btn-accent"
             style={{
               flex: "none",
@@ -281,7 +155,7 @@ export default function SiteHeader() {
               whiteSpace: "nowrap",
             }}
           >
-            Start a project
+            Contact Us
           </Link>
           <button
             type="button"
@@ -346,70 +220,28 @@ export default function SiteHeader() {
               </button>
             </div>
             <ul style={{ listStyle: "none", margin: 0, padding: "12px 0", flex: "1 1 auto", minHeight: 0, overflowY: "auto", overscrollBehavior: "contain" }}>
-              <li style={{ padding: "14px 24px 6px" }}>
-                <Link href="/technologies-services" onClick={() => setOpen(false)}
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    gap: 10,
-                    fontFamily: "var(--font-display)",
-                    fontStretch: "75%",
-                    fontWeight: 700,
-                    fontSize: 11,
-                    letterSpacing: ".14em",
-                    textTransform: "uppercase",
-                    color: "rgba(255,255,255,.52)",
-                    margin: "0 0 6px",
-                    textDecoration: "none",
-                    minHeight: 44,
-                  }}
-                >
-                  <span aria-hidden style={{ width: 16, height: 1, background: "currentColor", flex: "none" }} />
-                  Technologies &amp; Services
-                </Link>
-              </li>
-              {AMZ_TECH_MENU.map((item) => (
-                <li key={item.label}>
-                  <Link
-                    href={item.href}
-                    onClick={() => setOpen(false)}
-                    className="amz-mobile-item"
-                    style={{ display: "flex", alignItems: "center", minHeight: 50, padding: "0 24px", fontFamily: "var(--font-display)", fontWeight: 600, fontSize: 17, color: "rgba(255,255,255,.86)", textDecoration: "none" }}
-                  >
-                    {item.label}
-                  </Link>
-                </li>
-              ))}
-              <li aria-hidden style={{ height: 1, background: "rgba(255,255,255,.12)", margin: "12px 24px" }} />
               {AMZ_NAV_LINKS.map((l) => (
                 <li key={l.label}>
-                  <a
+                  <Link
                     href={l.href}
                     onClick={() => setOpen(false)}
                     className="amz-mobile-item"
-                    style={{ display: "flex", alignItems: "center", minHeight: 56, padding: "0 24px", fontFamily: "var(--font-display)", fontWeight: 700, fontSize: 24, color: "#FFFFFF", textDecoration: "none" }}
+                    style={{ display: "flex", alignItems: "center", minHeight: 56, padding: "0 24px", fontFamily: "var(--font-display)", fontWeight: 700, fontSize: 22, color: "#FFFFFF", textDecoration: "none" }}
                   >
                     {l.label}
-                  </a>
+                  </Link>
                 </li>
               ))}
             </ul>
             <div style={{ flex: "none", padding: "20px 24px 28px", borderTop: "1px solid rgba(255,255,255,.12)", display: "flex", flexDirection: "column", gap: 12 }}>
               <Link
-                href="/#contact"
+                href={AMZ_CONTACT_HREF}
                 onClick={() => setOpen(false)}
                 className="amz-btn-accent"
                 style={{ display: "flex", alignItems: "center", justifyContent: "center", height: 52, borderRadius: 999, background: "#F99615", color: "#191C1F", fontFamily: "var(--font-display)", fontWeight: 600, fontSize: 16, textDecoration: "none" }}
               >
-                Request a quote
+                Contact Us
               </Link>
-              <a
-                href={AMZ_PHONE_HREF}
-                className="amz-btn-outline-light"
-                style={{ display: "flex", alignItems: "center", justifyContent: "center", height: 52, borderRadius: 999, border: "1.5px solid rgba(255,255,255,.4)", color: "#FFFFFF", fontFamily: "var(--font-display)", fontWeight: 600, fontSize: 16, textDecoration: "none" }}
-              >
-                {AMZ_PHONE_DISPLAY}
-              </a>
             </div>
           </nav>
         </div>
